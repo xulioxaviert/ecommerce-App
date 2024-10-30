@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { AuthenticationComponent } from './authentication.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -14,6 +15,7 @@ import { RegisterComponent } from './register/register.component';
     RouterModule.forChild([ { path: '', component: AuthenticationComponent } ]),
     LoginComponent,
     RegisterComponent,
+    HttpClientModule,
     AuthenticationComponent
   ]
 })

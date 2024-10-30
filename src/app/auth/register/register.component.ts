@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-register',
@@ -12,5 +13,5 @@ export class RegisterComponent {
   registeredUser() {
     this.registered.emit(true);
   }
-
+  constructor(private authService: AuthService) { }
 }

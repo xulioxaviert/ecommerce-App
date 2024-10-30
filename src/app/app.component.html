@@ -1,2 +1,10 @@
-<router-outlet></router-outlet>
+<div class="container-app">
+  <ng-container *ngIf="isLoading$ | async as loading">
+    <div class="container-app__loading">
+      <p-progressSpinner ariaLabel="loading" />
+    </div>
+  </ng-container>
 
+
+  <router-outlet></router-outlet>
+</div>

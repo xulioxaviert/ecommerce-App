@@ -1,0 +1,7 @@
+<div [ngSwitch]="phase">
+  <div >
+    <app-login *ngSwitchCase="'login'" (registration)="showRegistration()"></app-login>
+    <app-register *ngSwitchCase="'registration'" (registered)="showLogin()"></app-register>
+  </div>
+
+</div>

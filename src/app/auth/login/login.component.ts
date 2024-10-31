@@ -5,6 +5,8 @@ import { RouterLink } from '@angular/router';
 import { map, switchMap } from 'rxjs';
 import { UsersService } from '../../users/users.service';
 import { AuthService } from '../auth.service';
+import { ENDPOINTS } from '../../core/const/constants';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +23,7 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup = new FormGroup({});
 
-  constructor(private authService: AuthService, private fb: FormBuilder, private usersService: UsersService) { }
+  constructor(private authService: AuthService, private fb: FormBuilder, private usersService: UsersService, private toastService: ToastService) { }
 
 
   ngOnInit(): void {
@@ -53,7 +55,12 @@ export class LoginComponent implements OnInit {
 
       const username = this.loginForm.get('username')?.value;
       const password = this.loginForm.get('password')?.value;
-      this.authService.login(username, password).pipe(
+
+      const payload = {
+        username,
+        password
+      }
+      this.authService.httpPostData(ENDPOINTS.login, payload).pipe(
 
         switchMap(({ token }: any) => {
           this.authService.setSessionStorage('token', token);
@@ -69,6 +76,9 @@ export class LoginComponent implements OnInit {
       ).subscribe(
         (filteredUsers) => {
           this.login.emit(true);
+          this.authService.isAuthenticated();
+          this.toastService.showMessage$.next(true);
+          // this.toastService.show('success','Success','Login successful');
         }
       );
     }

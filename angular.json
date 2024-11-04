@@ -3,6 +3,13 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
+    "angular-i18n": {
+      "projectType": "application",
+      "root": "",
+      "i18n": {
+        "sourceLocale": "en-US"
+      }
+    },
     "ecommerce-app": {
       "projectType": "application",
       "schematics": {

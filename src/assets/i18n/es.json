@@ -1,0 +1,15 @@
+{
+  "HOME": {
+    "TITLE": "Bienvenido a nuestro sitio de comercio electrónico",
+    "DESCRIPTION": "¡Encuentra los mejores productos aquí!"
+  },
+  "PRODUCTS": {
+    "TITLE": "Products",
+    "DESCRIPTION": "Find the best products here!"
+  },
+  "LOGIN": {
+    "TITLE": "Iniciar sesión",
+    "DESCRIPTION": "Inicia sesión en tu cuenta",
+    "SIGN_IN": "Inicia sesión"
+  }
+}

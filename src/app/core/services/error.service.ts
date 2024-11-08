@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ToastModule } from 'primeng/toast';
+import { ToastService } from './toast.service';
 
 
 @Injectable({
@@ -8,7 +8,7 @@ import { ToastModule } from 'primeng/toast';
 })
 export class ErrorService {
 
-  constructor(private toastr: ToastModule) { }
+  constructor(private toast: ToastService) { }
 
   /**
    * Prints error
@@ -16,6 +16,6 @@ export class ErrorService {
    * @param error
    */
   printError(error: HttpErrorResponse) {
-    // this.toastr.error(String(error.message), 'Error');
+    this.toast.showToast('error', 'Error', error.message);
   }
 }

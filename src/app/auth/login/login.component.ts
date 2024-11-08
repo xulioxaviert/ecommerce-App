@@ -17,7 +17,14 @@ import { AuthService } from '../auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ NgSwitchCase, RouterLink, ReactiveFormsModule, NgClass, NgIf, TranslateModule ],
+  imports: [
+    NgSwitchCase,
+    RouterLink,
+    ReactiveFormsModule,
+    NgClass,
+    NgIf,
+    TranslateModule,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -33,7 +40,9 @@ export class LoginComponent implements OnInit {
     private usersService: UsersService,
     private toastService: ToastService,
     private translateService: TranslateService
-  ) { this.translateService.setDefaultLang('en'); }
+  ) {
+    this.translateService.setDefaultLang('es');
+  }
 
   ngOnInit(): void {
     this.createLoginForm();
@@ -41,8 +50,8 @@ export class LoginComponent implements OnInit {
 
   createLoginForm(): void {
     this.loginForm = this.fb.group({
-      username: [ '', [ Validators.required ] ],
-      password: [ '', [ Validators.required ] ],
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required]],
     });
   }
 
@@ -85,12 +94,10 @@ export class LoginComponent implements OnInit {
         .subscribe((filteredUsers) => {
           this.login.emit(true);
           this.authService.isAuthenticated();
-          this.toastService.showMessage$.next(true);
-          // this.toastService.show('success','Success','Login successful');
         });
     }
   }
   switchLanguage(language: string): void {
-    this.translateService.use(language)
+    this.translateService.use(language);
   }
 }

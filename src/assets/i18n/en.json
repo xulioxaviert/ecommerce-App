@@ -10,6 +10,32 @@
   "LOGIN": {
     "TITLE": "Login",
     "DESCRIPTION": "Login to your account",
-    "SIGN_IN": "Sign in"
+    "SIGN_IN": "Sign in",
+    "EMAIL": "Email",
+    "PASSWORD": "Password",
+    "FORGOT_PASSWORD": "Forgot password?",
+    "NO_ACCOUNT": "Don't have an account?",
+    "SIGN_UP": "Sign up",
+    "WEB_DESCRIPTION": "We create unique garments that make you stand out.",
+    "WEB_PARAPH": "We design clothing that highlights your style and personality.",
+    "LOGIN_NOW": "Login now",
+    "KEEP_ME_LOGGED_IN": "Keep me logged in",
+    "USERNAME": "Username",
+    "USERNAME_REQUIRED": "Username is required",
+    "PASSWORD_REQUIRED": "Password is required"
+  },
+  "ERROR": {
+    "404": {
+      "TITLE": "404",
+      "DESCRIPTION": "Page not found"
+    },
+    "500": {
+      "TITLE": "500",
+      "DESCRIPTION": "Internal server error"
+    },
+    "401": {
+      "TITLE": "401",
+      "DESCRIPTION": "Unauthorized"
+    }
   }
 }

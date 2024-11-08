@@ -1,15 +1,41 @@
 {
   "HOME": {
-    "TITLE": "Bienvenido a nuestro sitio de comercio electrónico",
+    "TITLE": "Bienvenido a nuestro sitio de eCommerce",
     "DESCRIPTION": "¡Encuentra los mejores productos aquí!"
   },
   "PRODUCTS": {
-    "TITLE": "Products",
-    "DESCRIPTION": "Find the best products here!"
+    "TITLE": "Productos",
+    "DESCRIPTION": "¡Encuentra los mejores productos aquí!"
   },
   "LOGIN": {
     "TITLE": "Iniciar sesión",
     "DESCRIPTION": "Inicia sesión en tu cuenta",
-    "SIGN_IN": "Inicia sesión"
+    "SIGN_IN": "Iniciar sesión",
+    "EMAIL": "Correo electrónico",
+    "PASSWORD": "Contraseña",
+    "FORGOT_PASSWORD": "¿Olvidaste tu contraseña?",
+    "NO_ACCOUNT": "¿No tienes una cuenta?",
+    "SIGN_UP": "Regístrate",
+    "WEB_DESCRIPTION": "Creamos prendas únicas que te hacen destacar.",
+    "WEB_PARAPH": "Diseñamos ropa que resalta tu estilo y personalidad.",
+    "LOGIN_NOW": "Inicia sesión ahora",
+    "KEEP_ME_LOGGED_IN": "Mantenerme conectado",
+    "USERNAME": "Nombre de usuario",
+    "USERNAME_REQUIRED": "El nombre de usuario es obligatorio",
+    "PASSWORD_REQUIRED": "La contraseña es obligatoria"
+  },
+  "ERROR": {
+    "404": {
+      "TITLE": "404",
+      "DESCRIPTION": "Página no encontrada"
+    },
+    "500": {
+      "TITLE": "500",
+      "DESCRIPTION": "Error interno del servidor"
+    },
+    "401": {
+      "TITLE": "401",
+      "DESCRIPTION": "No autorizado"
+    }
   }
 }

@@ -1,17 +1,18 @@
 <!-- Login 9 - Bootstrap Brain Component -->
-<section class="bg-primary py-3 py-md-5 py-xl-8 vh-100 d-flex">
+<section class="bg-warning bg-gradient py-3 py-md-5 py-xl-8 vh-100 d-flex">
   <div class="container align-content-center">
     <div class="row gy-4 align-items-center m-auto">
       <div class="col-12 col-md-6 col-xl-7">
-        <div class="d-flex justify-content-center text-bg-primary">
-          <div class="col-12 col-xl-9">
+        <div
+          class="bg-warning d-flex justify-content-center text-bg-primary rounded-4 shadow"
+        >
+          <div class="col-12 col-xl-9 rounded-4">
             <hr class="border-primary-subtle mb-4" />
             <h2 class="h1 mb-4">
-              We make digital products that drive you to stand out.
+              {{ "LOGIN.WEB_DESCRIPTION" | translate }}
             </h2>
             <p class="lead mb-5">
-              We write words, take photos, make videos, and interact with
-              artificial intelligence.
+              {{ "LOGIN.WEB_PARAPH" | translate }}
             </p>
             <div class="text-endx">
               <svg
@@ -36,12 +37,10 @@
             <div class="row">
               <div class="col-12">
                 <div class="mb-4">
-                  <button (click)="switchLanguage('en')">English</button>
-                  <button (click)="switchLanguage('es')">Español</button>
-                  <h3>{{ 'LOGIN.TITLE' | translate }}</h3>
+                  <h3>{{ "LOGIN.TITLE" | translate }}</h3>
 
                   <a (click)="gotoRegistration()">
-                    <p>Don't have an account? Sign up</p>
+                    <p>{{ "LOGIN.NO_ACCOUNT" | translate }}</p>
                   </a>
                 </div>
               </div>
@@ -57,7 +56,9 @@
                       placeholder="Username"
                       required
                     />
-                    <label for="text" class="form-label">Username</label>
+                    <label for="text" class="form-label">{{
+                      "LOGIN.USERNAME" | translate
+                    }}</label>
                   </div>
                   <div class="error-text">
                     <span
@@ -66,7 +67,7 @@
                         loginForm.get('username')?.touched
                       "
                     >
-                      Username is required
+                      {{ "LOGIN.USERNAME_REQUIRED" | translate }}
                     </span>
                   </div>
                 </div>
@@ -80,7 +81,9 @@
                       placeholder="Password"
                       required
                     />
-                    <label for="password" class="form-label">Password</label>
+                    <label for="password" class="form-label">{{
+                      "LOGIN.PASSWORD" | translate
+                    }}</label>
                   </div>
                   <div class="error-text">
                     <span
@@ -89,7 +92,7 @@
                         loginForm.get('password')?.touched
                       "
                     >
-                      Password is required
+                      {{ "LOGIN.PASSWORD_REQUIRED" | translate }}
                     </span>
                   </div>
                 </div>
@@ -106,7 +109,7 @@
                       class="form-check-label text-secondary"
                       for="remember_me"
                     >
-                      Keep me logged in
+                      {{ "LOGIN.KEEP_ME_LOGGED_IN" | translate }}
                     </label>
                   </div>
                 </div>
@@ -117,7 +120,7 @@
                       type="submit"
                       (click)="singIn()"
                     >
-                      Log in now
+                      {{'LOGIN.LOGIN_NOW' | translate}}
                     </button>
                   </div>
                 </div>

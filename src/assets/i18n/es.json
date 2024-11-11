@@ -37,5 +37,13 @@
       "TITLE": "401",
       "DESCRIPTION": "No autorizado"
     }
+  },
+  "HEADER": {
+    "ABOUT": "Acerca de",
+    "CONTACT": "Contacto",
+    "HELP": "Ayuda",
+    "FAQS": "Preguntas frecuentes",
+    "CUSTOMER_SERVICE": "Atención al cliente",
+    "SEARCH": "Buscar productos"
   }
 }

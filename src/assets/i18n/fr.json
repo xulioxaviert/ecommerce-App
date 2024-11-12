@@ -1,0 +1,49 @@
+{
+  "HOME": {
+    "TITLE": "Bienvenue sur notre site de eCommerce",
+    "DESCRIPTION": "Trouvez les meilleurs produits ici !"
+  },
+  "PRODUCTS": {
+    "TITLE": "Produits",
+    "DESCRIPTION": "Trouvez les meilleurs produits ici !"
+  },
+  "LOGIN": {
+    "TITLE": "Connexion",
+    "DESCRIPTION": "Connectez-vous à votre compte",
+    "SIGN_IN": "Se connecter",
+    "EMAIL": "E-mail",
+    "PASSWORD": "Mot de passe",
+    "FORGOT_PASSWORD": "Mot de passe oublié ?",
+    "NO_ACCOUNT": "Vous n'avez pas de compte ?",
+    "SIGN_UP": "S'inscrire",
+    "WEB_DESCRIPTION": "Nous créons des vêtements uniques qui vous font ressortir.",
+    "WEB_PARAPH": "Nous concevons des vêtements qui mettent en valeur votre style et votre personnalité.",
+    "LOGIN_NOW": "Connectez-vous maintenant",
+    "KEEP_ME_LOGGED_IN": "Rester connecté",
+    "USERNAME": "Nom d'utilisateur",
+    "USERNAME_REQUIRED": "Le nom d'utilisateur est requis",
+    "PASSWORD_REQUIRED": "Le mot de passe est requis"
+  },
+  "ERROR": {
+    "404": {
+      "TITLE": "404",
+      "DESCRIPTION": "Page non trouvée"
+    },
+    "500": {
+      "TITLE": "500",
+      "DESCRIPTION": "Erreur interne du serveur"
+    },
+    "401": {
+      "TITLE": "401",
+      "DESCRIPTION": "Non autorisé"
+    }
+  },
+  "HEADER": {
+    "ABOUT": "À propos",
+    "CONTACT": "Contact",
+    "HELP": "Aide",
+    "FAQS": "FAQs",
+    "CUSTOMER_SERVICE": "Service client",
+    "SEARCH": "Rechercher un produit"
+  }
+}

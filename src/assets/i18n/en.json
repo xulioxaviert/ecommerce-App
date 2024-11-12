@@ -37,5 +37,13 @@
       "TITLE": "401",
       "DESCRIPTION": "Unauthorized"
     }
+  },
+  "HEADER":{
+    "ABOUT": "About",
+    "CONTACT": "Contact",
+    "HELP": "Help",
+    "FAQS": "FAQs",
+    "CUSTOMER_SERVICE": "Customer Service",
+    "SEARCH": "Search products"
   }
 }

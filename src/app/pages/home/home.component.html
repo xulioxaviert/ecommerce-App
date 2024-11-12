@@ -1,2 +1,70 @@
 <app-header></app-header>
+<section class="container-banner">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="banner-blocks">
+          <div class="banner-ad large block-1">
+            <h2 class="title">Productos</h2>
+            <div class="card container__carousel">
+              <p-carousel
+                          [value]="products"
+                          [numVisible]="3"
+                          [numScroll]="3"
+                          [circular]="true"
+                          [responsiveOptions]="responsiveOptions"
+                          autoplayInterval="5000">
+                <ng-template let-product pTemplate="item">
+                  <div class="border-1 surface-border border-round m-2 p-3 container__carousel-card">
+                    <div class="relative mx-auto  container__carousel-card-img">
+                      <img
+                           [src]="product.image"
+                           [alt]="product.name"
+                           class="w-full border-round" />
+                    </div>
 
+                    <div class="flex justify-content-between align-items-center">
+                      <div class="mb-3 font-medium">
+                        {{ product.title }}
+                      </div>
+                      <div class="mt-0 font-semibold text-xl">
+                        {{ "$" + product.price }}
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </p-carousel>
+            </div>
+          </div>
+
+          <div class="banner-ad block-2">
+            <div class="row banner-content p-5">
+              <div class="content-wrapper col-md-7">
+                <div class="categories sale mb-3 pb-3">20% off</div>
+                <h3 class="banner-title">Fruits & Vegetables</h3>
+                <a href="#" class="d-flex align-items-center nav-link">Shop Collection
+                  <svg width="24" height="24">
+                    <use xlink:href="#arrow-right"></use>
+                  </svg></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="banner-ad block-3">
+            <div class="row banner-content p-5">
+              <div class="content-wrapper col-md-7">
+                <div class="categories sale mb-3 pb-3">15% off</div>
+                <h3 class="item-title">Baked Products</h3>
+                <a href="#" class="d-flex align-items-center nav-link">Shop Collection
+                  <svg width="24" height="24">
+                    <use xlink:href="#arrow-right"></use>
+                  </svg></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- / Banner Blocks -->
+      </div>
+    </div>
+  </div>
+</section>

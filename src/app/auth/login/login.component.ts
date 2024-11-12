@@ -18,12 +18,11 @@ import { AuthService } from '../auth.service';
   selector: 'app-login',
   standalone: true,
   imports: [
-    NgSwitchCase,
-    RouterLink,
     ReactiveFormsModule,
-    NgClass,
     NgIf,
     TranslateModule,
+    NgClass,
+    NgSwitchCase
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',

@@ -14,6 +14,8 @@ import {
 import { routes } from './app.routes';
 import { HttpInterceptorService } from './core/interceptors/http-interceptor.service';
 import { MessageService } from 'primeng/api';
+import { CarouselModule } from 'primeng/carousel';
+import { ButtonModule } from 'primeng/button';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -30,6 +32,8 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideAnimations(),
     MessageService,
+    CarouselModule,
+    ButtonModule,
     provideHttpClient(withFetch()),
     {
       provide: TranslateLoader,

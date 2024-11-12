@@ -2,7 +2,11 @@
 export const ENDPOINTS = {
   login: 'https://fakestoreapi.com/auth/login',
   getAllUsers: 'https://fakestoreapi.com/users',
-  getUser: 'https://fakestoreapi.com/users/'
+  getUser: 'https://fakestoreapi.com/users/',
+  getAllCategories: 'https://fakestoreapi.com/products/categories',
+  getAllProducts: 'https://fakestoreapi.com/products',
+  getAllPlatziProducts: 'https://api.escuelajs.co/api/v1/products',
+  getAllPlatziCategories: 'https://api.escuelajs.co/api/v1/categories',
 };
 
 export const ERROR_MESSAGES = {

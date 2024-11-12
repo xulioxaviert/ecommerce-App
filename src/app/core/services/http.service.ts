@@ -1,12 +1,15 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, map, Observable, of, take } from 'rxjs';
+import { catchError, Observable, of, take } from 'rxjs';
+import { ENDPOINTS } from '../const/constants';
+import { Products } from '../models/products.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
   private http = inject(HttpClient);
+  options: {};
 
 
   constructor(private _http: HttpClient) { }
@@ -20,9 +23,15 @@ export class HttpService {
       })
       .pipe(
         take(1),
-       catchError((err) => {
+        catchError((err) => {
           return of(err);
         })
       );
+  }
+  getAllProducts(): Observable<Products[]> {
+    return this.http.get<Products[]>(ENDPOINTS.getAllProducts, this.options)
+  }
+  getAllCategories(): Observable<Products[]> {
+    return this.http.get<Products[]>(ENDPOINTS.getAllCategories, this.options)
   }
 }

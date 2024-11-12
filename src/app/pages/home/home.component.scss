@@ -1,3 +1,17 @@
-.container-banner{
+
+
+.container-banner {
   margin-top: 13rem;
+}
+
+.container__carousel {
+  display: flex;
+  &-card{
+    margin: 1rem;
+    &-title{
+      // color: $titleColor;
+      background-color: $background1;
+
+    }
+  }
 }

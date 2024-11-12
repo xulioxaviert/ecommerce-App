@@ -4,8 +4,9 @@
     <div class="row">
       <div class="col-md-12">
         <div class="banner-blocks">
-          <div class="banner-ad large bg-info block-1">
-            <div class="swiper main-swiper">
+          <div class="banner-ad large block-1">
+            <!-- <div class="swiper main-swiper">
+
               <div class="swiper-wrapper">
                 <div class="swiper-slide">
                   <div class="row banner-content p-5">
@@ -23,7 +24,7 @@
                       >
                     </div>
                     <div class="img-wrapper col-md-5">
-                      <img src="images/product-thumb-1.png" class="img-fluid" />
+                      <img src="assets/images/product-thumb-1.png" class="img-fluid" />
                     </div>
                   </div>
                 </div>
@@ -46,7 +47,7 @@
                       >
                     </div>
                     <div class="img-wrapper col-md-5">
-                      <img src="images/product-thumb-1.png" class="img-fluid" />
+                      <img src="assets/images/product-thumb-1.png" class="img-fluid" />
                     </div>
                   </div>
                 </div>
@@ -67,52 +68,64 @@
                       >
                     </div>
                     <div class="img-wrapper col-md-5">
-                      <img src="images/product-thumb-2.png" class="img-fluid" />
+                      <img src="assets/images/product-thumb-2.png" class="img-fluid" />
                     </div>
                   </div>
                 </div>
               </div>
 
               <div class="swiper-pagination"></div>
+            </div> -->
+            <div class="container__carousel">
+              <p-carousel
+                          [value]="products"
+                          styleClass="custom-carousel"
+                          [numVisible]="3"
+                          [numScroll]="1"
+                          [circular]="true"
+                          [autoplayInterval]="3000"
+                          [responsiveOptions]="responsiveOptions">
+                <ng-template pTemplate="header">
+                </ng-template>
+                <ng-template let-product pTemplate="item">
+                  <div class="product-item">
+                    <div class="product-item-content">
+                      <div class="container__carousel-card">
+                        <h4 class="container__carousel-card-title">{{ product.title }}</h4>
+                        <img [src]=product.image alt=product.title class="container__carousel-card-img">
+                        <p class="container__carousel-card-paragraph">${{ product.price }}</p>
+                        <!-- <span
+                            [class]="'product-badge status-'+product.inventoryStatus.toLowerCase()">{{product.inventoryStatus}}</span> -->
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </p-carousel>
             </div>
           </div>
 
-          <div
-            class="banner-ad bg-success-subtle block-2"
-            style="
-              background: url('images/ad-image-1.png') no-repeat;
-              background-position: right bottom;
-            "
-          >
+          <div class="banner-ad block-2">
             <div class="row banner-content p-5">
               <div class="content-wrapper col-md-7">
                 <div class="categories sale mb-3 pb-3">20% off</div>
                 <h3 class="banner-title">Fruits & Vegetables</h3>
-                <a href="#" class="d-flex align-items-center nav-link"
-                  >Shop Collection
+                <a href="#" class="d-flex align-items-center nav-link">Shop Collection
                   <svg width="24" height="24">
-                    <use xlink:href="#arrow-right"></use></svg
-                ></a>
+                    <use xlink:href="#arrow-right"></use>
+                  </svg></a>
               </div>
             </div>
           </div>
 
-          <div
-            class="banner-ad bg-danger block-3"
-            style="
-              background: url('images/ad-image-2.png') no-repeat;
-              background-position: right bottom;
-            "
-          >
+          <div class="banner-ad block-3">
             <div class="row banner-content p-5">
               <div class="content-wrapper col-md-7">
                 <div class="categories sale mb-3 pb-3">15% off</div>
                 <h3 class="item-title">Baked Products</h3>
-                <a href="#" class="d-flex align-items-center nav-link"
-                  >Shop Collection
+                <a href="#" class="d-flex align-items-center nav-link">Shop Collection
                   <svg width="24" height="24">
-                    <use xlink:href="#arrow-right"></use></svg
-                ></a>
+                    <use xlink:href="#arrow-right"></use>
+                  </svg></a>
               </div>
             </div>
           </div>

@@ -53,10 +53,7 @@ export class HeaderComponent implements OnInit {
   }
 
   loadData() {
-    this.http.getData(ENDPOINTS.getAllCategories).subscribe((data) => {
-      console.log(data.body);
-      this.categories = data.body;
-    });
+    
     this.selectedLanguage = this.languages.find(
       (language) => language.code === this.translateService.getDefaultLang()
     );

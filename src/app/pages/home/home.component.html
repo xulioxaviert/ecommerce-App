@@ -5,97 +5,30 @@
       <div class="col-md-12">
         <div class="banner-blocks">
           <div class="banner-ad large block-1">
-            <!-- <div class="swiper main-swiper">
-
-              <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                  <div class="row banner-content p-5">
-                    <div class="content-wrapper col-md-7">
-                      <div class="categories my-3">100% natural</div>
-                      <h3 class="display-4">Fresh Smoothie & Summer Juice</h3>
-                      <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Dignissim massa diam elementum.
-                      </p>
-                      <a
-                        href="#"
-                        class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1 px-4 py-3 mt-3"
-                        >Shop Now</a
-                      >
-                    </div>
-                    <div class="img-wrapper col-md-5">
-                      <img src="assets/images/product-thumb-1.png" class="img-fluid" />
-                    </div>
-                  </div>
-                </div>
-
-                <div class="swiper-slide">
-                  <div class="row banner-content p-5">
-                    <div class="content-wrapper col-md-7">
-                      <div class="categories mb-3 pb-3">100% natural</div>
-                      <h3 class="banner-title">
-                        Fresh Smoothie & Summer Juice
-                      </h3>
-                      <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Dignissim massa diam elementum.
-                      </p>
-                      <a
-                        href="#"
-                        class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1"
-                        >Shop Collection</a
-                      >
-                    </div>
-                    <div class="img-wrapper col-md-5">
-                      <img src="assets/images/product-thumb-1.png" class="img-fluid" />
-                    </div>
-                  </div>
-                </div>
-
-                <div class="swiper-slide">
-                  <div class="row banner-content p-5">
-                    <div class="content-wrapper col-md-7">
-                      <div class="categories mb-3 pb-3">100% natural</div>
-                      <h3 class="banner-title">Heinz Tomato Ketchup</h3>
-                      <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Dignissim massa diam elementum.
-                      </p>
-                      <a
-                        href="#"
-                        class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1"
-                        >Shop Collection</a
-                      >
-                    </div>
-                    <div class="img-wrapper col-md-5">
-                      <img src="assets/images/product-thumb-2.png" class="img-fluid" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="swiper-pagination"></div>
-            </div> -->
-            <div class="container__carousel">
+            <h2 class="title">Productos</h2>
+            <div class="card container__carousel">
               <p-carousel
                           [value]="products"
-                          styleClass="custom-carousel"
                           [numVisible]="3"
-                          [numScroll]="1"
+                          [numScroll]="3"
                           [circular]="true"
-                          [autoplayInterval]="3000"
-                          [responsiveOptions]="responsiveOptions">
-                <ng-template pTemplate="header">
-                </ng-template>
+                          [responsiveOptions]="responsiveOptions"
+                          autoplayInterval="5000">
                 <ng-template let-product pTemplate="item">
-                  <div class="product-item">
-                    <div class="product-item-content">
-                      <div class="container__carousel-card">
-                        <h4 class="container__carousel-card-title">{{ product.title }}</h4>
-                        <img [src]=product.image alt=product.title class="container__carousel-card-img">
-                        <p class="container__carousel-card-paragraph">${{ product.price }}</p>
-                        <!-- <span
-                            [class]="'product-badge status-'+product.inventoryStatus.toLowerCase()">{{product.inventoryStatus}}</span> -->
+                  <div class="border-1 surface-border border-round m-2 p-3 container__carousel-card">
+                    <div class="relative mx-auto  container__carousel-card-img">
+                      <img
+                           [src]="product.image"
+                           [alt]="product.name"
+                           class="w-full border-round" />
+                    </div>
+
+                    <div class="flex justify-content-between align-items-center">
+                      <div class="mb-3 font-medium">
+                        {{ product.title }}
+                      </div>
+                      <div class="mt-0 font-semibold text-xl">
+                        {{ "$" + product.price }}
                       </div>
                     </div>
                   </div>

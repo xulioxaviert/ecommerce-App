@@ -1,0 +1,34 @@
+ $primary: #FFD333;
+ $secondary: #F5F5F5;
+ $light: #FFFFFF;
+ $dark: #3D464D;
+
+ $font-family-sans-serif: 'Roboto', sans-serif;
+ $body-bg: $secondary;
+ $body-color: #6C757D;
+ $headings-color: $dark;
+ $enable-responsive-font-sizes: true;
+ $enable-rounded: false;
+ $btn-focus-box-shadow: none;
+ $btn-active-box-shadow: none;
+ $input-btn-focus-box-shadow: none;
+ $input-placeholder-color: #999999;
+ @import "bootstrap/scss/bootstrap";
+
+ $background1: #0A9396;
+ $background2: #94D2BD;
+ $background3: #E9D8A6;
+ $background4: #005F73;
+ $background5: #BB3E03;
+ $background6: #ff8e3c;
+ $titleColor: #3D464D;
+ $subTitleColor: #023047;
+ $textColor: #3d464d;
+ $errorColor: #9B2226;
+ $bottomColor1: #EE9B00;
+ $bottomColor2: #CA6702;
+ $bottomColor3: #BB3E03;
+
+ $titleSize: 18px;
+ $subTitleSize: 14px;
+ $paragraphSize: 12px;

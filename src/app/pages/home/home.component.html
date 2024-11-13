@@ -5,7 +5,8 @@
       <div class="col-md-12">
         <div class="banner-blocks">
           <div class="banner-ad large block-1">
-            <h2 class="title">Productos</h2>
+            <h2 class="title">{{'HOME.SEASONAL_PRODUCTS' | translate}}</h2>
+            @if (products.length > 0) {
             <div class="card container__carousel">
               <p-carousel
                           [value]="products"
@@ -35,14 +36,69 @@
                 </ng-template>
               </p-carousel>
             </div>
+            } @else {
+            <div class="d-flex w-100 justify-content-center gap-4 flex-wrap container__carousel">
+              <div class="border-1 surface-border border-round m-2 p-3 container__carousel-card card2">
+                <div class="relative mx-auto  container__carousel-card-img">
+                  <img
+                       src="assets/images/product-thumb-1.png"
+                       alt="product"
+                       class="w-full border-round" />
+                </div>
+
+                <div class="flex justify-content-between align-items-center">
+                  <div class="mb-3 font-medium">
+                    Producto genérico
+                  </div>
+                  <div class="mt-0 font-semibold text-xl">
+                    $100
+                  </div>
+                </div>
+              </div>
+              <div class="border-1 surface-border border-round m-2 p-3 container__carousel-card card2">
+                <div class="relative mx-auto  container__carousel-card-img">
+                  <img
+                       src="assets/images/product-thumb-1.png"
+                       alt="product"
+                       class="w-full border-round" />
+                </div>
+
+                <div class="flex justify-content-between align-items-center">
+                  <div class="mb-3 font-medium">
+                    Producto genérico
+                  </div>
+                  <div class="mt-0 font-semibold text-xl">
+                    $100
+                  </div>
+                </div>
+              </div>
+              <div class="border-1 surface-border border-round m-2 p-3 container__carousel-card card2">
+                <div class="relative mx-auto  container__carousel-card-img">
+                  <img
+                       src="assets/images/product-thumb-1.png"
+                       alt="product"
+                       class="w-full border-round" />
+                </div>
+
+                <div class="flex justify-content-between align-items-center">
+                  <div class="mb-3 font-medium">
+                    Producto genérico
+                  </div>
+                  <div class="mt-0 font-semibold text-xl">
+                    $100
+                  </div>
+                </div>
+              </div>
+            </div>
+            }
           </div>
 
           <div class="banner-ad block-2">
             <div class="row banner-content p-5">
               <div class="content-wrapper col-md-7">
-                <div class="categories sale mb-3 pb-3">20% off</div>
-                <h3 class="banner-title">Fruits & Vegetables</h3>
-                <a href="#" class="d-flex align-items-center nav-link">Shop Collection
+                <div class="categories sale mb-3 pb-3">20% {{'HOME.DISCOUNTS' | translate}}</div>
+                <h3 class="banner-title">{{'HOME.DISCOUNTS' | translate}}</h3>
+                <a href="#" class="d-flex align-items-center nav-link">{{'HOME.SHOP_COLLECTION' | translate}}
                   <svg width="24" height="24">
                     <use xlink:href="#arrow-right"></use>
                   </svg></a>
@@ -53,12 +109,13 @@
           <div class="banner-ad block-3">
             <div class="row banner-content p-5">
               <div class="content-wrapper col-md-7">
-                <div class="categories sale mb-3 pb-3">15% off</div>
-                <h3 class="item-title">Baked Products</h3>
-                <a href="#" class="d-flex align-items-center nav-link">Shop Collection
+                <div class="categories sale mb-3 pb-3">15% {{'HOME.DISCOUNTS' | translate}}</div>
+                <h3 class="item-title">{{'HOME.NEW_ARRIVALS' | translate}}</h3>
+                <a href="#" class="d-flex align-items-center nav-link">{{'HOME.DISCOUNTS' | translate}}
                   <svg width="24" height="24">
                     <use xlink:href="#arrow-right"></use>
-                  </svg></a>
+                  </svg>
+                </a>
               </div>
             </div>
           </div>

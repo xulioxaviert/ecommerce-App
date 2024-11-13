@@ -1,7 +1,16 @@
 {
   "HOME": {
     "TITLE": "Welcome to our eCommerce site",
-    "DESCRIPTION": "Find the best products here!"
+    "DESCRIPTION": "Find the best products here!",
+    "SEASONAL_PRODUCTS": "Seasonal Products",
+    "DISCOUNTS": "Discounts",
+    "NEW_ARRIVALS": "New Arrivals",
+    "FEATURED": "Featured",
+    "SHOP_NOW": "Shop Now",
+    "SHOP": "Shop",
+    "ADD_TO_CART": "Add to Cart",
+    "REBAJA": "Sale",
+    "SHOP_COLLECTION": "Shop Collection"
   },
   "PRODUCTS": {
     "TITLE": "Products",
@@ -13,7 +22,7 @@
     "SIGN_IN": "Sign in",
     "EMAIL": "Email",
     "PASSWORD": "Password",
-    "FORGOT_PASSWORD": "Forgot password?",
+    "FORGOT_PASSWORD": "Forgot your password?",
     "NO_ACCOUNT": "Don't have an account?",
     "SIGN_UP": "Sign up",
     "WEB_DESCRIPTION": "We create unique garments that make you stand out.",
@@ -38,7 +47,7 @@
       "DESCRIPTION": "Unauthorized"
     }
   },
-  "HEADER":{
+  "HEADER": {
     "ABOUT": "About",
     "CONTACT": "Contact",
     "HELP": "Help",

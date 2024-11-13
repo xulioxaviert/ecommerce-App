@@ -6,11 +6,13 @@ import { HeaderComponent } from '../../core/components/header/header.component';
 import { ENDPOINTS } from '../../core/const/constants';
 import { Products } from '../../core/models/products.model';
 import { HttpService } from '../../core/services/http.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ HeaderComponent, CarouselModule, ButtonModule,
+  imports: [ HeaderComponent, CarouselModule, ButtonModule, TranslateModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -20,7 +22,7 @@ export class HomeComponent implements OnInit {
   products: Products[] = [];
   category: any;
   responsiveOptions;
-  constructor(private http: HttpService) {
+  constructor(private http: HttpService, private translateService: TranslateService) {
     this.responsiveOptions = [
       {
         breakpoint: '1024px',
@@ -38,6 +40,8 @@ export class HomeComponent implements OnInit {
         numScroll: 1
       }
     ];
+    this.translateService.setDefaultLang('en');
+
   }
 
   ngOnInit(): void {

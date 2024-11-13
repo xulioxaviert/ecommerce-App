@@ -1,7 +1,16 @@
 {
   "HOME": {
     "TITLE": "Bienvenue sur notre site de eCommerce",
-    "DESCRIPTION": "Trouvez les meilleurs produits ici !"
+    "DESCRIPTION": "Trouvez les meilleurs produits ici !",
+    "SEASONAL_PRODUCTS": "Produits de saison",
+    "DISCOUNTS": "Réductions",
+    "NEW_ARRIVALS": "Nouveautés",
+    "FEATURED": "En vedette",
+    "SHOP_NOW": "Achetez maintenant",
+    "SHOP": "Boutique",
+    "ADD_TO_CART": "Ajouter au panier",
+    "REBAJA": "Soldes",
+    "SHOP_COLLECTION": "Acheter la collection"
   },
   "PRODUCTS": {
     "TITLE": "Produits",
@@ -44,6 +53,6 @@
     "HELP": "Aide",
     "FAQS": "FAQs",
     "CUSTOMER_SERVICE": "Service client",
-    "SEARCH": "Rechercher un produit"
+    "SEARCH": "Rechercher des produits"
   }
 }

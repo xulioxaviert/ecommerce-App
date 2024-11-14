@@ -8,12 +8,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DropdownModule } from 'primeng/dropdown';
-import { ENDPOINTS } from '../../const/constants';
+import { Observable } from 'rxjs';
+import { AuthService } from '../../../auth/auth.service';
 import { DropdownLanguages } from '../../models/lang.model';
+import { Users } from '../../models/user.model';
 import { HttpService } from '../../services/http.service';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -24,7 +26,7 @@ import { RouterLink } from '@angular/router';
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
-    RouterLink
+    RouterLink,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
@@ -34,15 +36,20 @@ export class HeaderComponent implements OnInit {
   languageForm: FormGroup = new FormGroup({});
   categories = signal<string[]>([]);
   public dropDownDefaultValue: string = 'English';
+  user: Users = {} as Users;
+  userLogin: string = 'red';
+  lang = (sessionStorage.getItem('language') ? sessionStorage.getItem('language') : 'en');
+  isAuthenticated$: Observable<boolean> = new Observable<boolean>();
 
   selectedLanguage: any | undefined;
 
   constructor(
     private fb: FormBuilder,
     private translateService: TranslateService,
-    private http: HttpService
+    private http: HttpService,
+    private authService: AuthService
   ) {
-    this.translateService.setDefaultLang('en');
+    this.translateService.setDefaultLang(this.lang || '');
   }
 
   ngOnInit() {
@@ -52,19 +59,28 @@ export class HeaderComponent implements OnInit {
       { name: 'Français', code: 'fr' },
     ];
     this.createForm();
+    this.loadData();
   }
 
   loadData() {
+    if (this.authService.isAuthenticated()) {
+      this.user = this.authService.getSessionStorage('user');
+      const lang = sessionStorage.getItem('language');
+      this.translateService.setDefaultLang(lang || '');
+      this.userLogin = 'green';
+      this.isAuthenticated$ = this.authService.isAuthenticated$;
+
+    }
 
     this.selectedLanguage = this.languages.find(
-      (language) => language.code === this.translateService.getDefaultLang()
+      (language) => language.code === this.lang
     );
   }
 
   createForm() {
     this.languageForm = this.fb.group({
-      language: ['', [Validators.required]],
-      search: ['', [Validators.minLength(3)]],
+      language: [ '', [ Validators.required ] ],
+      search: [ '', [ Validators.minLength(3) ] ],
     });
     this.loadData();
     this.chooseLanguage();
@@ -78,4 +94,11 @@ export class HeaderComponent implements OnInit {
       }
     });
   }
+
+  logout() {
+    this.authService.logout();
+    this.userLogin = 'red';
+    this.translateService.setDefaultLang('en');
+  }
+
 }

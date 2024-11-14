@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { map, switchMap } from 'rxjs';
 import { ENDPOINTS } from '../../core/const/constants';
@@ -38,7 +38,8 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private usersService: UsersService,
     private toastService: ToastService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private router: Router
   ) {
     this.translateService.setDefaultLang('es');
   }
@@ -49,8 +50,8 @@ export class LoginComponent implements OnInit {
 
   createLoginForm(): void {
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(3)]],
+      username: [ '', [ Validators.required, Validators.minLength(3) ] ],
+      password: [ '', [ Validators.required, Validators.minLength(3) ] ],
     });
   }
 
@@ -70,7 +71,6 @@ export class LoginComponent implements OnInit {
     } else {
       const username = this.loginForm.get('username')?.value;
       const password = this.loginForm.get('password')?.value;
-
       const payload = {
         username,
         password,
@@ -80,21 +80,27 @@ export class LoginComponent implements OnInit {
         .pipe(
           switchMap(({ token }: any) => {
             this.authService.setSessionStorage('token', token);
-            this.authService.setSessionStorage('language', 'en');
+            this.authService.setSessionStorage('language', 'fr');
             return this.usersService.getAllUsers();
           }),
           map((users) => {
-            users.filter((user) => {
-              user.username === username;
-              this.authService.setSessionStorage('user', JSON.stringify(user));
-            });
-            return;
+            users.forEach(user => {
+              if (user.username === payload.username) {
+                console.log("users.find / user:", user);
+                this.authService.setSessionStorage('user', JSON.stringify(user));
+                this.router.navigate([ '/' ]);
+                this.authService.isAuthenticated();
+              }
+            })
           })
         )
         .subscribe((filteredUsers) => {
           this.login.emit(true);
-          this.authService.isAuthenticated();
-        });
+        }), (error: any) => {
+          console.log(".subscribe / error:", error);
+          this.toastService.showError('error', 'Error Login');
+        }
+        ;
     }
   }
   switchLanguage(language: string): void {

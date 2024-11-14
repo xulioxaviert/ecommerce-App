@@ -13,6 +13,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ENDPOINTS } from '../../const/constants';
 import { DropdownLanguages } from '../../models/lang.model';
 import { HttpService } from '../../services/http.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -23,6 +24,7 @@ import { HttpService } from '../../services/http.service';
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
+    RouterLink
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
@@ -53,7 +55,7 @@ export class HeaderComponent implements OnInit {
   }
 
   loadData() {
-    
+
     this.selectedLanguage = this.languages.find(
       (language) => language.code === this.translateService.getDefaultLang()
     );

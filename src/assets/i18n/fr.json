@@ -1,15 +1,14 @@
 {
   "HOME": {
-    "TITLE": "Bienvenue sur notre site de eCommerce",
+    "TITLE": "Bienvenue sur notre site eCommerce",
     "DESCRIPTION": "Trouvez les meilleurs produits ici !",
-    "SEASONAL_PRODUCTS": "Produits de saison",
+    "SEASONAL_PRODUCTS": "Produits saisonniers",
     "DISCOUNTS": "Réductions",
-    "NEW_ARRIVALS": "Nouveautés",
+    "NEW_ARRIVALS": "Nouvelle collection",
     "FEATURED": "En vedette",
     "SHOP_NOW": "Achetez maintenant",
-    "SHOP": "Boutique",
+    "SHOP": "Acheter",
     "ADD_TO_CART": "Ajouter au panier",
-    "REBAJA": "Soldes",
     "SHOP_COLLECTION": "Acheter la collection"
   },
   "PRODUCTS": {
@@ -20,18 +19,20 @@
     "TITLE": "Connexion",
     "DESCRIPTION": "Connectez-vous à votre compte",
     "SIGN_IN": "Se connecter",
-    "EMAIL": "E-mail",
+    "EMAIL": "Email",
     "PASSWORD": "Mot de passe",
     "FORGOT_PASSWORD": "Mot de passe oublié ?",
-    "NO_ACCOUNT": "Vous n'avez pas de compte ?",
+    "NO_ACCOUNT": "Vous n'avez pas de compte ? Cliquez ici",
     "SIGN_UP": "S'inscrire",
     "WEB_DESCRIPTION": "Nous créons des vêtements uniques qui vous font ressortir.",
     "WEB_PARAPH": "Nous concevons des vêtements qui mettent en valeur votre style et votre personnalité.",
     "LOGIN_NOW": "Connectez-vous maintenant",
     "KEEP_ME_LOGGED_IN": "Rester connecté",
     "USERNAME": "Nom d'utilisateur",
-    "USERNAME_REQUIRED": "Le nom d'utilisateur est requis",
-    "PASSWORD_REQUIRED": "Le mot de passe est requis"
+    "USERNAME_REQUIRED": "Nom d'utilisateur requis",
+    "USERNAME_MIN_LENGTH": "Le nom d'utilisateur doit comporter au moins 3 caractères",
+    "PASSWORD_MIN_LENGTH": "Le mot de passe doit comporter au moins 3 caractères",
+    "PASSWORD_REQUIRED": "Mot de passe requis"
   },
   "ERROR": {
     "404": {
@@ -51,8 +52,37 @@
     "ABOUT": "À propos",
     "CONTACT": "Contact",
     "HELP": "Aide",
-    "FAQS": "FAQs",
+    "FAQS": "FAQ",
     "CUSTOMER_SERVICE": "Service client",
-    "SEARCH": "Rechercher des produits"
+    "SEARCH": "Rechercher des produits",
+    "LOGIN": "Connexion",
+    "LOGOUT": "Déconnexion"
+  },
+  "REGISTER": {
+    "TITLE": "Inscription",
+    "DESCRIPTION": "Créez un compte",
+    "SIGN_UP": "S'inscrire",
+    "FIRST_NAME": "Prénom",
+    "LAST_NAME": "Nom",
+    "EMAIL": "Email",
+    "USERNAME": "Nom d'utilisateur",
+    "PASSWORD": "Mot de passe",
+    "CONFIRM_PASSWORD": "Confirmer le mot de passe",
+    "HAVE_ACCOUNT": "Vous avez déjà un compte ? Cliquez ici",
+    "LOGIN": "Connexion",
+    "WEB_DESCRIPTION": "Créez un compte pour accéder à nos produits exclusifs.",
+    "WEB_PARAPH": "Inscrivez-vous pour accéder à notre collection de produits exclusifs.",
+    "REGISTER_NOW": "Inscrivez-vous maintenant",
+    "FIRST_NAME_REQUIRED": "Le prénom est requis",
+    "LAST_NAME_REQUIRED": "Le nom est requis",
+    "EMAIL_REQUIRED": "L'email est requis",
+    "EMAIL_INVALID": "L'email n'est pas valide",
+    "PASSWORD_REQUIRED": "Mot de passe requis",
+    "USERNAME_REQUIRED": "Nom d'utilisateur requis",
+    "PASSWORD_MIN_LENGTH": "Le mot de passe doit comporter au moins 3 caractères",
+    "FIRST_NAME_MIN_LENGTH": "Le prénom doit comporter au moins 3 caractères",
+    "CONFIRM_PASSWORD_REQUIRED": "Confirmation du mot de passe requise",
+    "CONFIRM_PASSWORD_MIN_LENGTH": "La confirmation du mot de passe doit comporter au moins 3 caractères",
+    "CONFIRM_PASSWORD_MATCH": "Les mots de passe ne correspondent pas"
   }
 }

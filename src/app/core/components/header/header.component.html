@@ -70,8 +70,8 @@
                        loading="lazy" />
                 </button>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Login</a></li>
-                  <li><a class="dropdown-item" href="#">Logout</a></li>
+                  <li><a class="dropdown-item" [routerLink]="['/auth']" routerLinkActive="router-link-active">{{'HEADER.LOGIN' | translate}}</a></li>
+                  <li><a class="dropdown-item" href="#">{{'HEADER.LOGOUT' | translate}}</a></li>
                 </ul>
                 <div class="container__avatar-name">
                   <p>Xulio Xaviert Rojas Teixeira</p>

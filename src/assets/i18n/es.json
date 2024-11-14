@@ -9,7 +9,6 @@
     "SHOP_NOW": "Comprar ahora",
     "SHOP": "Comprar",
     "ADD_TO_CART": "Añadir al carrito",
-    "REBAJA": "Rebaja",
     "SHOP_COLLECTION": "Comprar colección"
 
   },
@@ -24,7 +23,7 @@
     "EMAIL": "Correo electrónico",
     "PASSWORD": "Contraseña",
     "FORGOT_PASSWORD": "¿Olvidaste tu contraseña?",
-    "NO_ACCOUNT": "¿No tienes una cuenta?",
+    "NO_ACCOUNT": "¿No tienes una cuenta? Pincha aquí",
     "SIGN_UP": "Regístrate",
     "WEB_DESCRIPTION": "Creamos prendas únicas que te hacen destacar.",
     "WEB_PARAPH": "Diseñamos ropa que resalta tu estilo y personalidad.",
@@ -32,6 +31,8 @@
     "KEEP_ME_LOGGED_IN": "Mantenerme conectado",
     "USERNAME": "Nombre de usuario",
     "USERNAME_REQUIRED": "El nombre de usuario es obligatorio",
+    "USERNAME_MIN_LENGTH": "El nombre de usuario debe tener al menos 3 caracteres",
+    "PASSWORD_MIN_LENGTH": "La contraseña debe tener al menos 3 caracteres",
     "PASSWORD_REQUIRED": "La contraseña es obligatoria"
   },
   "ERROR": {
@@ -54,7 +55,36 @@
     "HELP": "Ayuda",
     "FAQS": "Preguntas frecuentes",
     "CUSTOMER_SERVICE": "Atención al cliente",
-    "SEARCH": "Buscar productos"
+    "SEARCH": "Buscar productos",
+    "LOGIN": "Iniciar sesión",
+    "LOGOUT": "Cerrar sesión"
+  },
+  "REGISTER":{
+    "TITLE": "Registro",
+    "DESCRIPTION": "Crea una cuenta",
+    "SIGN_UP": "Regístrate",
+    "FIRST_NAME": "Nombre",
+    "LAST_NAME": "Apellido",
+    "EMAIL": "Correo electrónico",
+    "USERNAME": "Nombre de usuario",
+    "PASSWORD": "Contraseña",
+    "CONFIRM_PASSWORD": "Confirmar contraseña",
+    "HAVE_ACCOUNT": "¿Ya tienes una cuenta? Pincha aquí",
+    "LOGIN": "Iniciar sesión",
+    "WEB_DESCRIPTION": "Crea una cuenta para acceder a nuestros productos exclusivos.",
+    "WEB_PARAPH": "Regístrate para obtener acceso a nuestra colección de productos exclusivos.",
+    "REGISTER_NOW": "Regístrate ahora",
+    "FIRST_NAME_REQUIRED": "El nombre es obligatorio",
+    "LAST_NAME_REQUIRED": "El apellido es obligatorio",
+    "EMAIL_REQUIRED": "El correo electrónico es obligatorio",
+    "EMAIL_INVALID": "El correo electrónico no es válido",
+    "PASSWORD_REQUIRED": "La contraseña es obligatoria",
+    "USERNAME_REQUIRED": "El usuario es obligatorio",
+    "PASSWORD_MIN_LENGTH": "La contraseña debe tener al menos 3 caracteres",
+    "FIRST_NAME_MIN_LENGTH": "La contraseña debe tener al menos 3 caracteres",
+    "CONFIRM_PASSWORD_REQUIRED": "Confirmar contraseña es obligatorio",
+    "CONFIRM_PASSWORD_MIN_LENGTH": "La confirmación de la contraseña debe tener al menos 3 caracteres",
+    "CONFIRM_PASSWORD_MATCH": "Las contraseñas no coinciden"
   }
 
 }

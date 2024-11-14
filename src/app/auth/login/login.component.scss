@@ -21,3 +21,7 @@
     border-bottom-right-radius: .3rem;
   }
 }
+
+.container__login-hero {
+  background-color: rgba(var(--bs-body-color-rgb), 0.1) !important;
+}

@@ -49,8 +49,8 @@ export class LoginComponent implements OnInit {
 
   createLoginForm(): void {
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required]],
-      password: ['', [Validators.required]],
+      username: ['', [Validators.required, Validators.minLength(3)]],
+      password: ['', [Validators.required, Validators.minLength(3)]],
     });
   }
 
@@ -80,6 +80,7 @@ export class LoginComponent implements OnInit {
         .pipe(
           switchMap(({ token }: any) => {
             this.authService.setSessionStorage('token', token);
+            this.authService.setSessionStorage('language', 'en');
             return this.usersService.getAllUsers();
           }),
           map((users) => {

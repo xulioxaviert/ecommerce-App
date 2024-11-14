@@ -1,10 +1,10 @@
 <!-- Login 9 - Bootstrap Brain Component -->
-<section class="bg-warning bg-gradient py-3 py-md-5 py-xl-8 vh-100 d-flex">
+<section class="bg-light bg-gradient py-3 py-md-5 py-xl-8 vh-100 d-flex">
   <div class="container align-content-center">
     <div class="row gy-4 align-items-center m-auto">
       <div class="col-12 col-md-6 col-xl-7">
         <div
-          class="bg-warning d-flex justify-content-center text-bg-primary rounded-4 shadow"
+          class="bg-light d-flex justify-content-center text-bg-light rounded-4 shadow container__login-hero"
         >
           <div class="col-12 col-xl-9 rounded-4">
             <hr class="border-primary-subtle mb-4" />
@@ -40,15 +40,15 @@
                   <h3>{{ "LOGIN.TITLE" | translate }}</h3>
 
                   <a (click)="gotoRegistration()">
-                    <p>{{ "LOGIN.NO_ACCOUNT" | translate }}</p>
+                    {{ "LOGIN.NO_ACCOUNT" | translate }}
                   </a>
                 </div>
               </div>
             </div>
             <form [formGroup]="loginForm">
               <div class="row gy-3 overflow-hidden">
-                <div class="col-12">
-                  <div class="form-floating mb-3">
+                <div class="col-12 container__input">
+                  <div class="form-floating mb-2">
                     <input
                       type="text"
                       class="form-control"
@@ -70,9 +70,19 @@
                       {{ "LOGIN.USERNAME_REQUIRED" | translate }}
                     </span>
                   </div>
+                  <div class="error-text">
+                    <span
+                      *ngIf="
+                        loginForm.get('username')?.hasError('minlength')
+
+                      "
+                    >
+                      {{ "LOGIN.USERNAME_MIN_LENGTH" | translate }}
+                    </span>
+                  </div>
                 </div>
-                <div class="col-12">
-                  <div class="form-floating mb-3">
+                <div class="col-12 container__input">
+                  <div class="form-floating mb-1">
                     <input
                       type="password"
                       class="form-control"

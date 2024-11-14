@@ -1,17 +1,18 @@
-<!-- Login 9 - Bootstrap Brain Component -->
-<section class="bg-primary py-3 py-md-5 py-xl-8 vh-100 d-flex">
+<!-- REGISTER 9 - Bootstrap Brain Component -->
+<section class="bg-light py-md-5 py-xl-8 vh-100 d-flex">
   <div class="container align-content-center">
     <div class="row gy-4 align-items-center m-auto">
       <div class="col-12 col-md-6 col-xl-7">
-        <div class="d-flex justify-content-center text-bg-primary">
+        <div
+          class="bg-light d-flex justify-content-center text-bg-light rounded-4 shadow container__REGISTER-hero"
+        >
           <div class="col-12 col-xl-9">
             <hr class="border-primary-subtle mb-4" />
             <h2 class="h1 mb-4">
-              We make digital products that drive you to stand out.
+              {{ "REGISTER.WEB_DESCRIPTION" | translate }}
             </h2>
             <p class="lead mb-5">
-              We write words, take photos, make videos, and interact with
-              artificial intelligence.
+              {{ "REGISTER.WEB_PARAPH" | translate }}
             </p>
             <div class="text-endx">
               <svg
@@ -36,107 +37,197 @@
             <div class="row">
               <div class="col-12">
                 <div class="mb-4">
-                  <h3>Sign in</h3>
-
+                  <h3>{{ "REGISTER.SIGN_UP" | translate }}</h3>
                   <a (click)="registeredUser()">
-                    <p>Have an account? Sign up</p>
+                    {{ "REGISTER.HAVE_ACCOUNT" | translate }}
                   </a>
                 </div>
               </div>
             </div>
             <form [formGroup]="registerForm">
               <div class="row gy-3 overflow-hidden">
-                <div class="col-12">
-                  <div class="form-floating mb-3">
+                <div class="col-12 container__input">
+                  <div class="form-floating mb-2">
                     <input
                       type="text"
                       class="form-control"
-                      name="nombre"
-                      placeholder="Nombre"
-                      required
                       formControlName="firstname"
+                      placeholder="firstname"
+                      required
                     />
-                    <label for="nombre" class="form-label">Nombre</label>
+                    <label for="text" class="form-label">{{
+                      "REGISTER.FIRST_NAME" | translate
+                    }}</label>
                   </div>
                   <div class="error-text">
-                    <span *ngIf="registerForm.get('firstname')?.hasError('required') && registerForm.get('firstname')?.touched">
-                      Firstname is required
+                    <span
+                      *ngIf="
+                        registerForm.get('firstname')?.hasError('required') &&
+                        registerForm.get('firstname')?.touched
+                      "
+                    >
+                      {{ "REGISTER.FIRST_NAME_REQUIRED" | translate }}
+                    </span>
+                  </div>
+                  <div class="error-text">
+                    <span
+                      *ngIf="
+                        registerForm.get('firstname')?.hasError('minlength')
+                      "
+                    >
+                      {{ "REGISTER.FIRST_NAME_MIN_LENGTH" | translate }}
                     </span>
                   </div>
                 </div>
-
-                <div class="col-12">
-                  <div class="form-floating mb-3">
+                <div class="col-12 container__input">
+                  <div class="form-floating mb-1">
                     <input
-                      type="text"
+                      type="password"
                       class="form-control"
-                      name="apellido"
-                      placeholder="Apellido"
                       formControlName="lastname"
+                      value=""
+                      placeholder="lastname"
                       required
                     />
-                    <label for="apellido" class="form-label">Apellido</label>
+                    <label for="lastname" class="form-label">{{
+                      "REGISTER.LAST_NAME" | translate
+                    }}</label>
                   </div>
                   <div class="error-text">
-                      <span *ngIf="registerForm.get('lastname')?.hasError('required') && registerForm.get('lastname')?.touched">
-                        Username is required
-                      </span>
+                    <span
+                      *ngIf="
+                        registerForm.get('lastname')?.hasError('required') &&
+                        registerForm.get('lastname')?.touched
+                      "
+                    >
+                      {{ "REGISTER.LAST_NAME_REQUIRED" | translate }}
+                    </span>
                   </div>
-                  <div class="col-12">
-                    <div class="form-floating mb-3">
-                        <input
-                          type="password"
-                          class="form-control"
-                          name="password"
-                          id="password"
-                          value=""
-                          placeholder="password"
-                          required
-                        />
-                      <label for="password" class="form-label">Password</label>
-                    </div>
-                    <div class="error-text">
-                      <span *ngIf="registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched">
-                        Password is required
-                      </span>
-                    </div>
+                  <div class="error-text">
+                    <span
+                      *ngIf="
+                        registerForm.get('lastname')?.hasError('minlength')
+                      "
+                    >
+                      {{ "REGISTER.LAST_NAME_MIN_LENGTH" | translate }}
+                    </span>
                   </div>
-                  <div class="col-12">
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value=""
-                          name="remember_me"
-                          id="remember_me"
-                        />
-                        <label
-                          class="form-check-label text-secondary"
-                          for="remember_me"
-                        >
-                          Keep me logged in
-                        </label>
-                      </div>
-                   </div>
+                </div>
+                <div class="col-12 container__input">
+                  <div class="form-floating mb-1">
+                    <input
+                      type="password"
+                      class="form-control"
+                      formControlName="username"
+                      value=""
+                      placeholder="username"
+                      required
+                    />
+                    <label for="username" class="form-label">{{
+                      "REGISTER.USERNAME" | translate
+                    }}</label>
+                  </div>
+                  <div class="error-text">
+                    <span
+                      *ngIf="
+                        registerForm.get('username')?.hasError('required') &&
+                        registerForm.get('username')?.touched
+                      "
+                    >
+                      {{ "REGISTER.USERNAME_REQUIRED" | translate }}
+                    </span>
+                  </div>
+                  <div class="error-text">
+                    <span
+                      *ngIf="
+                        registerForm.get('lastname')?.hasError('minlength')
+                      "
+                    >
+                      {{ "REGISTER.USERNAME_MIN_LENGTH" | translate }}
+                    </span>
+                  </div>
+                </div>
+                <div class="col-12 container__input">
+                  <div class="form-floating mb-1">
+                    <input
+                      type="password"
+                      class="form-control"
+                      formControlName="password"
+                      value=""
+                      placeholder="password"
+                      required
+                    />
+                    <label for="password" class="form-label">{{
+                      "REGISTER.PASSWORD" | translate
+                    }}</label>
+                  </div>
+                  <div class="error-text">
+                    <span
+                      *ngIf="
+                        registerForm.get('password')?.hasError('required') &&
+                        registerForm.get('password')?.touched
+                      "
+                    >
+                      {{ "REGISTER.PASSWORD_REQUIRED" | translate }}
+                    </span>
+                  </div>
+                  <div class="error-text">
+                    <span
+                      *ngIf="
+                        registerForm.get('password')?.hasError('minlength')
+                      "
+                    >
+                      {{ "REGISTER.PASSWORD_MIN_LENGTH" | translate }}
+                    </span>
+                  </div>
+                </div>
+                <div class="col-12 container__input">
+                  <div class="form-floating mb-1">
+                    <input
+                      type="password"
+                      class="form-control"
+                      formControlName="confirmPassword"
+                      value=""
+                      placeholder="confirmPassword"
+                      required
+                    />
+                    <label for="confirmPassword" class="form-label">{{
+                      "REGISTER.CONFIRM_PASSWORD" | translate
+                    }}</label>
+                  </div>
+
+                <div class="error-text">
+                  <span
+                    *ngIf="
+                      registerForm
+                        .get('confirmPassword')
+                        ?.hasError('required') &&
+                      registerForm.get('confirmPassword')?.touched
+                    "
+                  >
+                    {{ "REGISTER.PASSWORD_REQUIRED" | translate }}
+                  </span>
+                </div>
+                <div class="error-text">
+                  <span
+                    *ngIf="
+                      registerForm.get('confirmPassword')?.hasError('minlength')
+                    "
+                  >
+                    {{ "REGISTER.CONFIRM_PASSWORD_MIN_LENGTH" | translate }}
+                  </span>
+                </div>
+                </div>
                 <div class="col-12">
                   <div class="d-grid">
                     <button class="btn btn-primary btn-lg" type="submit">
-                      Log in now
+                      {{ "REGISTER.REGISTER_NOW" | translate }}
                     </button>
                   </div>
                 </div>
-                </div>
               </div>
             </form>
-            <div class="row">
-              <div class="col-12">
-                <div
-                  class="d-flex gap-2 gap-md-4 flex-column flex-md-row justify-content-md-end mt-4"
-                >
-                  <a href="#!">Forgot password</a>
-                </div>
-              </div>
-            </div>
+            
           </div>
         </div>
       </div>

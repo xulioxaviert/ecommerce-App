@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { map, switchMap } from 'rxjs';
+import { catchError, map, of, switchMap } from 'rxjs';
 import { ToastService } from '../../core/services/toast.service';
 import { UsersService } from '../../users/users.service';
 import { AuthService } from '../auth.service';
@@ -74,6 +74,10 @@ export class LoginComponent implements OnInit {
       this.authService
         .login(username, password)
         .pipe(
+          catchError((error) => {
+            console.log('error:', error)
+            return of(error);
+          }),
           switchMap(({ token }: any) => {
             this.authService.setSessionStorage('token', token);
             this.authService.setSessionStorage('language', 'fr');
@@ -108,5 +112,5 @@ export class LoginComponent implements OnInit {
         });
     }
   }
-  
+
 }

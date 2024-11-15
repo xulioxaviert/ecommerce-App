@@ -9,7 +9,6 @@ import {
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { map, switchMap } from 'rxjs';
-import { ENDPOINTS } from '../../core/const/constants';
 import { ToastService } from '../../core/services/toast.service';
 import { UsersService } from '../../users/users.service';
 import { AuthService } from '../auth.service';
@@ -17,13 +16,7 @@ import { AuthService } from '../auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    NgIf,
-    TranslateModule,
-    NgClass,
-    NgSwitchCase
-  ],
+  imports: [ReactiveFormsModule, NgIf, TranslateModule, NgClass, NgSwitchCase],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -32,6 +25,9 @@ export class LoginComponent implements OnInit {
   @Output() login = new EventEmitter();
 
   loginForm: FormGroup = new FormGroup({});
+  lang = sessionStorage.getItem('language')
+    ? sessionStorage.getItem('language')
+    : 'en';
 
   constructor(
     private authService: AuthService,
@@ -41,7 +37,7 @@ export class LoginComponent implements OnInit {
     private translateService: TranslateService,
     private router: Router
   ) {
-    this.translateService.setDefaultLang('es');
+    this.translateService.setDefaultLang(this.lang || '');
   }
 
   ngOnInit(): void {
@@ -50,8 +46,8 @@ export class LoginComponent implements OnInit {
 
   createLoginForm(): void {
     this.loginForm = this.fb.group({
-      username: [ '', [ Validators.required, Validators.minLength(3) ] ],
-      password: [ '', [ Validators.required, Validators.minLength(3) ] ],
+      username: ['', [Validators.required, Validators.minLength(3)]],
+      password: ['', [Validators.required, Validators.minLength(3)]],
     });
   }
 
@@ -76,7 +72,7 @@ export class LoginComponent implements OnInit {
         password,
       };
       this.authService
-        .httpPostData(ENDPOINTS.login, payload)
+        .login(username, password)
         .pipe(
           switchMap(({ token }: any) => {
             this.authService.setSessionStorage('token', token);
@@ -84,26 +80,33 @@ export class LoginComponent implements OnInit {
             return this.usersService.getAllUsers();
           }),
           map((users) => {
-            users.forEach(user => {
+            users.forEach((user) => {
               if (user.username === payload.username) {
-                console.log("users.find / user:", user);
-                this.authService.setSessionStorage('user', JSON.stringify(user));
-                this.router.navigate([ '/' ]);
+                console.log('users.find / user:', user);
+                this.authService.setSessionStorage(
+                  'user',
+                  JSON.stringify(user)
+                );
+                this.router.navigate(['/']);
                 this.authService.isAuthenticated();
               }
-            })
+            });
           })
         )
-        .subscribe((filteredUsers) => {
-          this.login.emit(true);
-        }), (error: any) => {
-          console.log(".subscribe / error:", error);
-          this.toastService.showError('error', 'Error Login');
-        }
-        ;
+        .subscribe({
+          next: (data) => {
+            this.login.emit(true);
+          },
+          error: (error) => {
+            const errorMessage = this.translateService.instant('ERROR.LOGIN');
+            this.toastService.showError('Error', errorMessage);
+            this.loginForm.reset();
+          },
+          complete: () => {
+            console.log('.subscribe / complete');
+          },
+        });
     }
   }
-  switchLanguage(language: string): void {
-    this.translateService.use(language);
-  }
+  
 }

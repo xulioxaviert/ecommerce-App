@@ -3,7 +3,7 @@
     "TITLE": "Bienvenue sur notre site eCommerce",
     "DESCRIPTION": "Trouvez les meilleurs produits ici !",
     "SEASONAL_PRODUCTS": "Produits saisonniers",
-    "DISCOUNTS": "Réductions",
+    "DISCOUNTS": "Promotions",
     "NEW_ARRIVALS": "Nouvelle collection",
     "FEATURED": "En vedette",
     "SHOP_NOW": "Achetez maintenant",
@@ -19,7 +19,7 @@
     "TITLE": "Connexion",
     "DESCRIPTION": "Connectez-vous à votre compte",
     "SIGN_IN": "Se connecter",
-    "EMAIL": "Email",
+    "EMAIL": "Adresse électronique",
     "PASSWORD": "Mot de passe",
     "FORGOT_PASSWORD": "Mot de passe oublié ?",
     "NO_ACCOUNT": "Vous n'avez pas de compte ? Cliquez ici",
@@ -29,10 +29,10 @@
     "LOGIN_NOW": "Connectez-vous maintenant",
     "KEEP_ME_LOGGED_IN": "Rester connecté",
     "USERNAME": "Nom d'utilisateur",
-    "USERNAME_REQUIRED": "Nom d'utilisateur requis",
+    "USERNAME_REQUIRED": "Le nom d'utilisateur est obligatoire",
     "USERNAME_MIN_LENGTH": "Le nom d'utilisateur doit comporter au moins 3 caractères",
     "PASSWORD_MIN_LENGTH": "Le mot de passe doit comporter au moins 3 caractères",
-    "PASSWORD_REQUIRED": "Mot de passe requis"
+    "PASSWORD_REQUIRED": "Le mot de passe est obligatoire"
   },
   "ERROR": {
     "404": {
@@ -46,7 +46,8 @@
     "401": {
       "TITLE": "401",
       "DESCRIPTION": "Non autorisé"
-    }
+    },
+    "LOGIN": "Nom d'utilisateur ou mot de passe incorrect"
   },
   "HEADER": {
     "ABOUT": "À propos",
@@ -63,25 +64,25 @@
     "DESCRIPTION": "Créez un compte",
     "SIGN_UP": "S'inscrire",
     "FIRST_NAME": "Prénom",
-    "LAST_NAME": "Nom",
-    "EMAIL": "Email",
+    "LAST_NAME": "Nom de famille",
+    "EMAIL": "Adresse électronique",
     "USERNAME": "Nom d'utilisateur",
     "PASSWORD": "Mot de passe",
     "CONFIRM_PASSWORD": "Confirmer le mot de passe",
     "HAVE_ACCOUNT": "Vous avez déjà un compte ? Cliquez ici",
     "LOGIN": "Connexion",
     "WEB_DESCRIPTION": "Créez un compte pour accéder à nos produits exclusifs.",
-    "WEB_PARAPH": "Inscrivez-vous pour accéder à notre collection de produits exclusifs.",
+    "WEB_PARAPH": "Inscrivez-vous pour accéder à notre collection exclusive de produits.",
     "REGISTER_NOW": "Inscrivez-vous maintenant",
-    "FIRST_NAME_REQUIRED": "Le prénom est requis",
-    "LAST_NAME_REQUIRED": "Le nom est requis",
-    "EMAIL_REQUIRED": "L'email est requis",
-    "EMAIL_INVALID": "L'email n'est pas valide",
-    "PASSWORD_REQUIRED": "Mot de passe requis",
-    "USERNAME_REQUIRED": "Nom d'utilisateur requis",
+    "FIRST_NAME_REQUIRED": "Le prénom est obligatoire",
+    "LAST_NAME_REQUIRED": "Le nom de famille est obligatoire",
+    "EMAIL_REQUIRED": "L'adresse électronique est obligatoire",
+    "EMAIL_INVALID": "Adresse électronique non valide",
+    "PASSWORD_REQUIRED": "Le mot de passe est obligatoire",
+    "USERNAME_REQUIRED": "Le nom d'utilisateur est obligatoire",
     "PASSWORD_MIN_LENGTH": "Le mot de passe doit comporter au moins 3 caractères",
     "FIRST_NAME_MIN_LENGTH": "Le prénom doit comporter au moins 3 caractères",
-    "CONFIRM_PASSWORD_REQUIRED": "Confirmation du mot de passe requise",
+    "CONFIRM_PASSWORD_REQUIRED": "La confirmation du mot de passe est obligatoire",
     "CONFIRM_PASSWORD_MIN_LENGTH": "La confirmation du mot de passe doit comporter au moins 3 caractères",
     "CONFIRM_PASSWORD_MATCH": "Les mots de passe ne correspondent pas"
   }

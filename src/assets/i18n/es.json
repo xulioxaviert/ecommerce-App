@@ -47,7 +47,8 @@
     "401": {
       "TITLE": "401",
       "DESCRIPTION": "No autorizado"
-    }
+    },
+    "LOGIN": "Usuario o contraseña incorrectos"
   },
   "HEADER": {
     "ABOUT": "Acerca de",

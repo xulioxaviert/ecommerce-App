@@ -38,9 +38,10 @@ export class HeaderComponent implements OnInit {
   public dropDownDefaultValue: string = 'English';
   user: Users = {} as Users;
   userLogin: string = 'red';
-  lang = (sessionStorage.getItem('language') ? sessionStorage.getItem('language') : 'en');
+  lang = sessionStorage.getItem('language')
+    ? sessionStorage.getItem('language')
+    : 'en';
   isAuthenticated$: Observable<boolean> = new Observable<boolean>();
-
   selectedLanguage: any | undefined;
 
   constructor(
@@ -69,12 +70,11 @@ export class HeaderComponent implements OnInit {
       this.translateService.setDefaultLang(lang || '');
       this.userLogin = 'green';
       this.isAuthenticated$ = this.authService.isAuthenticated$;
-
     }
 
-    this.selectedLanguage = this.languages.find(
-      (language) => language.code === this.lang
-    );
+    this.selectedLanguage = this.languages.find((language) => {
+      return language.code === this.lang;
+    });
   }
 
   createForm() {
@@ -82,23 +82,26 @@ export class HeaderComponent implements OnInit {
       language: [ '', [ Validators.required ] ],
       search: [ '', [ Validators.minLength(3) ] ],
     });
-    this.loadData();
     this.chooseLanguage();
   }
+
 
   chooseLanguage() {
     this.languageForm.get('language')?.valueChanges.subscribe((lang) => {
       if (lang) {
         console.log(lang.code);
         this.translateService.setDefaultLang(lang.code);
+        this.authService.setSessionStorage('language', lang.code);
       }
     });
   }
 
   logout() {
-    this.authService.logout();
     this.userLogin = 'red';
-    this.translateService.setDefaultLang('en');
+    this.selectedLanguage = {
+      "name": "Español",
+      "code": "en"
+    }
+    this.authService.logout();
   }
-
 }

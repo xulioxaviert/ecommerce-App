@@ -11,6 +11,8 @@ export class AuthService {
   private _authenticated = false;
 
   isAuthenticated$ = new BehaviorSubject<boolean>(false);
+  // user$: BehaviorSubject<Users> = new BehaviorSubject<Users>({} as Users);
+
 
 
   constructor(private _httpClient: HttpClient, private router: Router) { }
@@ -39,19 +41,20 @@ export class AuthService {
     sessionStorage.setItem(key, value);
   }
 
-  getSessionStorage(): string | null {
-    return sessionStorage.getItem('token');
+  getSessionStorage(key: string) {
+    return JSON.parse(sessionStorage.getItem(key) || '{}');
   }
 
   logout(): void {
     sessionStorage.clear();
-    this.router.navigate([ '/auth' ]);
+    this.isAuthenticated$.next(false);
   }
 
   isAuthenticated() {
     const token = sessionStorage.getItem('token');
     if (token) {
       this.isAuthenticated$.next(true);
+      this._authenticated = true;
     }
     return this._authenticated;
   }

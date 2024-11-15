@@ -403,7 +403,7 @@ li {
 }
 
 .banner-ad .banner-content .sale:after {
-  content: "SALE";
+  content: "";
   font-family: var(--body-font);
   position: absolute;
   font-size: 11px;
@@ -447,4 +447,13 @@ li {
     width: 5%;
     margin: 1rem 0;
   }
+}
+
+.error-text {
+  color: $errorColor;
+  font-size: 0.8125rem;
+
+}
+.container__input{
+  height: 5.375rem;
 }

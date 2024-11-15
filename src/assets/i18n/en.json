@@ -1,7 +1,15 @@
 {
   "HOME": {
     "TITLE": "Welcome to our eCommerce site",
-    "DESCRIPTION": "Find the best products here!"
+    "DESCRIPTION": "Find the best products here!",
+    "SEASONAL_PRODUCTS": "Seasonal Products",
+    "DISCOUNTS": "Discounts",
+    "NEW_ARRIVALS": "New Arrivals",
+    "FEATURED": "Featured",
+    "SHOP_NOW": "Shop Now",
+    "SHOP": "Shop",
+    "ADD_TO_CART": "Add to Cart",
+    "SHOP_COLLECTION": "Shop Collection"
   },
   "PRODUCTS": {
     "TITLE": "Products",
@@ -9,19 +17,21 @@
   },
   "LOGIN": {
     "TITLE": "Login",
-    "DESCRIPTION": "Login to your account",
-    "SIGN_IN": "Sign in",
+    "DESCRIPTION": "Log in to your account",
+    "SIGN_IN": "Sign In",
     "EMAIL": "Email",
     "PASSWORD": "Password",
-    "FORGOT_PASSWORD": "Forgot password?",
-    "NO_ACCOUNT": "Don't have an account?",
-    "SIGN_UP": "Sign up",
+    "FORGOT_PASSWORD": "Forgot your password?",
+    "NO_ACCOUNT": "Don't have an account? Click here",
+    "SIGN_UP": "Sign Up",
     "WEB_DESCRIPTION": "We create unique garments that make you stand out.",
     "WEB_PARAPH": "We design clothing that highlights your style and personality.",
-    "LOGIN_NOW": "Login now",
+    "LOGIN_NOW": "Log In Now",
     "KEEP_ME_LOGGED_IN": "Keep me logged in",
     "USERNAME": "Username",
     "USERNAME_REQUIRED": "Username is required",
+    "USERNAME_MIN_LENGTH": "Username must be at least 3 characters",
+    "PASSWORD_MIN_LENGTH": "Password must be at least 3 characters",
     "PASSWORD_REQUIRED": "Password is required"
   },
   "ERROR": {
@@ -36,14 +46,44 @@
     "401": {
       "TITLE": "401",
       "DESCRIPTION": "Unauthorized"
-    }
+    },
+    "LOGIN": "Incorrect username or password"
   },
-  "HEADER":{
+  "HEADER": {
     "ABOUT": "About",
     "CONTACT": "Contact",
     "HELP": "Help",
     "FAQS": "FAQs",
     "CUSTOMER_SERVICE": "Customer Service",
-    "SEARCH": "Search products"
+    "SEARCH": "Search products",
+    "LOGIN": "Log In",
+    "LOGOUT": "Log Out"
+  },
+  "REGISTER": {
+    "TITLE": "Register",
+    "DESCRIPTION": "Create an account",
+    "SIGN_UP": "Sign Up",
+    "FIRST_NAME": "First Name",
+    "LAST_NAME": "Last Name",
+    "EMAIL": "Email",
+    "USERNAME": "Username",
+    "PASSWORD": "Password",
+    "CONFIRM_PASSWORD": "Confirm Password",
+    "HAVE_ACCOUNT": "Already have an account? Click here",
+    "LOGIN": "Log In",
+    "WEB_DESCRIPTION": "Create an account to access our exclusive products.",
+    "WEB_PARAPH": "Sign up to access our exclusive collection of products.",
+    "REGISTER_NOW": "Register Now",
+    "FIRST_NAME_REQUIRED": "First name is required",
+    "LAST_NAME_REQUIRED": "Last name is required",
+    "EMAIL_REQUIRED": "Email is required",
+    "EMAIL_INVALID": "Invalid email",
+    "PASSWORD_REQUIRED": "Password is required",
+    "USERNAME_REQUIRED": "Username is required",
+    "PASSWORD_MIN_LENGTH": "Password must be at least 3 characters",
+    "FIRST_NAME_MIN_LENGTH": "First name must be at least 3 characters",
+    "CONFIRM_PASSWORD_REQUIRED": "Confirming password is required",
+    "CONFIRM_PASSWORD_MIN_LENGTH": "Password confirmation must be at least 3 characters",
+    "CONFIRM_PASSWORD_MATCH": "Passwords do not match"
   }
 }

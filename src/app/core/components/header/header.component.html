@@ -1,7 +1,7 @@
 <header id="header" class="header d-flex align-items-center fixed-top">
   <div class="container-fluid">
     <form [formGroup]="languageForm">
-      <div class="row bg-secondary py-1 px-xl-5">
+      <div class="row bg-secondary py-1 px-xl-4">
         <div class="col-lg-6 d-none d-lg-block">
           <div class="d-inline-flex align-items-center h-100">
             <a class="text-body mr-3" href="">{{
@@ -18,55 +18,119 @@
             }}</a>
           </div>
         </div>
-        <div class="col-lg-6 text-right text-lg-right">
-          <p-dropdown
-                      [options]="languages"
-                      [(ngModel)]="selectedLanguage"
-                      optionLabel="name"
-                      [showClear]="true"
-                      placeholder="language"
-                      class="customDropdown"
-                      dataKey="code"
-                      formControlName="language">
-            <ng-template pTemplate="selectedItem" class="customDropdown-item">
-              <div
-                   class="customDropdown-item flex align-items-center"
-                   *ngIf="selectedLanguage">
-                <div class="customDropdown-item">
+        <div class="col-lg-6 d-none d-lg-block">
+          <div
+            class="d-flex align-items-center justify-content-end w-100 container__lang-dropdown"
+          >
+            <p-dropdown
+              [options]="languages"
+              [(ngModel)]="selectedLanguage"
+              optionLabel="name"
+              [showClear]="true"
+              placeholder="language"
+              class="customDropdown"
+              dataKey="code"
+              formControlName="language"
+            >
+              <ng-template pTemplate="selectedItem" class="customDropdown-item">
+                <div
+                  class="customDropdown-item flex align-items-center py-2"
+                  *ngIf="selectedLanguage"
+                >
+                  <div class="customDropdown-item">
+                    <img
+                      src="assets/images/{{ selectedLanguage.code }}.png"
+                      alt="flag"
+                      style="width: 18px"
+                    />
+                  </div>
+                </div>
+              </ng-template>
+              <ng-template let-language pTemplate="item">
+                <div class="flex align-items-center">
                   <img
-                       src="assets/images/{{ selectedLanguage.code }}.png"
-                       alt="flag"
-                       style="width: 18px" />
+                    src="assets/images/{{ language.code }}.png"
+                    alt="flag"
+                    style="width: 18px"
+                  />
+                  <div>{{ language.name }}</div>
+                </div>
+              </ng-template>
+            </p-dropdown>
+            <div
+              class="d-flex align-items-center justify-content-end mx-2 bg-light rounded-2 px-2 container-login"
+            >
+              <!-- Icon -->
+              <a class="text-reset mx-2" href="#">
+                <i class="fas fa-shopping-cart"></i>
+              </a>
+
+              <!-- Avatar -->
+              <div class="dropdown container__avatar pt-0">
+                <button
+                  class="btn btn-light dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <img
+                    src="assets/images/user-{{ userLogin }}.svg"
+                    class=""
+                    height="25"
+                    alt="Black and White Portrait of a Man"
+                    loading="lazy"
+                  />
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      [routerLink]="['/auth']"
+                      routerLinkActive="router-link-active"
+                      >{{ "HEADER.LOGIN" | translate }}</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#" (click)="logout()">{{
+                      "HEADER.LOGOUT" | translate
+                    }}</a>
+                  </li>
+                </ul>
+                <div
+                  *ngIf="isAuthenticated$ | async"
+                  class="container__avatar-name"
+                >
+                  <p>
+                    {{ user.name.firstname | uppercase }}
+                    {{ user.name.lastname | uppercase }}
+                  </p>
                 </div>
               </div>
-            </ng-template>
-            <ng-template let-language pTemplate="item">
-              <div class="flex align-items-center">
-                <img
-                     src="assets/images/{{ language.code }}.png"
-                     alt="flag"
-                     style="width: 18px" />
-                <div>{{ language.name }}</div>
-              </div>
-            </ng-template>
-          </p-dropdown>
+            </div>
+          </div>
         </div>
       </div>
       <div
-           class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
+        class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex"
+      >
         <div class="col-lg-4">
           <a href="" class="text-decoration-none">
-            <span class="h1 text-uppercase text-primary bg-dark px-2">Multi</span>
-            <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1">Shop</span>
+            <span class="h1 text-uppercase text-primary bg-dark px-2"
+              >Multi</span
+            >
+            <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1"
+              >Shop</span
+            >
           </a>
         </div>
         <div class="col-lg-4 col-6 text-left">
           <div class="input-group">
             <input
-                   type="text"
-                   formControlName="search"
-                   class="form-control"
-                   [placeholder]="'HEADER.SEARCH' | translate" />
+              type="text"
+              formControlName="search"
+              class="form-control"
+              [placeholder]="'HEADER.SEARCH' | translate"
+            />
             <div class="input-group-append">
               <span class="input-group-text bg-transparent text-primary">
                 <i class="fa fa-search"></i>
@@ -82,28 +146,32 @@
       <div class="row px-3 bg-light">
         <div class="row">
           <div
-               class="d-flex justify-content-center justify-content-sm-between align-items-center">
+            class="d-flex justify-content-center justify-content-sm-between align-items-center"
+          >
             <nav class="main-menu d-flex navbar navbar-expand-lg">
               <button
-                      class="navbar-toggler"
-                      type="button"
-                      data-bs-toggle="offcanvas"
-                      data-bs-target="#offcanvasNavbar"
-                      aria-controls="offcanvasNavbar">
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasNavbar"
+                aria-controls="offcanvasNavbar"
+              >
                 <span class="navbar-toggler-icon"></span>
               </button>
 
               <div
-                   class="offcanvas offcanvas-end"
-                   tabindex="-1"
-                   id="offcanvasNavbar"
-                   aria-labelledby="offcanvasNavbarLabel">
+                class="offcanvas offcanvas-end"
+                tabindex="-1"
+                id="offcanvasNavbar"
+                aria-labelledby="offcanvasNavbarLabel"
+              >
                 <div class="offcanvas-header justify-content-center">
                   <button
-                          type="button"
-                          class="btn-close"
-                          data-bs-dismiss="offcanvas"
-                          aria-label="Close"></button>
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"
+                  ></button>
                 </div>
 
                 <div class="offcanvas-body">
@@ -115,7 +183,8 @@
                   </select>
 
                   <ul
-                      class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
+                    class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0"
+                  >
                     <li class="nav-item active">
                       <a href="#women" class="nav-link">Women</a>
                     </li>
@@ -138,6 +207,15 @@
                       <a href="#blog" class="nav-link">Blog</a>
                     </li>
                   </ul>
+                  <div class="d-flex d-xxl-none d-xl-none d-lg-none">
+                    <div class="offcanvas-body">
+                      <br />
+                      <select class="filter-categories border-0 mb-0 me-5">
+                        <option>Shopping Cart</option>
+                        <option>Logout</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
               </div>
             </nav>

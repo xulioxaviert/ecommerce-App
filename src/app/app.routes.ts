@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent),
+    loadChildren: () => import('./pages/home/home.routes').then(m => m.routes),
   },
   {
     path: 'auth',
@@ -18,7 +18,7 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/products/products.component').then(m => m.ProductsComponent),
   },
   {
-    path: 'products/:id',
+    path: 'product/:id',
     loadComponent: () => import('./pages/products/products-detail/products-detail.component').then(m => m.ProductsDetailComponent),
   },
 

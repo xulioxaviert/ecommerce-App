@@ -7,12 +7,12 @@ import { ENDPOINTS } from '../../core/const/constants';
 import { Products } from '../../core/models/products.model';
 import { HttpService } from '../../core/services/http.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ HeaderComponent, CarouselModule, ButtonModule, TranslateModule
+  imports: [ HeaderComponent, CarouselModule, ButtonModule, TranslateModule, RouterOutlet
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',

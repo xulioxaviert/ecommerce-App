@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-header relative">
   <p-menubar [model]="items">
     <ng-template pTemplate="start">
       <svg
@@ -105,7 +105,7 @@
     </ng-template>
     <ng-template pTemplate="end">
       <div class="flex align-items-center gap-2">
-      <app-translation-dropdown></app-translation-dropdown>
+      <app-translation-dropdown (changeLanguage)="changeLabelLanguage($event)"></app-translation-dropdown>
 
         <div class="col-12 md:col-4 flex flex-col justify-center text-center">
           <p-avatar

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, signal } from '@angular/core';
+import { Component, input, OnInit, signal } from '@angular/core';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { InputTextModule } from 'primeng/inputtext';
@@ -29,74 +29,72 @@ import { TranslationDropdownComponent } from '../../../shared/translation-dropdo
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent implements OnInit {
-  @Input() changeLanguage: any | undefined;
-  lang = sessionStorage.getItem('language')
-    ? sessionStorage.getItem('language')
+  changeLanguage = input();
+  lang = localStorage.getItem('language')
+    ? localStorage.getItem('language')
     : 'en';
 
   categories = signal<string[]>([]);
   isAuthenticated$: Observable<boolean> = new Observable<boolean>();
   items: MenuItem[] | undefined;
 
-  constructor(
-    private translateService: TranslateService,
-
-  ) {
+  constructor(private translateService: TranslateService) {
     this.translateService.setDefaultLang(this.lang || '');
-
+    this.updateItemLanguage();
   }
 
   ngOnInit() {
+  }
+
+  updateItemLanguage() {
     this.items = [
       {
-        label: 'Home',
+        label: this.translateService.instant('HEADER.HOME'),
         icon: 'pi pi-home',
       },
       {
-        label: 'Women',
+        label: this.translateService.instant('HEADER.WOMEN'),
         icon: 'pi pi-shop',
       },
       {
-        label: 'Mens',
+        label: this.translateService.instant('HEADER.MEN'),
         icon: 'pi pi-shop',
       },
       {
-        label: 'Category',
+        label: this.translateService.instant('HEADER.CATEGORY'),
         icon: 'pi pi-shopping-bag',
         items: [
           {
-            label: 'Electronics',
+            label: this.translateService.instant('HEADER.ELECTRONICS'),
             icon: 'pi pi-bolt',
           },
           {
-            label: 'Jewelery',
+            label: this.translateService.instant('HEADER.JEWELRY'),
             icon: 'pi pi-server',
           },
           {
-            label: "Men's clothing",
+            label: this.translateService.instant('HEADER.MEN_CLOTHING'),
             icon: 'pi pi-pencil',
           },
           {
-            label: "Women's clothing",
+            label: this.translateService.instant('HEADER.WOMEN_CLOTHING'),
             icon: 'pi pi-palette',
-            items: [
-              {
-                label: 'Apollo',
-                icon: 'pi pi-palette',
-              },
-              {
-                label: 'Ultima',
-                icon: 'pi pi-palette',
-              },
-            ],
           },
         ],
       },
       {
-        label: 'Contact',
+        label: this.translateService.instant('HEADER.PRODUCTS'),
+        icon: 'pi pi-shop',
+      },
+      {
+        label: this.translateService.instant('HEADER.CONTACT'),
         icon: 'pi pi-envelope',
       },
     ];
   }
-  
+  changeLabelLanguage(changeLanguage: any) {
+    console.log("changeLabelLanguage / changeLanguage:", changeLanguage);
+    this.translateService.use(changeLanguage);
+    this.updateItemLanguage();
+  }
 }

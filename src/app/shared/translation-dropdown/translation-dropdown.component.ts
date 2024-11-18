@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -27,6 +27,8 @@ import { DropdownLanguages } from '../../core/models/lang.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TranslationDropdownComponent implements OnInit {
+  changeLanguage = output();
+
   selectedLanguage: any;
   languages: DropdownLanguages[] = [
     { name: 'Español', code: 'es' },
@@ -34,8 +36,8 @@ export class TranslationDropdownComponent implements OnInit {
     { name: 'Français', code: 'fr' },
   ];
   languageForm: FormGroup = new FormGroup({});
-  lang = sessionStorage.getItem('language')
-    ? sessionStorage.getItem('language')
+  lang = localStorage.getItem('language')
+    ? localStorage.getItem('language')
     : 'en';
   constructor(
     private translateService: TranslateService,
@@ -67,10 +69,11 @@ export class TranslationDropdownComponent implements OnInit {
   }
 
   chooseLanguage(event: any) {
-    console.log('chooseLanguage / event:', event.value.code);
-    console.log(this.selectedLanguage);
     this.translateService.setDefaultLang(event.value.code);
     localStorage.setItem('language', event.value.code);
     this.selectedLanguage = event.value;
+    this.changeLanguage.emit(event.value.code);
+    console.log('chooseLanguage / event:', event.value.code);
   }
+  
 }

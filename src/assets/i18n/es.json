@@ -51,6 +51,14 @@
     "LOGIN": "Usuario o contraseña incorrectos"
   },
   "HEADER": {
+    "HOME": "Inicio",
+    "WOMEN": "Mujer",
+    "MEN": "Hombre",
+    "CATEGORY": "Categorías",
+    "ELECTRONICS": "Electrónica",
+    "JEWELRY": "Joyería",
+    "MEN_CLOTHING": "Ropa de hombre",
+    "WOMEN_CLOTHING": "Ropa de Mujer",
     "ABOUT": "Acerca de",
     "CONTACT": "Contacto",
     "HELP": "Ayuda",
@@ -58,7 +66,9 @@
     "CUSTOMER_SERVICE": "Atención al cliente",
     "SEARCH": "Buscar productos",
     "LOGIN": "Iniciar sesión",
-    "LOGOUT": "Cerrar sesión"
+    "LOGOUT": "Cerrar sesión",
+    "PRODUCTS": "Productos"
+
   },
   "REGISTER":{
     "TITLE": "Registro",

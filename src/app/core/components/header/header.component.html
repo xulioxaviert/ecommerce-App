@@ -1,4 +1,4 @@
-<div class="card">
+<div class="container-fluid">
   <p-menubar [model]="items">
     <ng-template pTemplate="start">
       <svg
@@ -105,9 +105,9 @@
     </ng-template>
     <ng-template pTemplate="end">
       <div class="flex align-items-center gap-2">
-        <!-- <input type="text" pInputText placeholder="Search" class="w-8rem sm:w-auto" /> -->
-        <div class="col-12 md:col-4">
-          <h5>Icon - Circle</h5>
+      <app-translation-dropdown></app-translation-dropdown>
+
+        <div class="col-12 md:col-4 flex flex-col justify-center text-center">
           <p-avatar
             icon="pi pi-user"
             styleClass="mr-2"
@@ -115,7 +115,7 @@
             [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }"
             shape="circle"
           />
-          
+          <h6>Icon - Circle</h6>
         </div>
       </div>
     </ng-template>

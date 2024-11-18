@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { UsersService } from '../../users/users.service';
 import { AuthService } from '../auth.service';
 
@@ -29,9 +29,7 @@ export class RegisterComponent implements OnInit {
     private authService: AuthService,
     private fb: FormBuilder,
     private usersService: UsersService,
-    private translateService: TranslateService
   ) {
-    this.translateService.setDefaultLang('es');
   }
 
 

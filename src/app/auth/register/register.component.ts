@@ -6,16 +6,16 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { UsersService } from '../../users/users.service';
 import { AuthService } from '../auth.service';
-import { Router, RouterOutlet } from '@angular/router';
 
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ ReactiveFormsModule, NgIf, NgFor, TranslateModule, RouterOutlet ],
+  imports: [ ReactiveFormsModule, NgIf, NgFor, TranslateModule, RouterLink ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })

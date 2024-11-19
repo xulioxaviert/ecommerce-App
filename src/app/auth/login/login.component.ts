@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterEvent, RouterLink, RouterOutlet } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { catchError, map, of, switchMap } from 'rxjs';
 import { ToastService } from '../../core/services/toast.service';
@@ -16,7 +16,7 @@ import { AuthService } from '../auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ ReactiveFormsModule, NgIf, TranslateModule, NgClass ],
+  imports: [ ReactiveFormsModule, NgIf, TranslateModule, NgClass,RouterLink ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })

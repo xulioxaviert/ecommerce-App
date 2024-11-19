@@ -44,7 +44,6 @@ export class TranslationDropdownComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService
   ) {
-    this.translateService.setDefaultLang(this.lang || '');
   }
   ngOnInit(): void {
     this.createForm();
@@ -53,7 +52,7 @@ export class TranslationDropdownComponent implements OnInit {
 
   createForm() {
     this.languageForm = this.fb.group({
-      language: ['', [Validators.required]],
+      language: [ '', [ Validators.required ] ],
     });
   }
   loadData() {
@@ -67,13 +66,12 @@ export class TranslationDropdownComponent implements OnInit {
     }
     console.log('loadData / lang:', this.lang);
   }
-
+  //TODO: Revisar con Mario
   chooseLanguage(event: any) {
-    this.translateService.setDefaultLang(event.value.code);
-    localStorage.setItem('language', event.value.code);
     this.selectedLanguage = event.value;
+    this.translateService.use(event.value.code);
     this.changeLanguage.emit(event.value.code);
-    console.log('chooseLanguage / event:', event.value.code);
+    localStorage.setItem('language', event.value.code);
   }
-  
+
 }

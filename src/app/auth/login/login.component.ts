@@ -37,7 +37,6 @@ export class LoginComponent implements OnInit {
     private translateService: TranslateService,
     private router: Router
   ) {
-    this.translateService.setDefaultLang(this.lang || '');
   }
 
   ngOnInit(): void {

@@ -1,7 +1,14 @@
-.container-header{
+.container__header {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   margin-bottom: 2px;
   z-index: 150;
+
+  &-img {
+    width: 100%;
+    img{
+      width: 150px;
+    }
+  }
 
 }
 
@@ -17,18 +24,19 @@
   border: 1px solid #cbd5e1
 }
 
-.container__avatar{
+.container__avatar {
   display: flex;
   flex-direction: column;
   text-align: center;
   height: 56px;
   justify-content: center;
-  p{
+
+  p {
     margin: 0;
     font-size: 10px;
   }
 
-  &-name{
+  &-name {
     height: 20px;
   }
 

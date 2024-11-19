@@ -9,7 +9,7 @@ import { RippleModule } from 'primeng/ripple';
 import { RouterLink } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { TranslationDropdownComponent } from '../../../shared/translation-dropdown/translation-dropdown.component';
 
 @Component({
@@ -39,11 +39,10 @@ export class HeaderComponent implements OnInit {
   items: MenuItem[] | undefined;
 
   constructor(private translateService: TranslateService) {
-    this.translateService.setDefaultLang(this.lang || '');
-    this.updateItemLanguage();
   }
 
   ngOnInit() {
+    this.updateItemLanguage();
   }
 
   updateItemLanguage() {
@@ -93,8 +92,10 @@ export class HeaderComponent implements OnInit {
     ];
   }
   changeLabelLanguage(changeLanguage: any) {
-    console.log("changeLabelLanguage / changeLanguage:", changeLanguage);
-    this.translateService.use(changeLanguage);
-    this.updateItemLanguage();
+    this.translateService.onLangChange.pipe(take(1)).subscribe((event) => {
+      console.log("changeLabelLanguage / event:", event);
+      this.updateItemLanguage();
+    });
+    this.translateService.setDefaultLang(changeLanguage);
   }
 }

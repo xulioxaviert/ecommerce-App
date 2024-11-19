@@ -1,5 +1,5 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -9,19 +9,18 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { UsersService } from '../../users/users.service';
 import { AuthService } from '../auth.service';
+import { Router, RouterOutlet } from '@angular/router';
+
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ ReactiveFormsModule, NgIf, NgFor, TranslateModule ],
+  imports: [ ReactiveFormsModule, NgIf, NgFor, TranslateModule, RouterOutlet ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent implements OnInit {
-  @Output() registered = new EventEmitter<boolean>();
-  registeredUser() {
-    this.registered.emit(true);
-  }
+
 
   registerForm: FormGroup = new FormGroup({});
 

@@ -1,12 +1,12 @@
 import { NgClass, NgIf, NgSwitchCase } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { catchError, map, of, switchMap } from 'rxjs';
 import { ToastService } from '../../core/services/toast.service';
@@ -16,13 +16,12 @@ import { AuthService } from '../auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf, TranslateModule, NgClass, NgSwitchCase],
+  imports: [ ReactiveFormsModule, NgIf, TranslateModule, NgClass ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit {
-  @Output() registration = new EventEmitter();
-  @Output() login = new EventEmitter();
+
 
   loginForm: FormGroup = new FormGroup({});
   lang = sessionStorage.getItem('language')
@@ -45,14 +44,12 @@ export class LoginComponent implements OnInit {
 
   createLoginForm(): void {
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(3)]],
+      username: [ '', [ Validators.required, Validators.minLength(3) ] ],
+      password: [ '', [ Validators.required, Validators.minLength(3) ] ],
     });
   }
 
-  gotoRegistration(): void {
-    this.registration.emit(true);
-  }
+
   get username() {
     return this.loginForm.get('username');
   }
@@ -90,7 +87,7 @@ export class LoginComponent implements OnInit {
                   'user',
                   JSON.stringify(user)
                 );
-                this.router.navigate(['/']);
+                this.router.navigate([ '/' ]);
                 this.authService.isAuthenticated();
               }
             });
@@ -98,7 +95,6 @@ export class LoginComponent implements OnInit {
         )
         .subscribe({
           next: (data) => {
-            this.login.emit(true);
           },
           error: (error) => {
             const errorMessage = this.translateService.instant('ERROR.LOGIN');

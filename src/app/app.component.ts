@@ -29,6 +29,12 @@ export class AppComponent implements OnInit {
 
   }
   ngOnInit(): void {
-    // this.loadingService.isLoading$.next(false)
+    const defaultLang = this.translateService.onTranslationChange.subscribe((event) => {
+      console.log("defaultLang / event:", event);
+
+    });
+
+
+
   }
 }

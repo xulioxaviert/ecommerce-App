@@ -76,7 +76,7 @@ export class LoginComponent implements OnInit {
           }),
           switchMap(({ token }: any) => {
             this.authService.setSessionStorage('token', token);
-            this.authService.setSessionStorage('language', 'fr');
+            this.authService.setLocalStorage('language', 'fr');
             return this.usersService.getAllUsers();
           }),
           map((users) => {
@@ -95,6 +95,8 @@ export class LoginComponent implements OnInit {
         )
         .subscribe({
           next: (data) => {
+            console.log("singIn / data:", data);
+            this.translateService.use('fr');
           },
           error: (error) => {
             const errorMessage = this.translateService.instant('ERROR.LOGIN');

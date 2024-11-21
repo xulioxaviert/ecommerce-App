@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  output,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -43,8 +48,7 @@ export class TranslationDropdownComponent implements OnInit {
     private translateService: TranslateService,
     private fb: FormBuilder,
     private authService: AuthService
-  ) {
-  }
+  ) { }
   ngOnInit(): void {
     this.createForm();
     this.loadData();
@@ -57,21 +61,24 @@ export class TranslationDropdownComponent implements OnInit {
   }
   loadData() {
     if (this.authService.isAuthenticated()) {
-      const lang = sessionStorage.getItem('language');
-      this.translateService.setDefaultLang(lang || '');
+      const lang = localStorage.getItem('language');
+      this.languages.forEach((data) => {
+        if (data.code === lang) {
+          this.selectedLanguage = data;
+        }
+      })
     } else {
-      this.selectedLanguage = this.languages.find(
-        (lang) => lang.code === this.lang
-      );
+
+      this.selectedLanguage = this.translateService.setDefaultLang('en');
+      this.selectedLanguage = this.languages[ 1 ];
     }
-    console.log('loadData / lang:', this.lang);
   }
   //TODO: Revisar con Mario
   chooseLanguage(event: any) {
     this.selectedLanguage = event.value;
     this.translateService.use(event.value.code);
-    this.changeLanguage.emit(event.value.code);
     localStorage.setItem('language', event.value.code);
   }
+
 
 }

@@ -2,7 +2,7 @@
   <p-menubar [model]="items">
     <ng-template pTemplate="start">
       <div class="container__header-img">
-        <img src="assets/images/logo.svg" alt="logo">
+        <img src="assets/images/logo.svg" alt="logo" />
       </div>
     </ng-template>
     <ng-template pTemplate="item" let-item let-root="root">
@@ -30,7 +30,9 @@
     </ng-template>
     <ng-template pTemplate="end">
       <div class="flex align-items-center gap-2">
-      <app-translation-dropdown (changeLanguage)="changeLabelLanguage($event)"></app-translation-dropdown>
+        <app-translation-dropdown
+          (changeLanguage)="changeLabelLanguage($event)"
+        ></app-translation-dropdown>
 
         <div class="col-12 md:col-4 flex flex-col justify-center text-center">
           <p-avatar
@@ -40,6 +42,16 @@
             [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }"
             shape="circle"
           />
+          <div class="card flex justify-content-center">
+            <form [formGroup]="formGroup">
+              <p-toggleButton
+                formControlName="checked"
+                (click)="toggleAuthentication()"
+                [onLabel]="toggleButtonText"
+                [offLabel]="toggleButtonText"
+              />
+            </form>
+          </div>
           <h6>Icon - Circle</h6>
         </div>
       </div>

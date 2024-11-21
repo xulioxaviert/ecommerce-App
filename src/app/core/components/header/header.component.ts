@@ -6,10 +6,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MenubarModule } from 'primeng/menubar';
 import { RippleModule } from 'primeng/ripple';
 
-import { RouterLink } from '@angular/router';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 import { Observable, take } from 'rxjs';
+import { AuthService } from '../../../auth/auth.service';
 import { TranslationDropdownComponent } from '../../../shared/translation-dropdown/translation-dropdown.component';
 
 @Component({
@@ -17,13 +20,14 @@ import { TranslationDropdownComponent } from '../../../shared/translation-dropdo
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
     MenubarModule,
     BadgeModule,
     AvatarModule,
     InputTextModule,
     RippleModule,
     TranslationDropdownComponent,
+    ReactiveFormsModule, ToggleButtonModule,
+    RouterModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
@@ -38,11 +42,49 @@ export class HeaderComponent implements OnInit {
   isAuthenticated$: Observable<boolean> = new Observable<boolean>();
   items: MenuItem[] | undefined;
 
-  constructor(private translateService: TranslateService) {
+  formGroup!: FormGroup;
+  isAuthenticated: boolean = false;
+  toggleButtonText: string = '';
+
+
+  constructor(private translateService: TranslateService, private route: Router, private authService: AuthService) {
   }
 
   ngOnInit() {
     this.updateItemLanguage();
+    this.createForm();
+    this.checkAuthenticated();
+
+  }
+
+  createForm() {
+    this.formGroup = new FormGroup({
+      checked: new FormControl<boolean>(false)
+    });
+    this.formControlValueChanged();
+
+  }
+
+  formControlValueChanged() {
+    this.formGroup.get('checked')?.valueChanges.subscribe((checked) => {
+      console.log('checked:', checked);
+      if (checked === true) {
+        this.toggleButtonText = this.translateService.instant('HEADER.LOGOUT');
+        this.logout();
+      } else {
+        this.toggleButtonText = this.translateService.instant('HEADER.LOGIN');
+        this.route.navigate([ '/auth/login' ]);
+      }
+    });
+  }
+  checkAuthenticated() {
+
+    if (!this.authService.isAuthenticated()) {
+      this.toggleButtonText = this.translateService.instant('HEADER.LOGIN');
+
+    } else {
+      this.toggleButtonText = this.translateService.instant('HEADER.LOGOUT');
+    }
   }
 
   updateItemLanguage() {
@@ -97,5 +139,17 @@ export class HeaderComponent implements OnInit {
       this.updateItemLanguage();
     });
     this.translateService.setDefaultLang(changeLanguage);
+  }
+  toggleAuthentication() {
+    if (this.authService.isAuthenticated()) {
+      this.logout();
+      this.toggleButtonText = this.translateService.instant('HEADER.LOGIN');
+    } else {
+      this.route.navigate([ '/auth/login' ]);
+    }
+
+  }
+  logout() {
+    this.authService.logout();
   }
 }

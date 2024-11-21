@@ -75,20 +75,25 @@ export class LoginComponent implements OnInit {
             return of(error);
           }),
           switchMap(({ token }: any) => {
+            console.log("switchMap / token:", token);
             this.authService.setSessionStorage('token', token);
-            this.authService.setLocalStorage('language', 'fr');
             return this.usersService.getAllUsers();
           }),
           map((users) => {
             users.forEach((user) => {
+              debugger;
+              console.log("users.forEach / user:", user);
               if (user.username === payload.username) {
                 console.log('users.find / user:', user);
                 this.authService.setSessionStorage(
                   'user',
                   JSON.stringify(user)
                 );
-                this.router.navigate([ '/' ]);
                 this.authService.isAuthenticated();
+                this.translateService.use('es');
+                this.authService.setLocalStorage('language', 'es')
+                this.router.navigate([ '/' ]);
+
               }
             });
           })
@@ -96,7 +101,6 @@ export class LoginComponent implements OnInit {
         .subscribe({
           next: (data) => {
             console.log("singIn / data:", data);
-            this.translateService.use('fr');
           },
           error: (error) => {
             const errorMessage = this.translateService.instant('ERROR.LOGIN');
@@ -105,6 +109,7 @@ export class LoginComponent implements OnInit {
           },
           complete: () => {
             console.log('.subscribe / complete');
+
           },
         });
     }

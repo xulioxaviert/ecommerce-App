@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterEvent, RouterLink, RouterOutlet } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { catchError, map, of, switchMap } from 'rxjs';
 import { ToastService } from '../../core/services/toast.service';
@@ -16,7 +16,7 @@ import { AuthService } from '../auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ ReactiveFormsModule, NgIf, TranslateModule, NgClass ],
+  imports: [ ReactiveFormsModule, NgIf, TranslateModule, NgClass,RouterLink ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -76,19 +76,20 @@ export class LoginComponent implements OnInit {
           }),
           switchMap(({ token }: any) => {
             this.authService.setSessionStorage('token', token);
-            this.authService.setSessionStorage('language', 'fr');
             return this.usersService.getAllUsers();
           }),
           map((users) => {
             users.forEach((user) => {
               if (user.username === payload.username) {
-                console.log('users.find / user:', user);
                 this.authService.setSessionStorage(
                   'user',
                   JSON.stringify(user)
                 );
-                this.router.navigate([ '/' ]);
                 this.authService.isAuthenticated();
+                this.translateService.use('es');
+                this.authService.setLocalStorage('language', 'es')
+                this.router.navigate([ '/' ]);
+
               }
             });
           })
@@ -103,6 +104,7 @@ export class LoginComponent implements OnInit {
           },
           complete: () => {
             console.log('.subscribe / complete');
+
           },
         });
     }

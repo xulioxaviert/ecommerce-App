@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CarouselModule } from 'primeng/carousel';
-import { forkJoin } from 'rxjs';
+import { forkJoin, take } from 'rxjs';
 import { HeaderComponent } from '../../core/components/header/header.component';
 import { ENDPOINTS } from '../../core/const/constants';
 import { Products } from '../../core/models/products.model';
@@ -22,6 +22,7 @@ export class HomeComponent implements OnInit {
   products: Products[] = [];
   category: any;
   responsiveOptions;
+
   constructor(private http: HttpService, private translateService: TranslateService) {
     this.responsiveOptions = [
       {
@@ -40,27 +41,29 @@ export class HomeComponent implements OnInit {
         numScroll: 1
       }
     ];
-    this.translateService.setDefaultLang('en');
+
 
   }
 
   ngOnInit(): void {
     this.getData();
+    console.log('Home');
 
   }
 
   getData(): void {
     forkJoin([
       this.http.getData(ENDPOINTS.getAllProducts),
-      this.http.getData(ENDPOINTS.getAllCategories)
+      this.http.getData(ENDPOINTS.getAllCategories),
+
     ]).subscribe(
       ([ products, categories ]) => {
         this.products = products.body;
         this.category = categories.body;
-        console.log('Communications History: ', products.body);
-        console.log('Communications History: ', categories.body);
       }
     );
+
+
   }
 
 

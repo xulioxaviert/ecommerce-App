@@ -96,6 +96,13 @@
     "CONFIRM_PASSWORD_REQUIRED": "Confirmar contraseña es obligatorio",
     "CONFIRM_PASSWORD_MIN_LENGTH": "La confirmación de la contraseña debe tener al menos 3 caracteres",
     "CONFIRM_PASSWORD_MATCH": "Las contraseñas no coinciden"
+  },
+  "HERO": {
+    "TITLE": "¡Encuentra los mejores productos aquí!",
+    "DESCRIPTION": "¡Descubre nuestra colección de productos!",
+    "SHOP_NOW": "Comprar ahora",
+    "TOTAL_PRODUCTS": "Productos de todas las temporadas",
+    "TOTAL_CUSTOMERS": "Muchos clientes satisfechos",
+    "TOTAL_SALES": "Más de 10000 ventas al mes"
   }
-
 }

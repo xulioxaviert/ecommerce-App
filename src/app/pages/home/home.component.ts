@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit {
   }
 
   getData(): void {
-    
+
     forkJoin([
       this.http.getData(ENDPOINTS.getAllProducts),
       this.http.getData(ENDPOINTS.getAllCategories),
@@ -60,8 +60,7 @@ export class HomeComponent implements OnInit {
       ([ products, categories ]) => {
         this.products = products.body;
         this.category = categories.body;
-        console.log('Communications History: ', products.body);
-        console.log('Communications History: ', categories.body);
+        
       }
     );
 

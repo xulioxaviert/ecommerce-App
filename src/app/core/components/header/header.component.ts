@@ -67,7 +67,6 @@ export class HeaderComponent implements OnInit {
 
   formControlValueChanged() {
     this.formGroup.get('checked')?.valueChanges.subscribe((checked) => {
-      console.log('checked:', checked);
       if (checked === true) {
         this.toggleButtonText = this.translateService.instant('HEADER.LOGOUT');
         this.logout();
@@ -135,7 +134,6 @@ export class HeaderComponent implements OnInit {
   }
   changeLabelLanguage(changeLanguage: any) {
     this.translateService.onLangChange.pipe(take(1)).subscribe((event) => {
-      console.log("changeLabelLanguage / event:", event);
       this.updateItemLanguage();
     });
     this.translateService.setDefaultLang(changeLanguage);

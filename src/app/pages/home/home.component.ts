@@ -47,11 +47,11 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.getData();
+    console.log('Home');
 
   }
 
   getData(): void {
-
     forkJoin([
       this.http.getData(ENDPOINTS.getAllProducts),
       this.http.getData(ENDPOINTS.getAllCategories),
@@ -60,7 +60,6 @@ export class HomeComponent implements OnInit {
       ([ products, categories ]) => {
         this.products = products.body;
         this.category = categories.body;
-        
       }
     );
 

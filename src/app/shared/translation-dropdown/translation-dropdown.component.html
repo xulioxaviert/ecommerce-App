@@ -9,7 +9,6 @@
       class="customDropdown"
       dataKey="code"
       formControlName="language"
-      (onChange)="chooseLanguage($event)"
     >
       <ng-template pTemplate="selectedItem" class="customDropdown-item">
         <div
@@ -26,7 +25,7 @@
         </div>
       </ng-template>
       <ng-template let-language pTemplate="item">
-        <div class="flex align-items-center">
+        <div class="flex align-items-center justify-between">
           <img
             src="assets/images/{{ language.code }}.png"
             alt="flag"

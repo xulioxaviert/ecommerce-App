@@ -1,8 +1,8 @@
-<div class="container__header relative">
-  <p-menubar [model]="items">
+<div class="container__header">
+  <p-menubar [model]="items" class="container__header-menu">
     <ng-template pTemplate="start">
       <div class="container__header-img">
-        <img src="assets/images/logo.svg" alt="logo" />
+        <img src="assets/images/logo2.svg" alt="logo" />
       </div>
     </ng-template>
     <ng-template pTemplate="item" let-item let-root="root">
@@ -29,19 +29,25 @@
       </a>
     </ng-template>
     <ng-template pTemplate="end">
-      <div class="flex align-items-center gap-2">
+      <div class="flex items-center justify-end gap-2 mx-4">
         <app-translation-dropdown
           (changeLanguage)="changeLabelLanguage($event)"
         ></app-translation-dropdown>
 
-        <div class="col-12 md:col-4 flex flex-col justify-center text-center">
+        <div class="col-12 md:col-4 flex flex-col justify-center text-center container__avatar">
           <p-avatar
             icon="pi pi-user"
             styleClass="mr-2"
             size="large"
             [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }"
             shape="circle"
+            class="container__avatar-img"
+
           />
+          <h6 *ngIf="isAuthenticated" class="container__avatar-name">
+            {{ user?.name?.firstname | uppercase }} -
+            {{ user?.name?.lastname | uppercase }}
+          </h6>
           <div class="card flex justify-content-center">
             <form [formGroup]="formGroup">
               <p-toggleButton
@@ -49,10 +55,13 @@
                 (click)="toggleAuthentication()"
                 [onLabel]="toggleButtonText"
                 [offLabel]="toggleButtonText"
+                [styleClass]="isAuthenticated ? 'p-button-danger' : 'p-button-success'"
+                class="container__avatar-toggle"
+
               />
             </form>
           </div>
-          <h6>Icon - Circle</h6>
+
         </div>
       </div>
     </ng-template>

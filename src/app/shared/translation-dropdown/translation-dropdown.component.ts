@@ -33,7 +33,6 @@ import { DropdownLanguages } from '../../core/models/lang.model';
 })
 export class TranslationDropdownComponent implements OnInit {
   changeLanguage = output();
-
   selectedLanguage: any;
   languages: DropdownLanguages[] = [
     { name: 'Español', code: 'es' },
@@ -41,14 +40,16 @@ export class TranslationDropdownComponent implements OnInit {
     { name: 'Français', code: 'fr' },
   ];
   languageForm: FormGroup = new FormGroup({});
-  lang = localStorage.getItem('language')
-    ? localStorage.getItem('language')
-    : 'en';
+
+  lang = localStorage.getItem('language') ? localStorage.getItem('language') : 'en';
+
   constructor(
     private translateService: TranslateService,
     private fb: FormBuilder,
     private authService: AuthService
-  ) { }
+  ) {
+    this.translateService.setDefaultLang(this.lang || '');
+  }
   ngOnInit(): void {
     this.createForm();
     this.loadData();
@@ -58,6 +59,7 @@ export class TranslationDropdownComponent implements OnInit {
     this.languageForm = this.fb.group({
       language: [ '', [ Validators.required ] ],
     });
+    this.chooseLanguage();
   }
   loadData() {
     if (this.authService.isAuthenticated()) {
@@ -74,10 +76,15 @@ export class TranslationDropdownComponent implements OnInit {
     }
   }
   //TODO: Revisar con Mario
-  chooseLanguage(event: any) {
-    this.selectedLanguage = event.value;
-    this.translateService.use(event.value.code);
-    localStorage.setItem('language', event.value.code);
+  chooseLanguage() {
+    this.languageForm.get('language')?.valueChanges.subscribe((value) => {
+      this.selectedLanguage = value;
+      console.log("chooseLanguage / event:", value);
+      this.translateService.use(value.code);
+      this.translateService.setDefaultLang(value.code);
+      localStorage.setItem('language', value.code);
+      this.changeLanguage.emit(value.code);
+    });
   }
 
 

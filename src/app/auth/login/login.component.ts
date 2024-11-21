@@ -80,7 +80,6 @@ export class LoginComponent implements OnInit {
           }),
           map((users) => {
             users.forEach((user) => {
-              debugger;
               if (user.username === payload.username) {
                 this.authService.setSessionStorage(
                   'user',

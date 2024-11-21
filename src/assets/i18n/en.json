@@ -16,22 +16,22 @@
     "DESCRIPTION": "Find the best products here!"
   },
   "LOGIN": {
-    "TITLE": "Log In",
+    "TITLE": "Login",
     "DESCRIPTION": "Log in to your account",
-    "SIGN_IN": "Log In",
-    "EMAIL": "Email Address",
+    "SIGN_IN": "Sign In",
+    "EMAIL": "Email",
     "PASSWORD": "Password",
     "FORGOT_PASSWORD": "Forgot your password?",
     "NO_ACCOUNT": "Don't have an account? Click here",
     "SIGN_UP": "Sign Up",
-    "WEB_DESCRIPTION": "We create unique garments that make you stand out.",
-    "WEB_PARAPH": "We design clothing that highlights your style and personality.",
-    "LOGIN_NOW": "Log In Now",
+    "WEB_DESCRIPTION": "We create unique clothing that makes you stand out.",
+    "WEB_PARAPH": "We design clothes that highlight your style and personality.",
+    "LOGIN_NOW": "Log in now",
     "KEEP_ME_LOGGED_IN": "Keep me logged in",
     "USERNAME": "Username",
     "USERNAME_REQUIRED": "Username is required",
-    "USERNAME_MIN_LENGTH": "Username must be at least 3 characters",
-    "PASSWORD_MIN_LENGTH": "Password must be at least 3 characters",
+    "USERNAME_MIN_LENGTH": "Username must be at least 3 characters long",
+    "PASSWORD_MIN_LENGTH": "Password must be at least 3 characters long",
     "PASSWORD_REQUIRED": "Password is required"
   },
   "ERROR": {
@@ -41,7 +41,7 @@
     },
     "500": {
       "TITLE": "500",
-      "DESCRIPTION": "Internal server error"
+      "DESCRIPTION": "Internal Server Error"
     },
     "401": {
       "TITLE": "401",
@@ -63,9 +63,9 @@
     "HELP": "Help",
     "FAQS": "FAQs",
     "CUSTOMER_SERVICE": "Customer Service",
-    "SEARCH": "Search products",
-    "LOGIN": "Log In",
-    "LOGOUT": "Log Out",
+    "SEARCH": "Search Products",
+    "LOGIN": "Login",
+    "LOGOUT": "Logout",
     "PRODUCTS": "Products"
   },
   "REGISTER": {
@@ -74,25 +74,33 @@
     "SIGN_UP": "Sign Up",
     "FIRST_NAME": "First Name",
     "LAST_NAME": "Last Name",
-    "EMAIL": "Email Address",
+    "EMAIL": "Email",
     "USERNAME": "Username",
     "PASSWORD": "Password",
     "CONFIRM_PASSWORD": "Confirm Password",
     "HAVE_ACCOUNT": "Already have an account? Click here",
-    "LOGIN": "Log In",
+    "LOGIN": "Login",
     "WEB_DESCRIPTION": "Create an account to access our exclusive products.",
-    "WEB_PARAPH": "Sign up to access our exclusive product collection.",
-    "REGISTER_NOW": "Register Now",
+    "WEB_PARAPH": "Sign up to access our collection of exclusive products.",
+    "REGISTER_NOW": "Register now",
     "FIRST_NAME_REQUIRED": "First name is required",
     "LAST_NAME_REQUIRED": "Last name is required",
-    "EMAIL_REQUIRED": "Email address is required",
-    "EMAIL_INVALID": "Invalid email address",
+    "EMAIL_REQUIRED": "Email is required",
+    "EMAIL_INVALID": "Email is not valid",
     "PASSWORD_REQUIRED": "Password is required",
     "USERNAME_REQUIRED": "Username is required",
-    "PASSWORD_MIN_LENGTH": "Password must be at least 3 characters",
-    "FIRST_NAME_MIN_LENGTH": "First name must be at least 3 characters",
-    "CONFIRM_PASSWORD_REQUIRED": "Confirm password is required",
-    "CONFIRM_PASSWORD_MIN_LENGTH": "Confirm password must be at least 3 characters",
+    "PASSWORD_MIN_LENGTH": "Password must be at least 3 characters long",
+    "FIRST_NAME_MIN_LENGTH": "First name must be at least 3 characters long",
+    "CONFIRM_PASSWORD_REQUIRED": "Confirming password is required",
+    "CONFIRM_PASSWORD_MIN_LENGTH": "Confirm password must be at least 3 characters long",
     "CONFIRM_PASSWORD_MATCH": "Passwords do not match"
+  },
+  "HERO": {
+    "TITLE": "Find the best products here!",
+    "DESCRIPTION": "Discover our product collection!",
+    "SHOP_NOW": "Shop Now",
+    "TOTAL_PRODUCTS": "Products from all seasons",
+    "TOTAL_CUSTOMERS": "Many satisfied customers",
+    "TOTAL_SALES": "Over 10000 sales per month"
   }
 }

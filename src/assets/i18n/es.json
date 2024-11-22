@@ -103,6 +103,9 @@
     "SHOP_NOW": "Comprar ahora",
     "TOTAL_PRODUCTS": "Productos de todas las temporadas",
     "TOTAL_CUSTOMERS": "Muchos clientes satisfechos",
-    "TOTAL_SALES": "Más de 10000 ventas al mes"
+    "TOTAL_SALES": "Más de 10000 ventas al mes",
+    "NEW_ARRIVALS": "Nueva colección",
+    "FEATURED": "Destacados"
+
   }
 }

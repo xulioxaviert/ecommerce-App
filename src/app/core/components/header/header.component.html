@@ -1,5 +1,5 @@
-<div class="container__header">
-  <p-menubar [model]="items" class="container__header-menu">
+<div class="container__header p-fluid card sticky top-0">
+  <p-menubar [model]="items" class="card">
     <ng-template pTemplate="start">
       <div class="container__header-img">
         <img src="assets/images/logo2.svg" alt="logo" />
@@ -35,15 +35,7 @@
         ></app-translation-dropdown>
 
         <div class="col-12 md:col-4 flex flex-col justify-center text-center container__avatar">
-          <p-avatar
-            icon="pi pi-user"
-            styleClass="mr-2"
-            size="large"
-            [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }"
-            shape="circle"
-            class="container__avatar-img"
 
-          />
           <h6 *ngIf="isAuthenticated" class="container__avatar-name">
             {{ user?.name?.firstname | uppercase }} -
             {{ user?.name?.lastname | uppercase }}

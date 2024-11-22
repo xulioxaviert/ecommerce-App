@@ -41,7 +41,9 @@ export class TranslationDropdownComponent implements OnInit {
   ];
   languageForm: FormGroup = new FormGroup({});
 
-  lang = localStorage.getItem('language') ? localStorage.getItem('language') : 'en';
+  lang = localStorage.getItem('language')
+    ? localStorage.getItem('language')
+    : 'en';
 
   constructor(
     private translateService: TranslateService,
@@ -62,30 +64,28 @@ export class TranslationDropdownComponent implements OnInit {
     this.chooseLanguage();
   }
   loadData() {
-    if (this.authService.isAuthenticated()) {
+    if (localStorage.getItem('language')) {
       const lang = localStorage.getItem('language');
       this.languages.forEach((data) => {
         if (data.code === lang) {
           this.selectedLanguage = data;
         }
-      })
+      });
     } else {
-
       this.selectedLanguage = this.translateService.setDefaultLang('en');
       this.selectedLanguage = this.languages[ 1 ];
+      localStorage.setItem('language', 'en');
     }
   }
   //TODO: Revisar con Mario
   chooseLanguage() {
     this.languageForm.get('language')?.valueChanges.subscribe((value) => {
       this.selectedLanguage = value;
-      console.log("chooseLanguage / event:", value);
+      console.log('chooseLanguage / event:', value);
       this.translateService.use(value.code);
       this.translateService.setDefaultLang(value.code);
       localStorage.setItem('language', value.code);
       this.changeLanguage.emit(value.code);
     });
   }
-
-
 }

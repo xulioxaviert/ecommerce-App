@@ -107,5 +107,19 @@
     "NEW_ARRIVALS": "Nueva colección",
     "FEATURED": "Destacados"
 
+  },
+  "CATEGORY": {
+    "ELECTRONICS": "Electrónica",
+    "JEWELRY": "Joyería",
+    "MEN": "Ropa de Hombres",
+    "WOMEN": "Ropa de Mujeres",
+    "ELECTRONICS_TITLE": "Tecnología que Simplifica tu Vida",
+    "ELECTRONICS_DESCRIPTIONS": "Lo último en gadgets y dispositivos electrónicos para mantenerte conectado, productivo y entretenido. Desde lo esencial hasta lo más innovador, encuentra justo lo que necesitas para tu mundo digital.",
+    "JEWELRY_TITLE": "Brilla con Estilo: Joyería para Cada Momento",
+    "JEWELRY_DESCRIPTIONS": "Encuentra piezas únicas que hablan por ti. Desde diseños elegantes hasta toques modernos, nuestra colección de joyería es perfecta para destacar en cualquier ocasión. Porque cada detalle cuenta, ¡hazlo inolvidable!",
+    "MEN_TITLE": "Estilo Masculino: Hecho a Tu Medida",
+    "MEN_DESCRIPTIONS": "Moderno, cómodo y siempre a la moda. Descubre nuestra colección para hombres que buscan prendas versátiles, con un diseño que combina funcionalidad y actitud. ¡El look que necesitas está aquí!",
+    "WOMEN_TITLE": "Moda Femenina: Vive tu Mejor Versión",
+    "WOMEN_DESCRIPTIONS": "Diseños que inspiran confianza y estilo. Desde básicos imprescindibles hasta piezas que marcan tendencia, explora nuestra selección para realzar tu esencia en cada paso que des."
   }
 }

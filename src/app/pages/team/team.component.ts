@@ -7,13 +7,13 @@ import { HttpService } from '../../core/services/http.service';
 
 
 @Component({
-  selector: 'app-categories',
+  selector: 'app-team',
   standalone: true,
   imports: [ NgForOf, TranslateModule ],
-  templateUrl: './categories.component.html',
-  styleUrl: './categories.component.scss',
+  templateUrl: './team.component.html',
+  styleUrl: './team.component.scss',
 })
-export class CategoriesComponent implements OnInit {
+export class TeamComponent implements OnInit {
   categories: CategoryFake[] = [];
 
   constructor(

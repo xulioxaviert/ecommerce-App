@@ -7,11 +7,12 @@ import { HeaderComponent } from '../../core/components/header/header.component';
 import { HttpService } from '../../core/services/http.service';
 import { HeroComponent } from "../hero/hero.component";
 import { CategoriesComponent } from "../categories/categories.component";
+import { TeamComponent } from "../team/team.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeaderComponent, CarouselModule, ButtonModule, TranslateModule, RouterOutlet, HeroComponent, CategoriesComponent],
+  imports: [HeaderComponent, CarouselModule, ButtonModule, TranslateModule, RouterOutlet, HeroComponent, CategoriesComponent, TeamComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })

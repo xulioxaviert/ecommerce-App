@@ -10,7 +10,6 @@
     "SHOP": "Comprar",
     "ADD_TO_CART": "Añadir al carrito",
     "SHOP_COLLECTION": "Comprar colección"
-
   },
   "PRODUCTS": {
     "TITLE": "Productos",
@@ -68,9 +67,8 @@
     "LOGIN": "Iniciar sesión",
     "LOGOUT": "Cerrar sesión",
     "PRODUCTS": "Productos"
-
   },
-  "REGISTER":{
+  "REGISTER": {
     "TITLE": "Registro",
     "DESCRIPTION": "Crea una cuenta",
     "SIGN_UP": "Regístrate",
@@ -106,7 +104,6 @@
     "TOTAL_SALES": "Más de 10000 ventas al mes",
     "NEW_ARRIVALS": "Nueva colección",
     "FEATURED": "Destacados"
-
   },
   "CATEGORY": {
     "ELECTRONICS": "Electrónica",
@@ -122,5 +119,17 @@
     "WOMEN_TITLE": "Moda Femenina: Vive tu Mejor Versión",
     "WOMEN_DESCRIPTIONS": "Diseños que inspiran confianza y estilo. Desde básicos imprescindibles hasta piezas que marcan tendencia, explora nuestra selección para realzar tu esencia en cada paso que des.",
     "NAME": "Electrónica"
+  },
+  "TEAM": {
+    "TITLE": "Conoce nuestro Equipo",
+    "DESCRIPTION": "Conoce a las personas detrás de nuestra marca",
+    "CEO": "CEO",
+    "CTO": "CTO",
+    "DESIGNER": "Diseñador",
+    "DEVELOPER": "Desarrollador",
+    "CEO_DESCRIPTION": "El líder de nuestro equipo, siempre buscando nuevas oportunidades para crecer y mejorar.",
+    "CTO_DESCRIPTION": "El cerebro detrás de nuestra tecnología, asegurando que todo funcione sin problemas.",
+    "DESIGNER_DESCRIPTION": "El creador de nuestros diseños, siempre innovando y sorprendiendo.",
+    "DEVELOPER_DESCRIPTION": "El responsable de nuestra plataforma, garantizando una experiencia de usuario excepcional."
   }
 }

@@ -54,6 +54,20 @@ export class CategoriesComponent implements OnInit {
         title: 'Moda Femenina: Vive tu Mejor Versión',
         descriptions:
           'Diseños que inspiran confianza y estilo. Desde básicos imprescindibles hasta piezas que marcan tendencia, explora nuestra selección para realzar tu esencia en cada paso que des.',
+      },
+      {
+        category: 'MEN',
+        name: 'men',
+        title: 'Estilo Masculino: Hecho a Tu Medida',
+        descriptions:
+          'Moderno, cómodo y siempre a la moda. Descubre nuestra colección para hombres que buscan prendas versátiles, con un diseño que combina funcionalidad y actitud. ¡El look que necesitas está aquí!',
+      },
+      {
+        category: 'WOMEN',
+        name: 'women',
+        title: 'Moda Femenina: Vive tu Mejor Versión',
+        descriptions:
+          'Diseños que inspiran confianza y estilo. Desde básicos imprescindibles hasta piezas que marcan tendencia, explora nuestra selección para realzar tu esencia en cada paso que des.',
       } ]
     });
   }

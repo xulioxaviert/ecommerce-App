@@ -37,7 +37,7 @@ import { Users } from '../../models/user.model';
 })
 export class HeaderComponent implements OnInit {
   changeLanguage = input();
-  
+
   categories = signal<string[]>([]);
   isAuthenticated: boolean = false;
   isAuthenticated$: Observable<boolean> = new Observable<boolean>();

@@ -1,8 +1,8 @@
-<div class="container__header">
-  <p-menubar [model]="items" class="container__header-menu">
+<div class="container__header p-fluid card sticky top-0">
+  <p-menubar [model]="items" class="card">
     <ng-template pTemplate="start">
       <div class="container__header-img">
-        <img src="assets/images/logo2.svg" alt="logo" />
+        <img src="assets/images/logo5.png" alt="logo" />
       </div>
     </ng-template>
     <ng-template pTemplate="item" let-item let-root="root">
@@ -34,16 +34,9 @@
           (changeLanguage)="changeLabelLanguage($event)"
         ></app-translation-dropdown>
 
-        <div class="col-12 md:col-4 flex flex-col justify-center text-center container__avatar">
-          <p-avatar
-            icon="pi pi-user"
-            styleClass="mr-2"
-            size="large"
-            [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }"
-            shape="circle"
-            class="container__avatar-img"
-
-          />
+        <div
+          class="col-12 md:col-4 flex flex-col justify-center text-center container__avatar"
+        >
           <h6 *ngIf="isAuthenticated" class="container__avatar-name">
             {{ user?.name?.firstname | uppercase }} -
             {{ user?.name?.lastname | uppercase }}
@@ -55,13 +48,13 @@
                 (click)="toggleAuthentication()"
                 [onLabel]="toggleButtonText"
                 [offLabel]="toggleButtonText"
-                [styleClass]="isAuthenticated ? 'p-button-danger' : 'p-button-success'"
+                [styleClass]="
+                  isAuthenticated ? 'p-button-danger' : 'p-button-success'
+                "
                 class="container__avatar-toggle"
-
               />
             </form>
           </div>
-
         </div>
       </div>
     </ng-template>

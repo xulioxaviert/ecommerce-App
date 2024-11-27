@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
     return this.loginForm.get('username');
   }
   get password() {
-    return this.loginForm.get('username');
+    return this.loginForm.get('password');
   }
 
   singIn(): void {

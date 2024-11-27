@@ -9,11 +9,12 @@ import { HeroComponent } from "../hero/hero.component";
 import { CategoriesComponent } from "../categories/categories.component";
 import { TeamComponent } from "../team/team.component";
 import { TestimonialComponent } from '../testimonial/testimonial.component';
+import { FooterComponent } from "../footer/footer.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeaderComponent, CarouselModule, ButtonModule, TranslateModule, RouterOutlet, HeroComponent, CategoriesComponent, TeamComponent, TestimonialComponent],
+  imports: [HeaderComponent, CarouselModule, ButtonModule, TranslateModule, RouterOutlet, HeroComponent, CategoriesComponent, TeamComponent, TestimonialComponent, FooterComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })

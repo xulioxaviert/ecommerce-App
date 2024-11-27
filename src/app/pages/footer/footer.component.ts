@@ -9,13 +9,13 @@ import { TagModule } from 'primeng/tag';
 
 
 @Component({
-  selector: 'app-testimonial',
+  selector: 'app-footer',
   standalone: true,
   imports: [ NgForOf, TranslateModule, TranslateModule, CarouselModule, ButtonModule, TagModule ],
-  templateUrl: './testimonial.component.html',
-  styleUrl: './testimonial.component.scss',
+  templateUrl: './footer.component.html',
+  styleUrls: ['./footer.component.scss'],
 })
-export class TestimonialComponent implements OnInit {
+export class FooterComponent implements OnInit {
   testimonials: Testimonial[] = [];
   responsiveOptions: any[] | undefined;
 
@@ -37,5 +37,5 @@ export class TestimonialComponent implements OnInit {
     });
 
   }
-  
+
 }

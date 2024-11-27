@@ -20,3 +20,11 @@ export interface Rating {
   count: number;
 }
 
+export interface CategoryFake {
+  category:     string;
+  name:         string;
+  title:        string;
+  descriptions: string;
+}
+
+

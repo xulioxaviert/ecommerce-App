@@ -2,7 +2,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, of, take } from 'rxjs';
 import { ENDPOINTS } from '../const/constants';
+import { testimonials } from '../mocks/mock-data';
 import { Products } from '../models/products.model';
+import { Testimonial } from '../models/testimonial.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,5 +35,9 @@ export class HttpService {
   }
   getAllCategories(): Observable<Products[]> {
     return this.http.get<Products[]>(ENDPOINTS.getAllCategories, this.options)
+  }
+
+  getTestimonials(): Observable<Testimonial[]> {
+    return of(testimonials);
   }
 }

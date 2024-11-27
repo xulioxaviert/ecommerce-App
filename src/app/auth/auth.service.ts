@@ -40,6 +40,9 @@ export class AuthService {
   setSessionStorage(key: string, value: string): void {
     sessionStorage.setItem(key, value);
   }
+  setLocalStorage(key: string, value: string): void {
+    localStorage.setItem(key, value);
+  }
 
   getSessionStorage(key: string) {
     return JSON.parse(sessionStorage.getItem(key) || '{}');

@@ -1,12 +1,12 @@
 import { AsyncPipe, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Observable } from 'rxjs';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { LoadingService } from './core/services/loading.service';
-import { CoreModule } from './core/core.module';
-import { ToastModule } from 'primeng/toast';
 import { TranslateService } from '@ngx-translate/core';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ToastModule } from 'primeng/toast';
+import { Observable } from 'rxjs';
+import { CoreModule } from './core/core.module';
+import { LoadingService } from './core/services/loading.service';
 
 
 @Component({
@@ -19,22 +19,17 @@ import { TranslateService } from '@ngx-translate/core';
 export class AppComponent implements OnInit {
   title = 'ecommerce-app';
   isLoading$: Observable<boolean>
-   lang = localStorage.getItem('language')
-    ? localStorage.getItem('language')
-    : 'en';
 
   constructor(private loadingService: LoadingService, private translateService: TranslateService) {
     this.isLoading$ = this.loadingService.isLoading$
-    this.translateService.setDefaultLang(this.lang || '');
 
   }
   ngOnInit(): void {
-    const defaultLang = this.translateService.onTranslationChange.subscribe((event) => {
-      console.log("defaultLang / event:", event);
+    const lang = localStorage.getItem('language')
+      ? localStorage.getItem('language')
+      : 'en';
 
-    });
-
-
+    this.translateService.setDefaultLang(lang || '');
 
   }
 }

@@ -1,67 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
 import { CarouselModule } from 'primeng/carousel';
-import { forkJoin } from 'rxjs';
 import { HeaderComponent } from '../../core/components/header/header.component';
-import { ENDPOINTS } from '../../core/const/constants';
-import { Products } from '../../core/models/products.model';
 import { HttpService } from '../../core/services/http.service';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { RouterOutlet } from '@angular/router';
+import { HeroComponent } from "../hero/hero.component";
+import { CategoriesComponent } from "../categories/categories.component";
+import { TeamComponent } from "../team/team.component";
+import { TestimonialComponent } from '../testimonial/testimonial.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ HeaderComponent, CarouselModule, ButtonModule, TranslateModule, RouterOutlet
-  ],
+  imports: [HeaderComponent, CarouselModule, ButtonModule, TranslateModule, RouterOutlet, HeroComponent, CategoriesComponent, TeamComponent, TestimonialComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
+  constructor(private http: HttpService, private translateService: TranslateService) { }
 
-  products: Products[] = [];
-  category: any;
-  responsiveOptions;
-  constructor(private http: HttpService, private translateService: TranslateService) {
-    this.responsiveOptions = [
-      {
-        breakpoint: '1024px',
-        numVisible: 3,
-        numScroll: 3
-      },
-      {
-        breakpoint: '768px',
-        numVisible: 2,
-        numScroll: 2
-      },
-      {
-        breakpoint: '560px',
-        numVisible: 1,
-        numScroll: 1
-      }
-    ];
-    this.translateService.setDefaultLang('en');
 
-  }
-
-  ngOnInit(): void {
-    this.getData();
-
-  }
-
-  getData(): void {
-    forkJoin([
-      this.http.getData(ENDPOINTS.getAllProducts),
-      this.http.getData(ENDPOINTS.getAllCategories)
-    ]).subscribe(
-      ([ products, categories ]) => {
-        this.products = products.body;
-        this.category = categories.body;
-        console.log('Communications History: ', products.body);
-        console.log('Communications History: ', categories.body);
-      }
-    );
-  }
 
 
 

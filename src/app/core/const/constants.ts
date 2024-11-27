@@ -7,6 +7,8 @@ export const ENDPOINTS = {
   getAllProducts: 'https://fakestoreapi.com/products',
   getAllPlatziProducts: 'https://api.escuelajs.co/api/v1/products',
   getAllPlatziCategories: 'https://api.escuelajs.co/api/v1/categories',
+  getUsersRandom: 'https://randomuser.me/api/?results=8',
+  getTestimonialsMock: '/core/mocks/mock-data.ts',
 };
 
 export const ERROR_MESSAGES = {

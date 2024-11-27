@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  output,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -28,7 +33,6 @@ import { DropdownLanguages } from '../../core/models/lang.model';
 })
 export class TranslationDropdownComponent implements OnInit {
   changeLanguage = output();
-
   selectedLanguage: any;
   languages: DropdownLanguages[] = [
     { name: 'Español', code: 'es' },
@@ -36,14 +40,17 @@ export class TranslationDropdownComponent implements OnInit {
     { name: 'Français', code: 'fr' },
   ];
   languageForm: FormGroup = new FormGroup({});
+
   lang = localStorage.getItem('language')
     ? localStorage.getItem('language')
     : 'en';
+
   constructor(
     private translateService: TranslateService,
     private fb: FormBuilder,
     private authService: AuthService
   ) {
+    this.translateService.setDefaultLang(this.lang || '');
   }
   ngOnInit(): void {
     this.createForm();
@@ -54,24 +61,31 @@ export class TranslationDropdownComponent implements OnInit {
     this.languageForm = this.fb.group({
       language: [ '', [ Validators.required ] ],
     });
+    this.chooseLanguage();
   }
   loadData() {
-    if (this.authService.isAuthenticated()) {
-      const lang = sessionStorage.getItem('language');
-      this.translateService.setDefaultLang(lang || '');
+    if (localStorage.getItem('language')) {
+      const lang = localStorage.getItem('language');
+      this.languages.forEach((data) => {
+        if (data.code === lang) {
+          this.selectedLanguage = data;
+        }
+      });
     } else {
-      this.selectedLanguage = this.languages.find(
-        (lang) => lang.code === this.lang
-      );
+      this.selectedLanguage = this.translateService.setDefaultLang('en');
+      this.selectedLanguage = this.languages[ 1 ];
+      localStorage.setItem('language', 'en');
     }
-    console.log('loadData / lang:', this.lang);
   }
   //TODO: Revisar con Mario
-  chooseLanguage(event: any) {
-    this.selectedLanguage = event.value;
-    this.translateService.use(event.value.code);
-    this.changeLanguage.emit(event.value.code);
-    localStorage.setItem('language', event.value.code);
+  chooseLanguage() {
+    this.languageForm.get('language')?.valueChanges.subscribe((value) => {
+      this.selectedLanguage = value;
+      console.log('chooseLanguage / event:', value);
+      this.translateService.use(value.code);
+      this.translateService.setDefaultLang(value.code);
+      localStorage.setItem('language', value.code);
+      this.changeLanguage.emit(value.code);
+    });
   }
-
 }

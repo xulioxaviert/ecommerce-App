@@ -3,41 +3,33 @@
   margin-bottom: 2px;
   z-index: 150;
 
+  .p-element.container__header-menu
+    .p-menubar.p-component.p-menubar-start.ng-star-inserted {
+        display: flex !important;
+        width: 100% !important;
+      }
+
+
+
+
+
   &-img {
     width: 100%;
-    img{
-      width: 150px;
+
+    img {
+      width: 100px;
     }
   }
 
-}
-
-
-.p-dropdown-item {
-
-  .p-element.ng-star-inserted {
+  .container__avatar {
     display: flex;
-  }
-}
 
-.container-login {
-  border: 1px solid #cbd5e1
-}
+    &-name {
+      font-size: 12px;
+    }
 
-.container__avatar {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  height: 56px;
-  justify-content: center;
 
-  p {
-    margin: 0;
-    font-size: 10px;
   }
 
-  &-name {
-    height: 20px;
-  }
 
 }

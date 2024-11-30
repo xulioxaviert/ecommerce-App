@@ -27,16 +27,16 @@ import { Users } from '../../models/user.model';
     InputTextModule,
     RippleModule,
     TranslationDropdownComponent,
-    ReactiveFormsModule, ToggleButtonModule,
+    ReactiveFormsModule,
+    ToggleButtonModule,
     RouterModule,
     NgClass,
-    NgIf
+    NgIf,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent implements OnInit {
-
   categories = signal<string[]>([]);
   isAuthenticated: boolean = false;
   isAuthenticated$: Observable<boolean> = new Observable<boolean>();
@@ -44,54 +44,36 @@ export class HeaderComponent implements OnInit {
   items: MenuItem[] | undefined;
 
   formGroup!: FormGroup;
-  toggleButtonText: string = '';
-  tanslateService$: TranslateService;
   user: Users | undefined;
+  initialsName: string = '';
+  title: string = '';
 
-
-  constructor(private translateService: TranslateService, private route: Router, private authService: AuthService) {
-  }
+  constructor(
+    private translateService: TranslateService,
+    private route: Router,
+    private authService: AuthService
+  ) { }
 
   ngOnInit() {
     this.updateItemLanguage();
-    this.createForm();
     this.checkAuthenticated();
-    this.isAuthenticated$ = this.authService.isAuthenticated$;
     this.translateService.onLangChange.subscribe((event) => {
       this.updateItemLanguage();
-      this.checkAuthenticated();
-
-    });
-
-  }
-
-  createForm() {
-    this.formGroup = new FormGroup({
-      checked: new FormControl<boolean>(false)
-    });
-    this.formControlValueChanged();
-  }
-
-  formControlValueChanged() {
-    this.formGroup.get('checked')?.valueChanges.subscribe((checked) => {
-      console.log("this.formGroup.get / checked:", checked);
-      if (checked === true) {
-        this.toggleButtonText = this.translateService.instant('HEADER.LOGOUT');
-      } else {
-        this.route.navigate([ '/auth/login' ]);
-        this.toggleButtonText = this.translateService.instant('HEADER.LOGIN');
-      }
     });
   }
-  checkAuthenticated() {
+
+    checkAuthenticated() {
     if (this.authService.isAuthenticated()) {
       this.isAuthenticated = true;
-      this.toggleButtonText = this.translateService.instant('HEADER.LOGOUT');
-      this.user = this.authService.getSessionStorage('user')
-      console.log("checkAuthenticated / this.user:", this.user);
-
+      this.user = this.authService.getSessionStorage('user');
+      console.log('checkAuthenticated / this.user:', this.user);
+      this.initialsName =
+        (this.user?.name?.firstname.toUpperCase().toString().charAt(0) || '') +
+        (this.user?.name?.lastname.toUpperCase().toString().charAt(0) || '');
+      this.title = this.translateService.instant('HEADER.LOGOUT');
     } else {
-      this.toggleButtonText = this.translateService.instant('HEADER.LOGIN');
+      this.title = this.translateService.instant('HEADER.LOGIN');
+      this.isAuthenticated = false;
 
     }
   }
@@ -141,16 +123,22 @@ export class HeaderComponent implements OnInit {
         icon: 'pi pi-envelope',
       },
     ];
+    if (this.isAuthenticated) {
+      this.title = this.translateService.instant('HEADER.LOGOUT');
+    } else {
+      this.title = this.translateService.instant('HEADER.LOGIN');
+    }
+
   }
 
   toggleAuthentication() {
-    if (!this.authService.isAuthenticated()) {
+
+    if (this.isAuthenticated === false) {
       this.route.navigate([ '/auth/login' ]);
     } else {
       this.authService.logout();
       this.isAuthenticated = false;
+      this.title = this.translateService.instant('HEADER.LOGIN');
     }
   }
-
-
 }

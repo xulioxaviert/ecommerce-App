@@ -1,5 +1,5 @@
 import { CommonModule, NgClass, NgIf } from '@angular/common';
-import { Component, input, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { InputTextModule } from 'primeng/inputtext';
@@ -11,7 +11,7 @@ import { Router, RouterModule } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { ToggleButtonModule } from 'primeng/togglebutton';
-import { Observable, take } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
 import { TranslationDropdownComponent } from '../../../shared/translation-dropdown/translation-dropdown.component';
 import { Users } from '../../models/user.model';
@@ -36,7 +36,6 @@ import { Users } from '../../models/user.model';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent implements OnInit {
-  changeLanguage = input();
 
   categories = signal<string[]>([]);
   isAuthenticated: boolean = false;
@@ -58,6 +57,11 @@ export class HeaderComponent implements OnInit {
     this.createForm();
     this.checkAuthenticated();
     this.isAuthenticated$ = this.authService.isAuthenticated$;
+    this.translateService.onLangChange.subscribe((event) => {
+      this.updateItemLanguage();
+      this.checkAuthenticated();
+
+    });
 
   }
 
@@ -138,14 +142,7 @@ export class HeaderComponent implements OnInit {
       },
     ];
   }
-  changeLabelLanguage(changeLanguage: any) {
-    this.translateService.onLangChange.pipe(take(1)).subscribe((event) => {
-      this.updateItemLanguage();
-      this.checkAuthenticated();
 
-    });
-
-  }
   toggleAuthentication() {
     if (!this.authService.isAuthenticated()) {
       this.route.navigate([ '/auth/login' ]);

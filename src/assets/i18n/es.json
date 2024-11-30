@@ -131,5 +131,11 @@
     "CTO_DESCRIPTION": "El cerebro detrás de nuestra tecnología, asegurando que todo funcione sin problemas.",
     "DESIGNER_DESCRIPTION": "El creador de nuestros diseños, siempre innovando y sorprendiendo.",
     "DEVELOPER_DESCRIPTION": "El responsable de nuestra plataforma, garantizando una experiencia de usuario excepcional."
+  },
+  "TESTIMONIAL":{
+    "TITLE": "Testimonios",
+    "DESCRIPTION": "Lo que nuestros clientes dicen de nosotros"
+
+
   }
 }

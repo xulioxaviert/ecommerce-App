@@ -30,29 +30,25 @@
     </ng-template>
     <ng-template pTemplate="end">
       <div class="flex items-center justify-end gap-2 mx-4">
-        <app-translation-dropdown
-        ></app-translation-dropdown>
+        <app-translation-dropdown></app-translation-dropdown>
 
         <div
           class="col-12 md:col-4 flex flex-col justify-center text-center container__avatar"
         >
-          <h6 *ngIf="isAuthenticated" class="container__avatar-name">
-            {{ user?.name?.firstname | uppercase }} -
-            {{ user?.name?.lastname | uppercase }}
-          </h6>
           <div class="card flex justify-content-center">
-            <form [formGroup]="formGroup">
-              <p-toggleButton
-                formControlName="checked"
-                (click)="toggleAuthentication()"
-                [onLabel]="toggleButtonText"
-                [offLabel]="toggleButtonText"
-                [styleClass]="
-                  isAuthenticated ? 'p-button-danger' : 'p-button-success'
-                "
-                class="container__avatar-toggle"
-              />
-            </form>
+            <p-avatar
+              [icon]="!isAuthenticated ? 'pi pi-user' : ''"
+              [style]="{
+                'background-color': !isAuthenticated ? 'red' : 'green',
+                color: 'white',
+                cursor: 'pointer'
+              }"
+              size="large"
+              [label]="isAuthenticated ? initialsName : ''"
+              (click)="toggleAuthentication()"
+              [title]="title"
+              shape="circle"
+            />
           </div>
         </div>
       </div>

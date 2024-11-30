@@ -10,8 +10,8 @@ export const routes: Routes = [
     loadChildren: () => import('./auth/authentication.routes').then(m => m.routes),
   },
   {
-    path: 'category',
-    loadComponent: () => import('./pages/categories/categories.component').then(m => m.CategoriesComponent),
+    path: 'categories',
+    loadChildren: () => import('./pages/categories/categories.routes').then(m => m.routes),
   },
   {
     path: 'products',

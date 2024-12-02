@@ -1,4 +1,4 @@
-import { NgClass, NgIf, NgSwitchCase } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router, RouterEvent, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { catchError, map, of, switchMap } from 'rxjs';
 import { ToastService } from '../../core/services/toast.service';
@@ -16,7 +16,7 @@ import { AuthService } from '../auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ ReactiveFormsModule, NgIf, TranslateModule, NgClass,RouterLink ],
+  imports: [ ReactiveFormsModule, NgIf, TranslateModule, NgClass, RouterLink ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -81,6 +81,20 @@ export class LoginComponent implements OnInit {
           map((users) => {
             users.forEach((user) => {
               if (user.username === payload.username) {
+
+                switch (user.username) {
+                  case 'derek':
+                    user.role = 'admin';
+                    break;
+                  case 'kevinryan':
+                    user.role = 'admin';
+                    break;
+                  default:
+                    user.role = 'costumer'
+                    break;
+                }
+
+
                 this.authService.setSessionStorage(
                   'user',
                   JSON.stringify(user)

@@ -1,0 +1,32 @@
+.container__dashboard {
+  display: flex;
+  flex-direction: column;
+  background-color: #F3F4F6;
+
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: white;
+    border-radius: 4px;
+    margin: 0.5rem 1rem;
+  }
+
+  &-container__card {
+    margin: 0.5rem 1rem;
+
+    &-content {
+      background-color: #F3F4F6;
+      margin: 0.5rem;
+      border-radius: 4px;
+    }
+  }
+
+  &-container__graphic {
+    margin: 1rem;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 4px;
+  }
+}

@@ -1,9 +1,41 @@
 <div class="container__dashboard">
+  <!--MenuBar-->
+  <div class="container__dashboard-header">
+    <p-menubar [model]="items" />
+    <div class="flex items-center justify-end gap-2 mx-4">
+      <app-translation-dropdown></app-translation-dropdown>
+
+      <div
+        class="col-12 md:col-4 flex flex-col justify-center text-center container__avatar"
+      >
+        <div class="card flex justify-content-center">
+          <p-avatar
+            [icon]="!isAuthenticated ? 'pi pi-user' : ''"
+            [style]="{
+              'background-color': !isAuthenticated ? 'red' : 'green',
+              color: 'white',
+              cursor: 'pointer'
+            }"
+            size="large"
+            [label]="isAuthenticated ? initialsName : ''"
+            (click)="toggleAuthentication()"
+            [title]="title"
+            shape="circle"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="container__dashboard-container__card">
     <div>
       <h3 class="text-base font-semibold text-gray-900">Last 30 days</h3>
-      <dl class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-3 md:divide-x md:divide-y-0">
-        <div class="px-4 py-5 sm:p-6 container__dashboard-container__card-content">
+      <dl
+        class="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:grid-cols-3 md:divide-x md:divide-y-0"
+      >
+        <div
+          class="px-4 py-5 sm:p-6 container__dashboard-container__card-content"
+        >
           <dt class="text-base font-normal text-gray-900">Total Subscribers</dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
             <div
@@ -36,7 +68,9 @@
             </div>
           </dd>
         </div>
-        <div class="px-4 py-5 sm:p-6 container__dashboard-container__card-content">
+        <div
+          class="px-4 py-5 sm:p-6 container__dashboard-container__card-content"
+        >
           <dt class="text-base font-normal text-gray-900">Avg. Open Rate</dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
             <div
@@ -69,7 +103,9 @@
             </div>
           </dd>
         </div>
-        <div class="px-4 py-5 sm:p-6 container__dashboard-container__card-content">
+        <div
+          class="px-4 py-5 sm:p-6 container__dashboard-container__card-content"
+        >
           <dt class="text-base font-normal text-gray-900">Avg. Click Rate</dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
             <div
@@ -107,15 +143,23 @@
   </div>
 
   <div class="container__dashboard-container__card">
-    <dl class="mx-auto grid grid-cols-1 gap-px bg-gray-900/5 sm:grid-cols-2 lg:grid-cols-4 rounded-lg shadow">
-      <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 bg-white px-4 py-5 sm:px-6 xl:px-8 container__dashboard-container__card">
+    <dl
+      class="mx-auto grid grid-cols-1 gap-px bg-gray-900/5 sm:grid-cols-2 lg:grid-cols-4 rounded-lg shadow"
+    >
+      <div
+        class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 bg-white px-4 py-5 sm:px-6 xl:px-8 container__dashboard-container__card"
+      >
         <dt class="text-sm/6 font-medium text-gray-500">Revenue</dt>
         <dd class="text-xs font-medium text-gray-700">+4.75%</dd>
-        <dd class="w-full flex-none text-3xl/10 font-medium tracking-tight text-gray-900" >
+        <dd
+          class="w-full flex-none text-3xl/10 font-medium tracking-tight text-gray-900"
+        >
           $405,091.00
         </dd>
       </div>
-      <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 bg-white px-4 py-5 sm:px-6 xl:px-8 container__dashboard-container__card">
+      <div
+        class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 bg-white px-4 py-5 sm:px-6 xl:px-8 container__dashboard-container__card"
+      >
         <dt class="text-sm/6 font-medium text-gray-500">Overdue invoices</dt>
         <dd class="text-xs font-medium text-rose-600">+54.02%</dd>
         <dd
@@ -124,7 +168,9 @@
           $12,787.00
         </dd>
       </div>
-      <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 bg-white px-4 py-5 sm:px-6 xl:px-8 container__dashboard-container__card">
+      <div
+        class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 bg-white px-4 py-5 sm:px-6 xl:px-8 container__dashboard-container__card"
+      >
         <dt class="text-sm/6 font-medium text-gray-500">
           Outstanding invoices
         </dt>
@@ -135,7 +181,9 @@
           $245,988.00
         </dd>
       </div>
-      <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 bg-white px-4 py-5 sm:px-6 xl:px-8 container__dashboard-container__card">
+      <div
+        class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 bg-white px-4 py-5 sm:px-6 xl:px-8 container__dashboard-container__card"
+      >
         <dt class="text-sm/6 font-medium text-gray-500">Expenses</dt>
         <dd class="text-xs font-medium text-rose-600">+10.18%</dd>
         <dd

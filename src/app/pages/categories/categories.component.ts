@@ -5,11 +5,12 @@ import { ENDPOINTS } from '../../core/const/constants';
 import { CategoryFake } from '../../core/models/products.model';
 import { HttpService } from '../../core/services/http.service';
 import { RouterOutlet } from '@angular/router';
+import { HeaderComponent } from '../../core/components/header/header.component';
 
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [ NgForOf, TranslateModule, RouterOutlet ],
+  imports: [ NgForOf, TranslateModule, RouterOutlet, HeaderComponent ],
   templateUrl: './categories.component.html',
   styleUrl: './categories.component.scss',
 })

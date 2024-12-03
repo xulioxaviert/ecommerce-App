@@ -1,29 +1,30 @@
 export interface Users {
-  address:  Address;
-  id:       number;
-  email:    string;
+  address: Address;
+  id: number;
+  email: string;
   username: string;
   password: string;
-  name:     Name;
-  phone:    string;
-  __v:      number;
+  name: Name;
+  phone: string;
+  role: string;
+  __v: number;
 }
 
 export interface Address {
   geolocation: Geolocation;
-  city:        string;
-  street:      string;
-  number:      number;
-  zipcode:     string;
+  city: string;
+  street: string;
+  number: number;
+  zipcode: string;
 }
 
 export interface Geolocation {
-  lat:  string;
+  lat: string;
   long: string;
 }
 
 export interface Name {
   firstname: string;
-  lastname:  string;
+  lastname: string;
 }
 

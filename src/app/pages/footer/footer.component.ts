@@ -29,12 +29,7 @@ export class FooterComponent implements OnInit {
   }
 
   getData() {
-    //Preguntó Mario traducciones cuando se hace peticiones al API
-    this.http.getTestimonials().subscribe((testimonials) => {
-      this.testimonials = testimonials;
-      console.log("this.http.getTestimonials / testimonials:", testimonials);
-
-    });
+    
 
   }
 

@@ -1,19 +1,21 @@
 import { NgForOf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, input, OnInit } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ENDPOINTS } from '../../core/const/constants';
 import { CategoryFake } from '../../core/models/products.model';
 import { HttpService } from '../../core/services/http.service';
-
+import { RouterOutlet } from '@angular/router';
+import { HeaderComponent } from '../../core/components/header/header.component';
 
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [ NgForOf, TranslateModule ],
+  imports: [ NgForOf, TranslateModule, RouterOutlet, HeaderComponent ],
   templateUrl: './categories.component.html',
   styleUrl: './categories.component.scss',
 })
 export class CategoriesComponent implements OnInit {
+  // changeLanguage = input();
   categories: CategoryFake[] = [];
 
   constructor(
@@ -22,53 +24,70 @@ export class CategoriesComponent implements OnInit {
   ) { }
   ngOnInit(): void {
     this.getData();
+    this.translateService.onDefaultLangChange.subscribe((event) => {
+      this.changeLabelLanguage();
+    });
   }
 
   getData() {
     this.http.getData(ENDPOINTS.getAllCategories).subscribe((categories) => {
-      console.log(categories);
-      this.categories = [ {
-        category: 'electronics',
-        name: 'electronics',
-        title: 'tecnología que simplifica tu vida',
-        descriptions:
-          'Lo último en gadgets y dispositivos electrónicos para mantenerte conectado, productivo y entretenido. Desde lo esencial hasta lo más innovador, encuentra justo lo que necesitas para tu mundo digital.',
-      },
-      {
-        category: 'JEWELRY',
-        name: 'jewellery',
-        title: 'Brilla con Estilo: Joyería para Cada Momento',
-        descriptions:
-          'Encuentra piezas únicas que hablan por ti. Desde diseños elegantes hasta toques modernos, nuestra colección de joyería es perfecta para destacar en cualquier ocasión. Porque cada detalle cuenta, ¡hazlo inolvidable!',
-      },
-      {
-        category: 'MEN',
-        name: 'men',
-        title: 'Estilo Masculino: Hecho a Tu Medida',
-        descriptions:
-          'Moderno, cómodo y siempre a la moda. Descubre nuestra colección para hombres que buscan prendas versátiles, con un diseño que combina funcionalidad y actitud. ¡El look que necesitas está aquí!',
-      },
-      {
-        category: 'WOMEN',
-        name: 'women',
-        title: 'Moda Femenina: Vive tu Mejor Versión',
-        descriptions:
-          'Diseños que inspiran confianza y estilo. Desde básicos imprescindibles hasta piezas que marcan tendencia, explora nuestra selección para realzar tu esencia en cada paso que des.',
-      },
-      {
-        category: 'MEN',
-        name: 'men',
-        title: 'Estilo Masculino: Hecho a Tu Medida',
-        descriptions:
-          'Moderno, cómodo y siempre a la moda. Descubre nuestra colección para hombres que buscan prendas versátiles, con un diseño que combina funcionalidad y actitud. ¡El look que necesitas está aquí!',
-      },
-      {
-        category: 'WOMEN',
-        name: 'women',
-        title: 'Moda Femenina: Vive tu Mejor Versión',
-        descriptions:
-          'Diseños que inspiran confianza y estilo. Desde básicos imprescindibles hasta piezas que marcan tendencia, explora nuestra selección para realzar tu esencia en cada paso que des.',
-      } ]
+      console.log(categories.body);
+      this.categories = [];
+      categories.body.forEach((category: any) => {
+        switch (category) {
+          case 'electronics':
+            this.categories.push({
+              category: this.translateService.instant('CATEGORY.ELECTRONICS'),
+              name: this.translateService.instant('CATEGORY.ELECTRONICS'),
+              title: this.translateService.instant(
+                'CATEGORY.ELECTRONICS_TITLE'
+              ),
+              descriptions: this.translateService.instant(
+                'CATEGORY.ELECTRONICS_DESCRIPTIONS'
+              ),
+              img: 'assets/images/electronics.jpg',
+            });
+            break;
+          case 'jewelery':
+            this.categories.push({
+              category: this.translateService.instant('CATEGORY.JEWELRY'),
+              name: this.translateService.instant('CATEGORY.JEWELRY'),
+              title: this.translateService.instant('CATEGORY.JEWELRY_TITLE'),
+              descriptions: this.translateService.instant(
+                'CATEGORY.JEWELRY_DESCRIPTIONS'
+              ),
+              img: 'assets/images/jewellery.jpg',
+            });
+            break;
+          case "men's clothing":
+            this.categories.push({
+              category: this.translateService.instant('CATEGORY.MEN'),
+              name: this.translateService.instant('CATEGORY.MEN'),
+              title: this.translateService.instant('CATEGORY.MEN_TITLE'),
+              descriptions: this.translateService.instant(
+                'CATEGORY.MEN_DESCRIPTIONS'
+              ),
+              img: 'assets/images/men.jpg'
+            });
+            break;
+          case "women's clothing":
+            this.categories.push({
+              category: this.translateService.instant('CATEGORY.WOMEN'),
+              name: this.translateService.instant('CATEGORY.WOMEN'),
+              title: this.translateService.instant('CATEGORY.WOMEN_TITLE'),
+              descriptions: this.translateService.instant(
+                'CATEGORY.WOMEN_DESCRIPTIONS'
+              ),
+              img: 'assets/images/women.jpg'
+            });
+            break;
+        }
+      });
     });
+  }
+
+  //TODO:  Revisar con Mario la traducción de las categoría si se limpia o no
+  changeLabelLanguage() {
+    this.getData();
   }
 }

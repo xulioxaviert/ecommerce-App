@@ -25,6 +25,7 @@ export interface CategoryFake {
   name:         string;
   title:        string;
   descriptions: string;
+  img:         string;
 }
 
 

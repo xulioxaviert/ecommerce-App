@@ -6,54 +6,34 @@
       </div>
     </ng-template>
     <ng-template pTemplate="item" let-item let-root="root">
-      <a pRipple class="flex align-items-center p-menuitem-link">
-        <span [class]="item.icon"></span>
-        <span class="ml-2">{{ item.label }}</span>
-        <p-badge
-          *ngIf="item.badge"
-          [ngClass]="{ 'ml-auto': !root, 'ml-2': root }"
-          [value]="item.badge"
-        />
-        <span
-          *ngIf="item.shortcut"
-          class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1"
-          >{{ item.shortcut }}</span
-        >
-        <i
-          *ngIf="item.items"
-          [ngClass]="[
-            'pi',
-            root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto'
-          ]"
-        ></i>
-      </a>
+      <ng-container >
+            <a [routerLink]="item.route" class="p-menuitem-link">
+                <span [class]="item.icon"></span>
+                <span class="ml-2">{{ item.label }}</span>
+            </a>
+        </ng-container>
     </ng-template>
     <ng-template pTemplate="end">
       <div class="flex items-center justify-end gap-2 mx-4">
-        <app-translation-dropdown
-          (changeLanguage)="changeLabelLanguage($event)"
-        ></app-translation-dropdown>
+        <app-translation-dropdown></app-translation-dropdown>
 
         <div
           class="col-12 md:col-4 flex flex-col justify-center text-center container__avatar"
         >
-          <h6 *ngIf="isAuthenticated" class="container__avatar-name">
-            {{ user?.name?.firstname | uppercase }} -
-            {{ user?.name?.lastname | uppercase }}
-          </h6>
           <div class="card flex justify-content-center">
-            <form [formGroup]="formGroup">
-              <p-toggleButton
-                formControlName="checked"
-                (click)="toggleAuthentication()"
-                [onLabel]="toggleButtonText"
-                [offLabel]="toggleButtonText"
-                [styleClass]="
-                  isAuthenticated ? 'p-button-danger' : 'p-button-success'
-                "
-                class="container__avatar-toggle"
-              />
-            </form>
+            <p-avatar
+              [icon]="!isAuthenticated ? 'pi pi-user' : ''"
+              [style]="{
+                'background-color': !isAuthenticated ? 'red' : 'green',
+                color: 'white',
+                cursor: 'pointer'
+              }"
+              size="large"
+              [label]="isAuthenticated ? initialsName : ''"
+              (click)="toggleAuthentication()"
+              [title]="title"
+              shape="circle"
+            />
           </div>
         </div>
       </div>

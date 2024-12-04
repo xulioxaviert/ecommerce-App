@@ -1,4 +1,4 @@
-import { NgClass, NgIf, NgSwitchCase } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router, RouterEvent, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { catchError, map, of, switchMap } from 'rxjs';
 import { ToastService } from '../../core/services/toast.service';
@@ -16,7 +16,7 @@ import { AuthService } from '../auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ ReactiveFormsModule, NgIf, TranslateModule, NgClass,RouterLink ],
+  imports: [ ReactiveFormsModule, NgIf, TranslateModule, NgClass, RouterLink ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -24,9 +24,7 @@ export class LoginComponent implements OnInit {
 
 
   loginForm: FormGroup = new FormGroup({});
-  lang = sessionStorage.getItem('language')
-    ? sessionStorage.getItem('language')
-    : 'en';
+
 
   constructor(
     private authService: AuthService,
@@ -75,19 +73,32 @@ export class LoginComponent implements OnInit {
             return of(error);
           }),
           switchMap(({ token }: any) => {
+            console.log("switchMap / token:", token);
             this.authService.setSessionStorage('token', token);
             return this.usersService.getAllUsers();
           }),
           map((users) => {
             users.forEach((user) => {
               if (user.username === payload.username) {
+                //TODO: enviar al authServcie
+                switch (user.username) {
+                  case 'derek':
+                    user.role = 'admin';
+                    break;
+                  case 'kevinryan':
+                    user.role = 'admin';
+                    break;
+                  default:
+                    user.role = 'costumer'
+                    break;
+                }
+
+
                 this.authService.setSessionStorage(
                   'user',
                   JSON.stringify(user)
                 );
                 this.authService.isAuthenticated();
-                this.translateService.use('es');
-                this.authService.setLocalStorage('language', 'es')
                 this.router.navigate([ '/' ]);
 
               }
@@ -98,8 +109,8 @@ export class LoginComponent implements OnInit {
           next: (data) => {
           },
           error: (error) => {
-            const errorMessage = this.translateService.instant('ERROR.LOGIN');
-            this.toastService.showError('Error', errorMessage);
+            // const errorMessage = this.translateService.instant('ERROR.LOGIN');
+            this.toastService.showError('Error', error);
             this.loginForm.reset();
           },
           complete: () => {

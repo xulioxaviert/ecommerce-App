@@ -1,14 +1,14 @@
 <div>
-  <form [formGroup]="languageForm">
+
     <p-dropdown
       [options]="languages"
-      [(ngModel)]="selectedLanguage"
+       [(ngModel)]="selectedLanguage"
       optionLabel="name"
       [showClear]="true"
       placeholder="language"
       class="customDropdown"
       dataKey="code"
-      formControlName="language"
+      (onChange)="changeLanguage($event)"
     >
       <ng-template pTemplate="selectedItem" class="customDropdown-item">
         <div
@@ -35,5 +35,4 @@
         </div>
       </ng-template>
     </p-dropdown>
-  </form>
 </div>

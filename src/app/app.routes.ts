@@ -4,7 +4,7 @@ import { AuthGuard } from './auth/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./pages/home/home.routes').then(m => m.routes),
+    loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent),
   },
   {
     path: 'auth',
@@ -24,7 +24,7 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
+    loadComponent: () => import('./admin/dashboard/dashboard.component').then(m => m.DashboardComponent),
     canActivate: [ AuthGuard ]
   },
 

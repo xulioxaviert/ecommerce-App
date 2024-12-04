@@ -1,77 +1,42 @@
-<header id="header" class="header d-flex align-items-center fixed-top">
-  <div class="container-fluid">
-    <div class="row bg-secondary py-1 px-xl-5">
-      <div class="col-lg-6 d-none d-lg-block">
-        <div class="d-inline-flex align-items-center h-100">
-          <a class="text-body mr-3" href="">About</a>
-          <a class="text-body mr-3" href="">Contact</a>
-          <a class="text-body mr-3" href="">Help</a>
-          <a class="text-body mr-3" href="">FAQs</a>
+<div class="container__header p-fluid card sticky top-0">
+  <p-menubar [model]="items" class="card">
+    <ng-template pTemplate="start">
+      <div class="container__header-img">
+        <img src="assets/images/logo5.png" alt="logo" />
+      </div>
+    </ng-template>
+    <ng-template pTemplate="item" let-item let-root="root">
+      <ng-container >
+            <a [routerLink]="item.route" class="p-menuitem-link">
+                <span [class]="item.icon"></span>
+                <span class="ml-2">{{ item.label }}</span>
+            </a>
+        </ng-container>
+    </ng-template>
+    <ng-template pTemplate="end">
+      <div class="flex items-center justify-end gap-2 mx-4">
+        <app-translation-dropdown></app-translation-dropdown>
+
+        <div
+          class="col-12 md:col-4 flex flex-col justify-center text-center container__avatar"
+        >
+          <div class="card flex justify-content-center">
+            <p-avatar
+              [icon]="!isAuthenticated ? 'pi pi-user' : ''"
+              [style]="{
+                'background-color': !isAuthenticated ? 'red' : 'green',
+                color: 'white',
+                cursor: 'pointer'
+              }"
+              size="large"
+              [label]="isAuthenticated ? initialsName : ''"
+              (click)="toggleAuthentication()"
+              [title]="title"
+              shape="circle"
+            />
+          </div>
         </div>
       </div>
-      <div class="col-lg-6 text-right text-lg-right">
-
-        <p-dropdown
-          [options]="languages"
-          [(ngModel)]="selectedLanguage"
-          optionLabel="name"
-          [showClear]="true"
-          placeholder="Language"
-          class="customDropdown"
-        >
-          <ng-template pTemplate="selectedItem" class="customDropdown-item">
-            <div class="customDropdown-item flex align-items-center" *ngIf="selectedLanguage">
-              <div class="customDropdown-item">
-                <img
-                src="assets/images/{{ selectedLanguage.code }}.png"
-                alt="flag"
-                style="width: 18px"
-                />
-              </div>
-            </div>
-          </ng-template>
-          <ng-template let-language pTemplate="item">
-            <div class="flex align-items-center">
-              <img
-                src="assets/images/{{ language.code }}.png"
-                alt="flag"
-                style="width: 18px"
-              />
-              <div>{{ language.name }}</div>
-            </div>
-          </ng-template>
-        </p-dropdown>
-      </div>
-    </div>
-    <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
-      <div class="col-lg-4">
-        <a href="" class="text-decoration-none">
-          <span class="h1 text-uppercase text-primary bg-dark px-2">Multi</span>
-          <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1"
-            >Shop</span
-          >
-        </a>
-      </div>
-      <div class="col-lg-4 col-6 text-left">
-        <form action="">
-          <div class="input-group">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Search for products"
-            />
-            <div class="input-group-append">
-              <span class="input-group-text bg-transparent text-primary">
-                <i class="fa fa-search"></i>
-              </span>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="col-lg-4 col-6 text-right">
-        <p class="m-0">Customer Service</p>
-        <h5 class="m-0">+012 345 6789</h5>
-      </div>
-    </div>
-  </div>
-</header>
+    </ng-template>
+  </p-menubar>
+</div>

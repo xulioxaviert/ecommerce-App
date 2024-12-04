@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './auth/auth.guard';
 
 export const routes: Routes = [
   {
@@ -7,19 +8,24 @@ export const routes: Routes = [
   },
   {
     path: 'auth',
-    loadChildren: () => import('./auth/authentication.module').then(m => m.AuthenticationModule),
+    loadChildren: () => import('./auth/authentication.routes').then(m => m.routes),
   },
   {
-    path: 'category',
-    loadComponent: () => import('./pages/categories/categories.component').then(m => m.CategoriesComponent),
+    path: 'categories',
+    loadChildren: () => import('./pages/categories/categories.routes').then(m => m.routes),
   },
   {
     path: 'products',
     loadComponent: () => import('./pages/products/products.component').then(m => m.ProductsComponent),
   },
   {
-    path: 'products/:id',
+    path: 'product/:id',
     loadComponent: () => import('./pages/products/products-detail/products-detail.component').then(m => m.ProductsDetailComponent),
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./admin/dashboard/dashboard.component').then(m => m.DashboardComponent),
+    canActivate: [ AuthGuard ]
   },
 
 

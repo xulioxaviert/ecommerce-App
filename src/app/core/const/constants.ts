@@ -2,7 +2,13 @@
 export const ENDPOINTS = {
   login: 'https://fakestoreapi.com/auth/login',
   getAllUsers: 'https://fakestoreapi.com/users',
-  getUser: 'https://fakestoreapi.com/users/'
+  getUser: 'https://fakestoreapi.com/users/',
+  getAllCategories: 'https://fakestoreapi.com/products/categories',
+  getAllProducts: 'https://fakestoreapi.com/products',
+  getAllPlatziProducts: 'https://api.escuelajs.co/api/v1/products',
+  getAllPlatziCategories: 'https://api.escuelajs.co/api/v1/categories',
+  getUsersRandom: 'https://randomuser.me/api/?results=8',
+  getTestimonialsMock: '/core/mocks/mock-data.ts',
 };
 
 export const ERROR_MESSAGES = {

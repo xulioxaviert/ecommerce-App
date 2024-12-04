@@ -1,145 +1,247 @@
-<!-- Login 9 - Bootstrap Brain Component -->
-<section class="bg-primary py-3 py-md-5 py-xl-8 vh-100 d-flex">
-  <div class="container align-content-center">
-    <div class="row gy-4 align-items-center m-auto">
-      <div class="col-12 col-md-6 col-xl-7">
-        <div class="d-flex justify-content-center text-bg-primary">
-          <div class="col-12 col-xl-9">
-            <hr class="border-primary-subtle mb-4" />
-            <h2 class="h1 mb-4">
-              We make digital products that drive you to stand out.
-            </h2>
-            <p class="lead mb-5">
-              We write words, take photos, make videos, and interact with
-              artificial intelligence.
-            </p>
-            <div class="text-endx">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="48"
-                height="48"
-                fill="currentColor"
-                class="bi bi-grip-horizontal"
-                viewBox="0 0 16 16"
+
+<div class="font-[sans-serif] bg-gray-50 container__form">
+  <form [formGroup]="registerForm">
+    <div
+      class="grid md:grid-cols-2 lg:grid-cols-3 items-center lg:gap-10 gap-4"
+    >
+      <div class="max-md:order-1 h-screen min-h-full">
+        <img
+          src="assets/images/img_login.jpg"
+          class="w-full h-full object-cover"
+          alt="login-image"
+        />
+      </div>
+
+      <div class="lg:col-span-2 max-w-lg w-full p-6 mx-auto">
+        <div class="mb-12">
+          <h3 class="text-gray-800 text-4xl font-extrabold">
+            {{ "REGISTER.SIGN_UP" | translate }}
+          </h3>
+          <p class="text-gray-800 text-sm mt-6">
+            <a
+              [routerLink]="['/auth/login']"
+              routerLinkActive="router-link-active"
+              class="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap"
+              >{{ "REGISTER.HAVE_ACCOUNT" | translate }}</a
+            >
+          </p>
+        </div>
+
+        <div class="container__form-input">
+          <label class="text-gray-800 text-sm block mb-2">{{
+            "REGISTER.FIRST_NAME" | translate
+          }}</label>
+          <div class="relative flex items-center">
+            <input
+              name="first_name"
+              type="text"
+              formControlName="firstname"
+              required
+              class="bg-transparent w-full text-sm text-gray-800 border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none"
+              [placeholder]="'REGISTER.FIRST_NAME' | translate"
+            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="#bbb"
+              stroke="#bbb"
+              class="w-[18px] h-[18px] absolute right-2"
+              viewBox="0 0 682.667 682.667"
+            >
+              <defs>
+                <clipPath id="a" clipPathUnits="userSpaceOnUse">
+                  <path d="M0 512h512V0H0Z" data-original="#000000"></path>
+                </clipPath>
+              </defs>
+              <g
+                clip-path="url(#a)"
+                transform="matrix(1.33 0 0 -1.33 0 682.667)"
               >
                 <path
-                  d="M2 8a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm3 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm0-3a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"
-                />
-              </svg>
-            </div>
+                  fill="none"
+                  stroke-miterlimit="10"
+                  stroke-width="40"
+                  d="M452 444H60c-22.091 0-40-17.909-40-40v-39.446l212.127-157.782c14.17-10.54 33.576-10.54 47.746 0L492 364.554V404c0 22.091-17.909 40-40 40Z"
+                  data-original="#000000"
+                ></path>
+                <path
+                  d="M472 274.9V107.999c0-11.027-8.972-20-20-20H60c-11.028 0-20 8.973-20 20V274.9L0 304.652V107.999c0-33.084 26.916-60 60-60h392c33.084 0 60 26.916 60 60v196.653Z"
+                  data-original="#000000"
+                ></path>
+              </g>
+            </svg>
+          </div>
+          <div class="error-text">
+            <span
+              *ngIf="
+                registerForm.get('firstname')?.hasError('required') &&
+                registerForm.get('firstname')?.touched
+              "
+            >
+              {{ "REGISTER.FIRST_NAME_REQUIRED" | translate }}
+            </span>
+          </div>
+          <div class="error-text">
+            <span *ngIf="registerForm.get('username')?.hasError('minlength')">
+              {{ "LOGIN.USERNAME_MIN_LENGTH" | translate }}
+            </span>
           </div>
         </div>
-      </div>
-      <div class="col-12 col-md-6 col-xl-5">
-        <div class="card border-0 rounded-4">
-          <div class="card-body p-3 p-md-4 p-xl-5">
-            <div class="row">
-              <div class="col-12">
-                <div class="mb-4">
-                  <h3>Sign in</h3>
 
-                  <a (click)="registeredUser()">
-                    <p>Have an account? Sign up</p>
-                  </a>
-                </div>
-              </div>
-            </div>
-            <form [formGroup]="registerForm">
-              <div class="row gy-3 overflow-hidden">
-                <div class="col-12">
-                  <div class="form-floating mb-3">
-                    <input
-                      type="text"
-                      class="form-control"
-                      name="nombre"
-                      placeholder="Nombre"
-                      required
-                      formControlName="firstname"
-                    />
-                    <label for="nombre" class="form-label">Nombre</label>
-                  </div>
-                  <div class="error-text">
-                    <span *ngIf="registerForm.get('firstname')?.hasError('required') && registerForm.get('firstname')?.touched">
-                      Firstname is required
-                    </span>
-                  </div>
-                </div>
-
-                <div class="col-12">
-                  <div class="form-floating mb-3">
-                    <input
-                      type="text"
-                      class="form-control"
-                      name="apellido"
-                      placeholder="Apellido"
-                      formControlName="lastname"
-                      required
-                    />
-                    <label for="apellido" class="form-label">Apellido</label>
-                  </div>
-                  <div class="error-text">
-                      <span *ngIf="registerForm.get('lastname')?.hasError('required') && registerForm.get('lastname')?.touched">
-                        Username is required
-                      </span>
-                  </div>
-                  <div class="col-12">
-                    <div class="form-floating mb-3">
-                        <input
-                          type="password"
-                          class="form-control"
-                          name="password"
-                          id="password"
-                          value=""
-                          placeholder="password"
-                          required
-                        />
-                      <label for="password" class="form-label">Password</label>
-                    </div>
-                    <div class="error-text">
-                      <span *ngIf="registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched">
-                        Password is required
-                      </span>
-                    </div>
-                  </div>
-                  <div class="col-12">
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value=""
-                          name="remember_me"
-                          id="remember_me"
-                        />
-                        <label
-                          class="form-check-label text-secondary"
-                          for="remember_me"
-                        >
-                          Keep me logged in
-                        </label>
-                      </div>
-                   </div>
-                <div class="col-12">
-                  <div class="d-grid">
-                    <button class="btn btn-primary btn-lg" type="submit">
-                      Log in now
-                    </button>
-                  </div>
-                </div>
-                </div>
-              </div>
-            </form>
-            <div class="row">
-              <div class="col-12">
-                <div
-                  class="d-flex gap-2 gap-md-4 flex-column flex-md-row justify-content-md-end mt-4"
-                >
-                  <a href="#!">Forgot password</a>
-                </div>
-              </div>
-            </div>
+        <div class="container__form-input">
+          <label class="text-gray-800 text-sm block mb-2">{{
+            "REGISTER.LAST_NAME" | translate
+          }}</label>
+          <div class="relative flex items-center">
+            <input
+              name="last_name"
+              type="text"
+              formControlName="lastname"
+              required
+              class="bg-transparent w-full text-sm text-gray-800 border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none"
+              [placeholder]="'REGISTER.LAST_NAME' | translate"
+            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="#bbb"
+              stroke="#bbb"
+              class="w-[18px] h-[18px] absolute right-2"
+              viewBox="0 0 682.667 682.667"
+            >
+              <defs>
+                <clipPath id="a" clipPathUnits="userSpaceOnUse">
+                  <path d="M0 512h512V0H0Z" data-original="#000000"></path>
+                </clipPath>
+              </defs>
+              <g
+                clip-path="url(#a)"
+                transform="matrix(1.33 0 0 -1.33 0 682.667)"
+              >
+                <path
+                  fill="none"
+                  stroke-miterlimit="10"
+                  stroke-width="40"
+                  d="M452 444H60c-22.091 0-40-17.909-40-40v-39.446l212.127-157.782c14.17-10.54 33.576-10.54 47.746 0L492 364.554V404c0 22.091-17.909 40-40 40Z"
+                  data-original="#000000"
+                ></path>
+                <path
+                  d="M472 274.9V107.999c0-11.027-8.972-20-20-20H60c-11.028 0-20 8.973-20 20V274.9L0 304.652V107.999c0-33.084 26.916-60 60-60h392c33.084 0 60 26.916 60 60v196.653Z"
+                  data-original="#000000"
+                ></path>
+              </g>
+            </svg>
           </div>
+          <div class="error-text">
+            <span
+              *ngIf="
+                registerForm.get('lastname')?.hasError('required') &&
+                registerForm.get('lastname')?.touched
+              "
+            >
+              {{ "REGISTER.LAST_NAME_REQUIRED" | translate }}
+            </span>
+          </div>
+          <div class="error-text">
+            <span *ngIf="registerForm.get('lastname')?.hasError('minlength')">
+              {{ "REGISTER.LAST_NAME_MIN_LENGTH" | translate }}
+            </span>
+          </div>
+        </div>
+
+        <div class="container__form-input">
+          <label class="text-gray-800 text-sm block mb-2">{{
+            "LOGIN.EMAIL" | translate
+          }}</label>
+          <div class="relative flex items-center">
+            <input
+              name="email"
+              type="text"
+              formControlName="username"
+              required
+              class="bg-transparent w-full text-sm text-gray-800 border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none"
+              [placeholder]="'REGISTER.EMAIL' | translate"
+            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="#bbb"
+              stroke="#bbb"
+              class="w-[18px] h-[18px] absolute right-2 cursor-pointer"
+              viewBox="0 0 128 128"
+            >
+              <path
+                d="M64 104C22.127 104 1.367 67.496.504 65.943a4 4 0 0 1 0-3.887C1.367 60.504 22.127 24 64 24s62.633 36.504 63.496 38.057a4 4 0 0 1 0 3.887C126.633 67.496 105.873 104 64 104zM8.707 63.994C13.465 71.205 32.146 96 64 96c31.955 0 50.553-24.775 55.293-31.994C114.535 56.795 95.854 32 64 32 32.045 32 13.447 56.775 8.707 63.994zM64 88c-13.234 0-24-10.766-24-24s10.766-24 24-24 24 10.766 24 24-10.766 24-24 24zm0-40c-8.822 0-16 7.178-16 16s7.178 16 16 16 16-7.178 16-16-7.178-16-16-16z"
+                data-original="#000000"
+              ></path>
+            </svg>
+          </div>
+          <div class="error-text">
+            <span
+              *ngIf="
+                registerForm.get('username')?.hasError('required') &&
+                registerForm.get('username')?.touched
+              "
+            >
+              {{ "REGISTER.USERNAME_REQUIRED" | translate }}
+            </span>
+          </div>
+          <div class="error-text">
+            <span *ngIf="registerForm.get('username')?.hasError('minlength')">
+              {{ "REGISTER.USERNAME_MIN_LENGTH" | translate }}
+            </span>
+          </div>
+        </div>
+
+        <div class="container__form-input mt-4">
+          <label class="text-gray-800 text-sm block mb-2">{{
+            "REGISTER.PASSWORD" | translate
+          }}</label>
+          <div class="relative flex items-center">
+            <input
+              name="password"
+              type="password"
+              formControlName="password"
+              required
+              class="bg-transparent w-full text-sm text-gray-800 border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none"
+              [placeholder]="'REGISTER.PASSWORD' | translate"
+            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="#bbb"
+              stroke="#bbb"
+              class="w-[18px] h-[18px] absolute right-2 cursor-pointer"
+              viewBox="0 0 128 128"
+            >
+              <path
+                d="M64 104C22.127 104 1.367 67.496.504 65.943a4 4 0 0 1 0-3.887C1.367 60.504 22.127 24 64 24s62.633 36.504 63.496 38.057a4 4 0 0 1 0 3.887C126.633 67.496 105.873 104 64 104zM8.707 63.994C13.465 71.205 32.146 96 64 96c31.955 0 50.553-24.775 55.293-31.994C114.535 56.795 95.854 32 64 32 32.045 32 13.447 56.775 8.707 63.994zM64 88c-13.234 0-24-10.766-24-24s10.766-24 24-24 24 10.766 24 24-10.766 24-24 24zm0-40c-8.822 0-16 7.178-16 16s7.178 16 16 16 16-7.178 16-16-7.178-16-16-16z"
+                data-original="#000000"
+              ></path>
+            </svg>
+          </div>
+          <div class="error-text">
+            <span
+              *ngIf="
+                registerForm.get('password')?.hasError('required') &&
+                registerForm.get('password')?.touched
+              "
+            >
+              {{ "REGISTER.PASSWORD_REQUIRED" | translate }}
+            </span>
+          </div>
+          <div class="error-text">
+            <span *ngIf="registerForm.get('password')?.hasError('minlength')">
+              {{ "REGISTER.PASSWORD_MIN_LENGTH" | translate }}
+            </span>
+          </div>
+        </div>
+
+        <div class="mt-8">
+          <button
+            type="button"
+            class="w-full py-2.5 px-5 text-sm tracking-wide rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+          >
+            {{ "REGISTER.SIGN_UP" | translate }}
+          </button>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </form>
+</div>

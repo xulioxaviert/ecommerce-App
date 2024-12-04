@@ -17,6 +17,7 @@ export const routes: Routes = [
     component: CategoriesComponent,
     children: [
       {
+        //TODO actualizar loadChildren
         path: 'electronics',
         component: ElectronicsComponent
 

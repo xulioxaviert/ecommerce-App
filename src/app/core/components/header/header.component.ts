@@ -8,7 +8,7 @@ import { RippleModule } from 'primeng/ripple';
 
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
@@ -27,6 +27,7 @@ import { Users } from '../../models/user.model';
     RippleModule,
     TranslationDropdownComponent,
     ReactiveFormsModule,
+    TranslateModule,
     RouterModule,
     NgClass,
     NgIf,

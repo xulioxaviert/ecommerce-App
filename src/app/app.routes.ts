@@ -1,17 +1,18 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './auth/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./pages/home/home.routes').then(m => m.routes),
+    loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent),
   },
   {
     path: 'auth',
     loadChildren: () => import('./auth/authentication.routes').then(m => m.routes),
   },
   {
-    path: 'category',
-    loadComponent: () => import('./pages/categories/categories.component').then(m => m.CategoriesComponent),
+    path: 'categories',
+    loadChildren: () => import('./pages/categories/categories.routes').then(m => m.routes),
   },
   {
     path: 'products',
@@ -20,6 +21,11 @@ export const routes: Routes = [
   {
     path: 'product/:id',
     loadComponent: () => import('./pages/products/products-detail/products-detail.component').then(m => m.ProductsDetailComponent),
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./admin/dashboard/dashboard.component').then(m => m.DashboardComponent),
+    canActivate: [ AuthGuard ]
   },
 
 

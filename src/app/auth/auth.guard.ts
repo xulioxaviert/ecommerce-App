@@ -11,12 +11,15 @@ export class AuthGuard {
   canActivate: CanActivateFn = (route, state) => {
     // Check if the user is authenticated
     const isAuthenticated = this.authService.isAuthenticated();
+    const isAdmin = this.authService.isAdministrator()
 
-    if (isAuthenticated) {
+    if (isAuthenticated && isAdmin) {
       return true;
     } else {
-      this.router.navigate([ '/login' ]);
+      this.router.navigate([ '/' ]);
       return false;
     }
+
+
   };
 }

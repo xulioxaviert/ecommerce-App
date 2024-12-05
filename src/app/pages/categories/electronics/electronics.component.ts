@@ -17,9 +17,6 @@ export class ElectronicsComponent implements OnInit {
   ) { }
   ngOnInit(): void {
     this.getData();
-    this.translateService.onDefaultLangChange.subscribe((event) => {
-      this.changeLabelLanguage();
-    });
   }
 
   getData() {

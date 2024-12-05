@@ -76,6 +76,7 @@ export class TranslationDropdownComponent implements OnInit {
     this.selectedLanguage = event.value;
     console.log("changeLanguage / event:", event);
     this.translateService.use(event.value.code);
+    this.authService.setLocalStorage('language', event.value.code)
 
   }
 }

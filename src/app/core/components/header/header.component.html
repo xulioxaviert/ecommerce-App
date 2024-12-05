@@ -9,7 +9,7 @@
       <ng-container >
             <a [routerLink]="item.route" class="p-menuitem-link">
                 <span [class]="item.icon"></span>
-                <span class="ml-2">{{ item.label }}</span>
+                <span class="ml-2">{{ item.label | translate }}</span>
             </a>
         </ng-container>
     </ng-template>
@@ -29,9 +29,9 @@
                 cursor: 'pointer'
               }"
               size="large"
-              [label]="isAuthenticated ? initialsName : ''"
+              [label]="initialsName"
               (click)="toggleAuthentication()"
-              title='{{"REGISTER.LOGIN" | translate }}'
+              [title]='title | translate'
               shape="circle"
             />
           </div>

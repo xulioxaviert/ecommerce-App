@@ -5,9 +5,11 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
 import { Observable } from 'rxjs';
-import { CoreModule } from './core/core.module';
-import { LoadingService } from './core/services/loading.service';
+import { AuthService } from './auth/auth.service';
 import { HeaderComponent } from './core/components/header/header.component';
+import { CoreModule } from './core/core.module';
+import { Users } from './core/models/user.model';
+import { LoadingService } from './core/services/loading.service';
 
 
 @Component({
@@ -20,8 +22,10 @@ import { HeaderComponent } from './core/components/header/header.component';
 export class AppComponent implements OnInit {
   title = 'ecommerce-app';
   isLoading$: Observable<boolean>
+  user: Users | undefined;
+  initialsName: string = '';
 
-  constructor(private loadingService: LoadingService, private translateService: TranslateService) {
+  constructor(private loadingService: LoadingService, private translateService: TranslateService, private authService: AuthService) {
     this.isLoading$ = this.loadingService.isLoading$
 
   }
@@ -31,6 +35,7 @@ export class AppComponent implements OnInit {
       : 'en';
 
     this.translateService.use(lang);
-
   }
+
+
 }

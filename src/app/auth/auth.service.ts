@@ -30,6 +30,7 @@ export class AuthService {
       username: username,
       password: password
     };
+    this.isAuthenticated$.next(true);
 
     return this._httpClient.post<string>(url, payload, { headers });
   }
@@ -58,7 +59,6 @@ export class AuthService {
   isAuthenticated() {
     const token = sessionStorage.getItem('token');
     if (token) {
-      this.isAuthenticated$.next(true);
       this._authenticated = true;
     }
     return this._authenticated;

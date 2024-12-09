@@ -78,10 +78,10 @@ export class LoginComponent implements OnInit {
           })
         ).subscribe({
           next: (data) => {
+            this.authService.user$.next(data);
             console.log('.subscribe / next', data);
             this.authService.setSessionStorage('user', JSON.stringify(data));
             this.authService.isAuthenticated$.next(true);
-            this.authService.user$.next(data);
             this.router.navigate([ '/' ]);
           },
           error: (error) => {

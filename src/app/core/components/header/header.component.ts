@@ -53,11 +53,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private translateService: TranslateService,
     private router: Router,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.checkAuthenticated();
     this.getSubscriptions();
+    this.isAuthenticated = this.authService.isAuthenticated();
   }
 
   checkAuthenticated() {
@@ -74,13 +75,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   getSubscriptions() {
     this.authService.isAuthenticated$.subscribe((response) => {
-      if (response) {
-        console.log(
-          'this.authService.isAuthenticated$.subscribe / response:',
-          response
-        );
-        this.isAuthenticated = response;
-      }
+      console.log(
+        'this.authService.isAuthenticated$.subscribe / response:',
+        response
+      );
+      this.isAuthenticated = response;
+      this.updateItemLanguage();
+
     });
 
     this.authService.user$.subscribe((response) => {
@@ -101,9 +102,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   updateItemLanguage() {
     if (!this.authService.isAuthenticated()) {
-      this.title = this.translateService.instant('HEADER.LOGOUT');
-    } else {
       this.title = this.translateService.instant('HEADER.LOGIN');
+    } else {
+      this.title = this.translateService.instant('HEADER.LOGOUT');
     }
     if (this.isAuthenticated && this.user?.role === 'admin') {
       this.isVisible = true;
@@ -118,7 +119,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         visible: true,
         // route: '/',
         command: () => {
-          this.router.navigate(['/']);
+          this.router.navigate([ '/' ]);
         },
       },
       {
@@ -191,13 +192,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   toggleAuthentication() {
     if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/auth/login']);
+      this.router.navigate([ '/auth/login' ]);
     } else {
       this.authService.logout();
-      this.initialsName = '';
       this.isAuthenticated = false;
+      this.initialsName = '';
+      this.title = this.translateService.instant('HEADER.LOGIN');
       if (this.router.url === '/dashboard') {
-        this.router.navigate(['/']);
+        this.router.navigate([ '/' ]);
       }
     }
   }

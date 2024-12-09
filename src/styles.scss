@@ -12,6 +12,7 @@
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
+@import "./styles/_variables.scss";
 
 
 .container__form {
@@ -26,8 +27,7 @@
   }
 }
 
-.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight.p-focus
-{
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight.p-focus {
   width: 110px;
 }
 
@@ -35,4 +35,38 @@
 .p-button-label.ng-star-inserted {
   font-size: 14px;
   padding: 0.6rem;
+}
+
+.p-confirm-popup {
+  background-color: red;
+  /* Azul claro */
+  border: 2px solid #4682b4;
+  /* Azul acero */
+}
+.p-confirm-popup-content.ng-star-inserted{
+  margin: 0.5rem;
+
+}
+.p-confirm-popup .p-button.p-confirm-popup-accept {
+  margin: 0.5rem;
+  padding: 0 1rem;
+}
+
+.p-confirm-popup .p-button.p-confirm-popup-reject {
+  margin: 0.5rem;
+  padding: 0 1rem;
+  background-color: #ff6347;
+  /* Tomate */
+  border-color: #ff6347;
+}
+
+/* Personaliza el icono */
+.p-confirm-popup .p-confirm-popup-icon {
+  color: #ffa500;
+  /* Naranja */
+}
+
+.p-confirm-popup-footer.ng-star-inserted{
+  margin: 0;
+  padding: 0;
 }

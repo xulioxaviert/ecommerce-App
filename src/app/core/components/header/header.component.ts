@@ -9,7 +9,9 @@ import { RippleModule } from 'primeng/ripple';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { MenuItem } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+// Removed duplicate and incorrect import
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { Observable, Subscription } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
 import { TranslationDropdownComponent } from '../../../shared/translation-dropdown/translation-dropdown.component';
@@ -31,6 +33,7 @@ import { Users } from '../../models/user.model';
     RouterModule,
     NgClass,
     NgIf,
+    ConfirmPopupModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
@@ -52,7 +55,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(
     private translateService: TranslateService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit() {
@@ -190,17 +195,30 @@ export class HeaderComponent implements OnInit, OnDestroy {
     ];
   }
 
-  toggleAuthentication() {
+  toggleAuthentication(event: Event) {
+    console.log("toggleAuthentication / event:", event);
     if (!this.authService.isAuthenticated()) {
       this.router.navigate([ '/auth/login' ]);
     } else {
-      this.authService.logout();
-      this.isAuthenticated = false;
-      this.initialsName = '';
-      this.title = this.translateService.instant('HEADER.LOGIN');
-      if (this.router.url === '/dashboard') {
-        this.router.navigate([ '/' ]);
-      }
+      // this.authService.logout();
+      this.confirmationService.confirm({
+        target: event.target as EventTarget,
+        message: '¿Estás seguro que deseas cerrar sesión?',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          this.authService.logout();
+          this.isAuthenticated = false;
+          this.initialsName = '';
+          this.title = this.translateService.instant('HEADER.LOGIN');
+          if (this.router.url === '/dashboard') {
+            this.router.navigate([ '/' ]);
+          }
+        },
+        reject: () => {
+
+        }
+      });
+
     }
   }
 

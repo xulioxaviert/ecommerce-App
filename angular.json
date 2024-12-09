@@ -33,6 +33,7 @@
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "src/styles.scss",
+              "src/styles/_variables.scss",
               "node_modules/primeng/resources/themes/aura-light-amber/theme.css",
               "node_modules/primeng/resources/primeng.min.css"
             ],

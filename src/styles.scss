@@ -37,27 +37,29 @@
   padding: 0.6rem;
 }
 
+
 .p-confirm-popup {
-  background-color: red;
-  /* Azul claro */
-  border: 2px solid #4682b4;
-  /* Azul acero */
+  background-color: $background4;
+
 }
 .p-confirm-popup-content.ng-star-inserted{
   margin: 0.5rem;
+  color: white;
 
 }
 .p-confirm-popup .p-button.p-confirm-popup-accept {
   margin: 0.5rem;
   padding: 0 1rem;
+  color: white;
+  background-color: #ffa500;
 }
 
 .p-confirm-popup .p-button.p-confirm-popup-reject {
   margin: 0.5rem;
   padding: 0 1rem;
-  background-color: #ff6347;
-  /* Tomate */
-  border-color: #ff6347;
+  color: white;
+  background-color: #ff0000;
+
 }
 
 /* Personaliza el icono */

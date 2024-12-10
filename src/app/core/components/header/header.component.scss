@@ -1,17 +1,13 @@
+
 .container__header {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   margin-bottom: 2px;
   z-index: 150;
 
-  .p-element.container__header-menu
-    .p-menubar.p-component.p-menubar-start.ng-star-inserted {
-        display: flex !important;
-        width: 100% !important;
-      }
-
-
-
-
+  .p-element.container__header-menu .p-menubar.p-component.p-menubar-start.ng-star-inserted {
+    display: flex !important;
+    width: 100% !important;
+  }
 
   &-img {
     width: 100%;
@@ -24,13 +20,5 @@
 
   .container__avatar {
     display: flex;
-
-    &-name {
-      font-size: 12px;
-    }
-
-
   }
-
-
 }

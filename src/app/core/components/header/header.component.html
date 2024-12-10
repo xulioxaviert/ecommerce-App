@@ -30,10 +30,11 @@
               }"
               size="large"
               [label]="initialsName"
-              (click)="toggleAuthentication()"
+              (click)="toggleAuthentication($event)"
               [title]='title | translate'
               shape="circle"
             />
+            <p-confirmPopup></p-confirmPopup>
           </div>
         </div>
       </div>

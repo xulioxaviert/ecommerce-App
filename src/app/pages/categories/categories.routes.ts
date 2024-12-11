@@ -1,5 +1,9 @@
 import { Routes } from '@angular/router';
 import { CategoriesComponent } from './categories.component';
+import { ElectronicsComponent } from './electronics/electronics.component';
+import { JewelryComponent } from './jewelry/jewelry.component';
+import { MenComponent } from './men/men.component';
+import { WomenComponent } from './women/women.component';
 
 
 export const routes: Routes = [
@@ -14,20 +18,20 @@ export const routes: Routes = [
     children: [
       {
         path: 'electronics',
-        loadChildren: () => import('./electronics/electronics.component').then(m => m.ElectronicsComponent)
+        component: ElectronicsComponent
 
       },
       {
         path: 'jewelry',
-        loadChildren: () => import('./jewelry/jewelry.component').then(m => m.JewelryComponent)
+        component: JewelryComponent
       },
       {
-        path: 'mens',
-        loadChildren: () => import('./mens/mens.component').then(m => m.MensComponent)
+        path: 'men',
+        component: MenComponent
       },
       {
         path: 'women',
-        loadChildren: () => import('./women/women.component').then(m => m.WomenComponent)
+        component: WomenComponent
       },
     ],
   }

@@ -128,20 +128,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
         },
       },
       {
-        label: this.translateService.instant('HEADER.WOMEN'),
+        label: this.translateService.instant('HEADER.NEW_ARRIVALS'),
         icon: 'pi pi-shop',
         visible: true,
         route: '/categories/women',
       },
       {
-        label: this.translateService.instant('HEADER.MEN'),
+        label: this.translateService.instant('HEADER.FEATURED'),
         icon: 'pi pi-shop',
         visible: true,
         command: () => {
-          const element = document.getElementById('heroCategories');
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-          }
+          this.router.navigate([ '/category/featured' ]);
+        },
+      },
+      {
+        label: this.translateService.instant('HEADER.OUTLET'),
+        icon: 'pi pi-shop',
+        visible: true,
+        command: () => {
+          this.router.navigate([ '/category/featured' ]);
         },
       },
       {
@@ -166,7 +171,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
             label: this.translateService.instant('HEADER.MEN_CLOTHING'),
             icon: 'pi pi-pencil',
             visible: true,
-            route: '/categories/mens',
+            route: '/categories/men',
           },
           {
             label: this.translateService.instant('HEADER.WOMEN_CLOTHING'),
@@ -181,11 +186,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         icon: 'pi pi-shop',
         visible: true,
       },
-      {
-        label: this.translateService.instant('HEADER.CONTACT'),
-        icon: 'pi pi-envelope',
-        visible: true,
-      },
+      
       {
         label: this.translateService.instant('HEADER.DASHBOARD'),
         icon: 'pi pi-shop',

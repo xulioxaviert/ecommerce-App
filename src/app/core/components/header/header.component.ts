@@ -79,29 +79,37 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   getSubscriptions() {
-    this.authService.isAuthenticated$.subscribe((response) => {
-      console.log(
-        'this.authService.isAuthenticated$.subscribe / response:',
-        response
-      );
-      this.isAuthenticated = response;
-      this.updateItemLanguage();
-
-    });
-
-    this.authService.user$.subscribe((response) => {
-      console.log("this.authService.user$.subscribe / response:", response);
-      if (Object.keys(response).length !== 0) {
-        this.user = response;
-        this.initialsName =
-          (this.user?.name?.firstname.toUpperCase().toString().charAt(0) || '') +
-          (this.user?.name?.lastname.toUpperCase().toString().charAt(0) || '');
+    this.subscription.add(
+      this.authService.isAuthenticated$.subscribe((response) => {
         console.log(
-          'this.authService.user$.subscribe / this.initialsName:',
-          this.initialsName
+          'this.authService.isAuthenticated$.subscribe / response:',
+          response
         );
-      }
-    });
+        this.isAuthenticated = response;
+        this.updateItemLanguage();
+
+      })
+    );
+
+    this.subscription.add(this.translateService.onLangChange.subscribe(() => {
+      this.updateItemLanguage();
+    }))
+
+    this.subscription.add(
+      this.authService.user$.subscribe((response) => {
+        console.log("this.authService.user$.subscribe / response:", response);
+        if (Object.keys(response).length !== 0) {
+          this.user = response;
+          this.initialsName =
+            (this.user?.name?.firstname.toUpperCase().toString().charAt(0) || '') +
+            (this.user?.name?.lastname.toUpperCase().toString().charAt(0) || '');
+          console.log(
+            'this.authService.user$.subscribe / this.initialsName:',
+            this.initialsName
+          );
+        }
+      })
+    );
 
   }
 
@@ -186,7 +194,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         icon: 'pi pi-shop',
         visible: true,
       },
-      
+
       {
         label: this.translateService.instant('HEADER.DASHBOARD'),
         icon: 'pi pi-shop',

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ENDPOINTS } from '../core/const/constants';
+import { Users } from '../core/models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class AuthService {
   private _authenticated = false;
 
   isAuthenticated$ = new BehaviorSubject<boolean>(false);
-  // user$: BehaviorSubject<Users> = new BehaviorSubject<Users>({} as Users);
+  user$: BehaviorSubject<Users> = new BehaviorSubject<Users>({} as Users);
 
 
 
@@ -29,6 +30,7 @@ export class AuthService {
       username: username,
       password: password
     };
+    this.isAuthenticated$.next(true);
 
     return this._httpClient.post<string>(url, payload, { headers });
   }
@@ -51,14 +53,26 @@ export class AuthService {
   logout(): void {
     sessionStorage.clear();
     this.isAuthenticated$.next(false);
+    this._authenticated = false;
   }
 
   isAuthenticated() {
     const token = sessionStorage.getItem('token');
     if (token) {
-      this.isAuthenticated$.next(true);
       this._authenticated = true;
     }
+    return this._authenticated;
+  }
+
+  isAdministrator() {
+    const user = this.getSessionStorage('user');
+    if (user.role === 'admin') {
+      return true;
+    }
+    return false;
+  }
+
+  get authenticated(): boolean {
     return this._authenticated;
   }
 

@@ -6,19 +6,17 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   selector: 'app-mens',
   standalone: true,
   imports: [ NgForOf, TranslateModule ],
-  templateUrl: './mens.component.html',
-  styleUrl: './mens.component.scss',
+  templateUrl: './men.component.html',
+  styleUrl: './men.component.scss',
 })
-export class MensComponent implements OnInit {
+export class MenComponent implements OnInit {
 
   constructor(
     private translateService: TranslateService,
   ) { }
   ngOnInit(): void {
     this.getData();
-    this.translateService.onDefaultLangChange.subscribe((event) => {
-      this.changeLabelLanguage();
-    });
+
   }
 
   getData() {

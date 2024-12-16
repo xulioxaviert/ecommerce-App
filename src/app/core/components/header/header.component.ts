@@ -1,5 +1,5 @@
 import { CommonModule, NgClass, NgIf } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { InputTextModule } from 'primeng/inputtext';
@@ -9,8 +9,10 @@ import { RippleModule } from 'primeng/ripple';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { MenuItem } from 'primeng/api';
-import { Observable } from 'rxjs';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+// Removed duplicate and incorrect import
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { Observable, Subscription } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
 import { TranslationDropdownComponent } from '../../../shared/translation-dropdown/translation-dropdown.component';
 import { Users } from '../../models/user.model';
@@ -31,14 +33,15 @@ import { Users } from '../../models/user.model';
     RouterModule,
     NgClass,
     NgIf,
+    ConfirmPopupModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   categories = signal<string[]>([]);
   isAuthenticated: boolean = false;
-  isAuthenticated$: Observable<boolean> = new Observable<boolean>();
+  isAuthenticated$: Observable<boolean>;
 
   items: MenuItem[] | undefined;
 
@@ -47,57 +50,72 @@ export class HeaderComponent implements OnInit {
   initialsName: string = '';
   title: string = '';
   isVisible: boolean = true;
+  subscription = new Subscription();
 
   constructor(
     private translateService: TranslateService,
     private router: Router,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
+  ) { }
 
   ngOnInit() {
     this.checkAuthenticated();
-    this.translateService.onLangChange.subscribe((event) => {
-      this.updateItemLanguage();
-    });
+    this.getSubscriptions();
+    this.isAuthenticated = this.authService.isAuthenticated();
   }
 
   checkAuthenticated() {
     if (this.authService.isAuthenticated()) {
-      this.isAuthenticated = true;
       this.user = this.authService.getSessionStorage('user');
-      if (this.user) {
-        switch (this.user.role) {
-          case 'admin':
-            this.isVisible = true;
-            break;
-          case 'costumer':
-            this.isVisible = false;
-            break;
-        }
-      }
       this.initialsName =
         (this.user?.name?.firstname.toUpperCase().toString().charAt(0) || '') +
         (this.user?.name?.lastname.toUpperCase().toString().charAt(0) || '');
-      this.title = this.translateService.instant('HEADER.LOGOUT');
-    } else {
-      this.title = this.translateService.instant('HEADER.LOGIN');
-      this.isAuthenticated = false;
-      this.isVisible = false;
+      this.isAuthenticated = true;
+      console.log('checkAuthenticated / this.initialsName:', this.initialsName);
     }
     this.updateItemLanguage();
   }
 
+  getSubscriptions() {
+    this.authService.isAuthenticated$.subscribe((response) => {
+      console.log(
+        'this.authService.isAuthenticated$.subscribe / response:',
+        response
+      );
+      this.isAuthenticated = response;
+      this.updateItemLanguage();
+
+    });
+
+    this.authService.user$.subscribe((response) => {
+      console.log("this.authService.user$.subscribe / response:", response);
+      if (Object.keys(response).length !== 0) {
+        this.user = response;
+        this.initialsName =
+          (this.user?.name?.firstname.toUpperCase().toString().charAt(0) || '') +
+          (this.user?.name?.lastname.toUpperCase().toString().charAt(0) || '');
+        console.log(
+          'this.authService.user$.subscribe / this.initialsName:',
+          this.initialsName
+        );
+      }
+    });
+
+  }
+
   updateItemLanguage() {
-    if (this.isAuthenticated) {
-      this.title = this.translateService.instant('HEADER.LOGOUT');
-    } else {
+    if (!this.authService.isAuthenticated()) {
       this.title = this.translateService.instant('HEADER.LOGIN');
+    } else {
+      this.title = this.translateService.instant('HEADER.LOGOUT');
     }
-    // if (this.user?.role === 'admin') {
-    //   this.isVisible = true;
-    // } else {
-    //   this.isVisible = false;
-    // }
+    if (this.isAuthenticated && this.user?.role === 'admin') {
+      this.isVisible = true;
+    } else {
+      this.isVisible = false;
+    }
 
     this.items = [
       {
@@ -106,31 +124,30 @@ export class HeaderComponent implements OnInit {
         visible: true,
         // route: '/',
         command: () => {
-          this.router.navigate(['/']);
-        }
+          this.router.navigate([ '/' ]);
+        },
       },
       {
-        label: this.translateService.instant('HEADER.WOMEN'),
+        label: this.translateService.instant('HEADER.NEW_ARRIVALS'),
         icon: 'pi pi-shop',
         visible: true,
-         route: '/categories/women',
-         //Quiero una ruta que me lleve al apartado de testimonio
-
-        // command: () => {
-        //   this.router.navigate(['/categories/women']);
-        // }
+        route: '/categories/women',
       },
       {
-        label: this.translateService.instant('HEADER.MEN'),
+        label: this.translateService.instant('HEADER.FEATURED'),
         icon: 'pi pi-shop',
         visible: true,
         command: () => {
-          const element = document.getElementById('heroCategories')
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-          }
-        }
-
+          this.router.navigate([ '/category/featured' ]);
+        },
+      },
+      {
+        label: this.translateService.instant('HEADER.OUTLET'),
+        icon: 'pi pi-shop',
+        visible: true,
+        command: () => {
+          this.router.navigate([ '/category/featured' ]);
+        },
       },
       {
         label: this.translateService.instant('HEADER.CATEGORY'),
@@ -143,7 +160,6 @@ export class HeaderComponent implements OnInit {
             icon: 'pi pi-bolt',
             visible: true,
             route: '/categories/electronics',
-
           },
           {
             label: this.translateService.instant('HEADER.JEWELRY'),
@@ -155,7 +171,7 @@ export class HeaderComponent implements OnInit {
             label: this.translateService.instant('HEADER.MEN_CLOTHING'),
             icon: 'pi pi-pencil',
             visible: true,
-            route: '/categories/mens',
+            route: '/categories/men',
           },
           {
             label: this.translateService.instant('HEADER.WOMEN_CLOTHING'),
@@ -170,11 +186,7 @@ export class HeaderComponent implements OnInit {
         icon: 'pi pi-shop',
         visible: true,
       },
-      {
-        label: this.translateService.instant('HEADER.CONTACT'),
-        icon: 'pi pi-envelope',
-        visible: true,
-      },
+      
       {
         label: this.translateService.instant('HEADER.DASHBOARD'),
         icon: 'pi pi-shop',
@@ -184,15 +196,34 @@ export class HeaderComponent implements OnInit {
     ];
   }
 
-  toggleAuthentication() {
-    if (this.isAuthenticated === false) {
-      this.router.navigate(['/auth/login']);
+  toggleAuthentication(event: Event) {
+    console.log("toggleAuthentication / event:", event);
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate([ '/auth/login' ]);
     } else {
-      this.authService.logout();
-      this.isAuthenticated = false;
-      this.title = this.translateService.instant('HEADER.LOGIN');
-      this.isVisible = false;
-      this.updateItemLanguage();
+      // this.authService.logout();
+      this.confirmationService.confirm({
+        target: event.target as EventTarget,
+        message: '¿Estás seguro que deseas cerrar sesión?',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          this.authService.logout();
+          this.isAuthenticated = false;
+          this.initialsName = '';
+          this.title = this.translateService.instant('HEADER.LOGIN');
+          if (this.router.url === '/dashboard') {
+            this.router.navigate([ '/' ]);
+          }
+        },
+        reject: () => {
+
+        }
+      });
+
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

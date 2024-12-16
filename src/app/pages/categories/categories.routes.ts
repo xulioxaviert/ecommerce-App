@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { CategoriesComponent } from './categories.component';
 import { ElectronicsComponent } from './electronics/electronics.component';
 import { JewelryComponent } from './jewelry/jewelry.component';
-import { MensComponent } from './mens/mens.component';
+import { MenComponent } from './men/men.component';
 import { WomenComponent } from './women/women.component';
 
 
@@ -17,7 +17,6 @@ export const routes: Routes = [
     component: CategoriesComponent,
     children: [
       {
-        //TODO actualizar loadChildren
         path: 'electronics',
         component: ElectronicsComponent
 
@@ -27,8 +26,8 @@ export const routes: Routes = [
         component: JewelryComponent
       },
       {
-        path: 'mens',
-        component: MensComponent
+        path: 'men',
+        component: MenComponent
       },
       {
         path: 'women',

@@ -1,9 +1,9 @@
+@layer tailwindcss, primeng;
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 
-@layer tailwindcss, primeng;
 
 @import "../node_modules/tailwindcss/base.css" layer(tailwindcss);
 @import "../node_modules/tailwindcss/components.css" layer(tailwindcss);

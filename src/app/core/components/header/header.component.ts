@@ -139,14 +139,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
         label: this.translateService.instant('HEADER.NEW_ARRIVALS'),
         icon: 'pi pi-shop',
         visible: true,
-        route: '/categories/women',
+        route: '/categories/feature',
       },
       {
         label: this.translateService.instant('HEADER.FEATURED'),
         icon: 'pi pi-shop',
         visible: true,
         command: () => {
-          this.router.navigate([ '/category/featured' ]);
+          this.router.navigate([ '/categories/feature' ]);
         },
       },
       {

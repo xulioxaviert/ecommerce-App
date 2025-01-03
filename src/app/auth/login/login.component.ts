@@ -62,10 +62,7 @@ export class LoginComponent implements OnInit {
     } else {
       const username = this.loginForm.get('username')?.value;
       const password = this.loginForm.get('password')?.value;
-      const payload = {
-        username,
-        password,
-      };
+      
       this.authService
         .login(username, password)
         .pipe(

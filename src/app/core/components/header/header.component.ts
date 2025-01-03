@@ -92,7 +92,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     );
 
     this.subscription.add(this.translateService.onLangChange.subscribe(() => {
-      this.updateItemLanguage();
+      console.log('Idioma cambiado');
+      // this.updateItemLanguage();
     }))
 
     this.subscription.add(

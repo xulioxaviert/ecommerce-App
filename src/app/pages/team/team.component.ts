@@ -26,9 +26,9 @@ export class TeamComponent implements OnInit {
   }
 
   getData() {
-    this.http.getData(ENDPOINTS.getUsersRandom).subscribe((users) => {
-      this.team = users.body.results;
-      console.log(users.body.results);
+    this.http.getData(ENDPOINTS.getUsersRandom).subscribe((team) => {
+      this.team = team.body;
+      console.log(team.body);
     });
   }
 }

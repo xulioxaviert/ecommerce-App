@@ -10,6 +10,7 @@ import { AuthService } from '../../auth/auth.service';
 import { Users } from '../../core/models/user.model';
 import { HttpService } from '../../core/services/http.service';
 import { TranslationDropdownComponent } from '../../shared/translation-dropdown/translation-dropdown.component';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-dashboard',
@@ -31,6 +32,7 @@ import { TranslationDropdownComponent } from '../../shared/translation-dropdown/
 export class DashboardComponent implements OnInit {
   data: any;
   options: any;
+  items: MenuItem[] | undefined;
   isAuthenticated: boolean = false;
   title: string = '';
   initialsName: string = '';
@@ -44,6 +46,12 @@ export class DashboardComponent implements OnInit {
   ) { }
   ngOnInit(): void {
     this.getData();
+    this.checkAuthenticated();
+
+    this.translateService.onDefaultLangChange.subscribe((event) => {
+      // this.changeLabelLanguage();
+    });
+
 
   }
 
@@ -107,6 +115,37 @@ export class DashboardComponent implements OnInit {
       },
     };
 
+    //navbar data(labels)
+    this.items = [
+      {
+        label: 'Home',
+        icon: 'pi pi-home',
+        routerLink: '/',
+      },
+    ];
   }
+  checkAuthenticated() {
+    if (this.authService.isAuthenticated()) {
+      this.isAuthenticated = true;
+      this.user = this.authService.getSessionStorage('user');
+      console.log('checkAuthenticated / this.user:', this.user);
+      this.initialsName =
+        (this.user?.name?.firstname.toUpperCase().toString().charAt(0) || '') +
+        (this.user?.name?.lastname.toUpperCase().toString().charAt(0) || '');
+      this.title = this.translateService.instant('HEADER.LOGOUT');
+    } else {
+      this.title = this.translateService.instant('HEADER.LOGIN');
+      this.isAuthenticated = false;
 
+    }
+  }
+  toggleAuthentication() {
+    if (this.isAuthenticated === false) {
+      this.router.navigate([ '/auth/login' ]);
+    } else {
+      this.authService.logout();
+      this.isAuthenticated = false;
+      this.title = this.translateService.instant('HEADER.LOGIN');
+    }
+  }
 }

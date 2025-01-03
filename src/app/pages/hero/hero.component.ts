@@ -16,6 +16,7 @@ import { HttpService } from '../../core/services/http.service';
 })
 export class HeroComponent implements OnInit, OnDestroy {
   categories: any[] = [];
+  heroCategories: any[] = [];
   subscription = new Subscription();
 
   constructor(
@@ -35,65 +36,74 @@ export class HeroComponent implements OnInit, OnDestroy {
   getData(): void {
     this.http.getData(ENDPOINTS.getAllCategories).subscribe((categories) => {
       console.log('hero', categories.body);
-      this.categories = [];
-      categories.body.forEach((category: any) => {
-        switch (category.title) {
-          case 'electronics':
-            this.categories.push({
-              category: this.translateService.instant('CATEGORY.ELECTRONICS'),
-              name: this.translateService.instant('CATEGORY.ELECTRONICS'),
-              title: this.translateService.instant(
-                'CATEGORY.ELECTRONICS_TITLE'
-              ),
-              descriptions: this.translateService.instant(
-                'CATEGORY.ELECTRONICS_DESCRIPTIONS'
-              ),
-              img: 'assets/images/electronics.jpg',
-            });
-            break;
-          case 'jewelery':
-            this.categories.push({
-              category: this.translateService.instant('CATEGORY.JEWELRY'),
-              name: this.translateService.instant('CATEGORY.JEWELRY'),
-              title: this.translateService.instant('CATEGORY.JEWELRY_TITLE'),
-              descriptions: this.translateService.instant(
-                'CATEGORY.JEWELRY_DESCRIPTIONS'
-              ),
-              img: 'assets/images/jewellery.jpg',
-            });
-            break;
-          case "men's clothing":
-            this.categories.push({
-              category: this.translateService.instant('CATEGORY.MEN'),
-              name: this.translateService.instant('CATEGORY.MEN'),
-              title: this.translateService.instant('CATEGORY.MEN_TITLE'),
-              descriptions: this.translateService.instant(
-                'CATEGORY.MEN_DESCRIPTIONS'
-              ),
-              img: 'assets/images/men.jpg',
-            });
-            break;
-          case "women's clothing":
-            this.categories.push({
-              category: this.translateService.instant('CATEGORY.WOMEN'),
-              name: this.translateService.instant('CATEGORY.WOMEN'),
-              title: this.translateService.instant('CATEGORY.WOMEN_TITLE'),
-              descriptions: this.translateService.instant(
-                'CATEGORY.WOMEN_DESCRIPTIONS'
-              ),
-              img: 'assets/images/women.jpg',
-            });
-            break;
-        }
-      });
+      this.heroCategories = categories.body;
+      this.getAndFillCategories();
+
     });
   }
   getSubscriptions() {
     this.subscription.add(
       this.translateService.onLangChange.subscribe(() => {
         console.log('change language');
-        this.getData();
+        this.getAndFillCategories()
+
       })
     );
   }
+
+  getAndFillCategories() {
+    console.log('updateLanguageCategories', this.categories);
+    this.categories = [];
+    this.heroCategories.forEach(category => {
+      switch (category.title) {
+        case 'electronics':
+          this.categories.push({
+            category: this.translateService.instant('CATEGORY.ELECTRONICS'),
+            name: this.translateService.instant('CATEGORY.ELECTRONICS'),
+            title: this.translateService.instant(
+              'CATEGORY.ELECTRONICS_TITLE'
+            ),
+            descriptions: this.translateService.instant(
+              'CATEGORY.ELECTRONICS_DESCRIPTIONS'
+            ),
+            img: 'assets/images/electronics.jpg',
+          });
+          break;
+        case 'jewelery':
+          this.categories.push({
+            category: this.translateService.instant('CATEGORY.JEWELRY'),
+            name: this.translateService.instant('CATEGORY.JEWELRY'),
+            title: this.translateService.instant('CATEGORY.JEWELRY_TITLE'),
+            descriptions: this.translateService.instant(
+              'CATEGORY.JEWELRY_DESCRIPTIONS'
+            ),
+            img: 'assets/images/jewellery.jpg',
+          });
+          break;
+        case "men's clothing":
+          this.categories.push({
+            category: this.translateService.instant('CATEGORY.MEN'),
+            name: this.translateService.instant('CATEGORY.MEN'),
+            title: this.translateService.instant('CATEGORY.MEN_TITLE'),
+            descriptions: this.translateService.instant(
+              'CATEGORY.MEN_DESCRIPTIONS'
+            ),
+            img: 'assets/images/men.jpg',
+          });
+          break;
+        case "women's clothing":
+          this.categories.push({
+            category: this.translateService.instant('CATEGORY.WOMEN'),
+            name: this.translateService.instant('CATEGORY.WOMEN'),
+            title: this.translateService.instant('CATEGORY.WOMEN_TITLE'),
+            descriptions: this.translateService.instant(
+              'CATEGORY.WOMEN_DESCRIPTIONS'
+            ),
+            img: 'assets/images/women.jpg',
+          });
+          break;
+      }
+    });
+  }
+
 }

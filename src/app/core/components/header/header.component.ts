@@ -143,18 +143,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         route: '/categories',
         items: [
           {
-            label: this.translateService.instant('HEADER.ELECTRONICS'),
-            icon: 'pi pi-bolt',
-            visible: true,
-            route: '/categories/electronics',
-          },
-          {
-            label: this.translateService.instant('HEADER.JEWELRY'),
-            icon: 'pi pi-server',
-            visible: true,
-            route: '/categories/jewelry',
-          },
-          {
             label: this.translateService.instant('HEADER.MEN_CLOTHING'),
             icon: 'pi pi-pencil',
             visible: true,
@@ -166,6 +154,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
             visible: true,
             route: '/categories/women',
           },
+          {
+            label: this.translateService.instant('HEADER.ELECTRONICS'),
+            icon: 'pi pi-bolt',
+            visible: true,
+            route: '/categories/electronics',
+          },
+          {
+            label: this.translateService.instant('HEADER.JEWELRY'),
+            icon: 'pi pi-server',
+            visible: true,
+            route: '/categories/jewelry',
+          }
+
         ],
       },
       {

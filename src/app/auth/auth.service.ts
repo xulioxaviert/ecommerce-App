@@ -30,7 +30,6 @@ export class AuthService {
       username: username,
       password: password
     };
-    this.isAuthenticated$.next(true);
 
     return this._httpClient.post<string>(url, payload, { headers });
   }

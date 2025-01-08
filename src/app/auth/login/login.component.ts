@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
     } else {
       const username = this.loginForm.get('username')?.value;
       const password = this.loginForm.get('password')?.value;
-      
+
       this.authService
         .login(username, password)
         .pipe(
@@ -78,8 +78,8 @@ export class LoginComponent implements OnInit {
             this.authService.user$.next(data);
             console.log('.subscribe / next', data);
             this.authService.setSessionStorage('user', JSON.stringify(data));
-            this.authService.isAuthenticated$.next(true);
             this.router.navigate([ '/' ]);
+            this.authService.isAuthenticated$.next(true);
           },
           error: (error) => {
             // const errorMessage = this.translateService.instant('ERROR.LOGIN');

@@ -49,7 +49,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   user: Users | undefined;
   initialsName: string = '';
   title: string = '';
-  isVisible: boolean = true;
+  isVisible: boolean = false;
   subscription = new Subscription();
 
   constructor(
@@ -63,7 +63,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.checkAuthenticated();
     this.getSubscriptions();
-    this.isAuthenticated = this.authService.isAuthenticated();
+    this.updateItemLanguage();
+
   }
 
   checkAuthenticated() {
@@ -73,59 +74,36 @@ export class HeaderComponent implements OnInit, OnDestroy {
         (this.user?.name?.firstname.toUpperCase().toString().charAt(0) || '') +
         (this.user?.name?.lastname.toUpperCase().toString().charAt(0) || '');
       this.isAuthenticated = true;
-      console.log('checkAuthenticated / this.initialsName:', this.initialsName);
+      if (this.user?.role === 'admin') {
+        this.isVisible = true;
+      } else {
+        this.isVisible = false;
+      }
+      this.updateItemLanguage();
+    } else {
+      this.isAuthenticated = false;
+      this.isVisible = false;
     }
-    this.updateItemLanguage();
   }
 
   getSubscriptions() {
-    this.subscription.add(
-      this.authService.isAuthenticated$.subscribe((response) => {
-        console.log(
-          'this.authService.isAuthenticated$.subscribe / response:',
-          response
-        );
-        this.isAuthenticated = response;
-        this.updateItemLanguage();
-
-      })
-    );
-
-    this.subscription.add(this.translateService.onLangChange.subscribe(() => {
-      console.log('Idioma cambiado');
-      // this.updateItemLanguage();
-    }))
-
-    this.subscription.add(
-      this.authService.user$.subscribe((response) => {
-        console.log("this.authService.user$.subscribe / response:", response);
-        if (Object.keys(response).length !== 0) {
-          this.user = response;
-          this.initialsName =
-            (this.user?.name?.firstname.toUpperCase().toString().charAt(0) || '') +
-            (this.user?.name?.lastname.toUpperCase().toString().charAt(0) || '');
-          console.log(
-            'this.authService.user$.subscribe / this.initialsName:',
-            this.initialsName
-          );
-        }
-      })
-    );
-
+    this.subscription.add(this.authService.isAuthenticated$.subscribe((response) => {
+      this.checkAuthenticated()
+    }));
   }
 
   updateItemLanguage() {
     if (!this.authService.isAuthenticated()) {
       this.title = this.translateService.instant('HEADER.LOGIN');
+      this.isVisible = false;
     } else {
       this.title = this.translateService.instant('HEADER.LOGOUT');
+      if (this.user?.role === 'admin') {
+        this.isVisible = true;
+      } else {
+        this.isVisible = false;
+      }
     }
-    if (this.isAuthenticated && this.user?.role === 'admin') {
-      this.isVisible = true;
-    } else {
-      this.isVisible = false;
-    }
-
     this.items = [
       {
         label: this.translateService.instant('HEADER.HOME'),
@@ -206,23 +184,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   toggleAuthentication(event: Event) {
-    console.log("toggleAuthentication / event:", event);
     if (!this.authService.isAuthenticated()) {
       this.router.navigate([ '/auth/login' ]);
     } else {
-      // this.authService.logout();
       this.confirmationService.confirm({
         target: event.target as EventTarget,
         message: '¿Estás seguro que deseas cerrar sesión?',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
           this.authService.logout();
-          this.isAuthenticated = false;
           this.initialsName = '';
+          this.isVisible = false;
+          this.isAuthenticated = false;
           this.title = this.translateService.instant('HEADER.LOGIN');
           if (this.router.url === '/dashboard') {
             this.router.navigate([ '/' ]);
           }
+
         },
         reject: () => {
 

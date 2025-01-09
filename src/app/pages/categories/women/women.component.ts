@@ -32,8 +32,5 @@ export class WomenComponent implements OnInit {
     })
   }
 
-  //TODO:  Revisar con Mario la traducción de las categoría si se limpia o no
-  changeLabelLanguage() {
-    this.getData();
-  }
+ 
 }

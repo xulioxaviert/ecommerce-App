@@ -1,6 +1,9 @@
 import { NgForOf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { ENDPOINTS } from '../../../core/const/constants';
+import { Products } from '../../../core/models/products.model';
+import { HttpService } from '../../../core/services/http.service';
 
 @Component({
   selector: 'app-mens',
@@ -10,21 +13,19 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   styleUrl: './men.component.scss',
 })
 export class MenComponent implements OnInit {
+  products: Products[] = [];
 
-  constructor(
-    private translateService: TranslateService,
-  ) { }
+  constructor(private http: HttpService) { }
   ngOnInit(): void {
     this.getData();
-
   }
 
   getData() {
-
-  }
-
-  //TODO:  Revisar con Mario la traducción de las categoría si se limpia o no
-  changeLabelLanguage() {
-    this.getData();
+    this.http.getData(ENDPOINTS.getAllProducts).subscribe((products) => {
+      products.body
+        .filter((product: Products) => product.category === "men's clothing")
+        .forEach((product: Products) => this.products.push(product));
+      console.log('products', this.products);
+    });
   }
 }

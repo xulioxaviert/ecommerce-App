@@ -1,8 +1,8 @@
 import { NgForOf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { Products } from '../../../core/models/products.model';
+import { TranslateModule } from '@ngx-translate/core';
 import { ENDPOINTS } from '../../../core/const/constants';
+import { Products } from '../../../core/models/products.model';
 import { HttpService } from '../../../core/services/http.service';
 
 @Component({
@@ -15,23 +15,17 @@ import { HttpService } from '../../../core/services/http.service';
 export class MenComponent implements OnInit {
   products: Products[] = [];
 
-  constructor(
-    private translateService: TranslateService,
-    private http: HttpService
-  ) { }
+  constructor(private http: HttpService) { }
   ngOnInit(): void {
     this.getData();
-
   }
 
   getData() {
-this.http.getData(ENDPOINTS.getAllProducts).subscribe((products) => {
+    this.http.getData(ENDPOINTS.getAllProducts).subscribe((products) => {
       products.body
         .filter((product: Products) => product.category === "men's clothing")
         .forEach((product: Products) => this.products.push(product));
       console.log('products', this.products);
-    })
+    });
   }
-
-
 }

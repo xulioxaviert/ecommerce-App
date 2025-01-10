@@ -80,9 +80,9 @@ export class LoginComponent implements OnInit {
             this.authService.setSessionStorage('user', JSON.stringify(data));
             this.router.navigate([ '/' ]);
             this.authService.isAuthenticated$.next(true);
-            this.usersService.getShoppingCartById(data.userId).subscribe((cart) => {
-              console.log("this.usersService.getShoppingCartById / cart:", cart);
-              this.usersService.shoppingCart$.next(cart);
+            this.usersService.getShoppingCartById(data.userId).subscribe((cart: any) => {
+              console.log("this.usersService.getShoppingCartById / cart:", { cart });
+              this.usersService.shoppingCart$.next(cart[ 0 ]);
             })
           },
           error: (error) => {

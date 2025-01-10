@@ -73,7 +73,8 @@
     "DASHBOARD": "Dashboard",
     "CART": "Shopping Cart",
     "MEET_TEAM": "Meet Our Team",
-    "TESTIMONIALS": "Testimonials"
+    "TESTIMONIALS": "Testimonials",
+    "FAVORITES": "Favorites"
   },
   "REGISTER": {
     "TITLE": "Register",

@@ -5,6 +5,8 @@ export const ENDPOINTS = {
   getUser: 'https://fakestoreapi.com/users/',
   getAllCategories: 'http://localhost:3000/categories',
   getAllProducts: 'http://localhost:3000/products',
+  getAllShoppingCarts: 'http://localhost:3000/carts',
+  getAllFavoriteProducts: 'http://localhost:3000/favorites',
   getAllPlatziProducts: 'https://api.escuelajs.co/api/v1/products',
   getAllPlatziCategories: 'https://api.escuelajs.co/api/v1/categories',
   getUsersRandom: 'http://localhost:3000/team',

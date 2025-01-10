@@ -9,12 +9,13 @@ import { RippleModule } from 'primeng/ripple';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { ConfirmationService, MenuItem } from 'primeng/api';
 // Removed duplicate and incorrect import
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
 import { TranslationDropdownComponent } from '../../../shared/translation-dropdown/translation-dropdown.component';
+import { UsersService } from '../../../users/users.service';
 import { Users } from '../../models/user.model';
 
 @Component({
@@ -41,7 +42,6 @@ import { Users } from '../../models/user.model';
 export class HeaderComponent implements OnInit, OnDestroy {
   categories = signal<string[]>([]);
   isAuthenticated: boolean = false;
-  isAuthenticated$: Observable<boolean>;
 
   items: MenuItem[] | undefined;
 
@@ -51,13 +51,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
   title: string = '';
   isVisible: boolean = false;
   subscription = new Subscription();
+  productsShoppingCart: number = 0;
+  favoriteProducts: number = 0;
+
 
   constructor(
     private translateService: TranslateService,
     private router: Router,
     private authService: AuthService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private userService: UsersService
   ) { }
 
   ngOnInit() {
@@ -80,9 +83,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.isVisible = false;
       }
       this.updateItemLanguage();
+      this.getData();
     } else {
       this.isAuthenticated = false;
       this.isVisible = false;
+      this.productsShoppingCart = 0;
     }
   }
 
@@ -90,6 +95,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.subscription.add(this.authService.isAuthenticated$.subscribe((response) => {
       this.checkAuthenticated()
     }));
+
+    this.subscription.add(
+      this.userService.shoppingCart$.subscribe((cart: any) => {
+        console.log("getSubscriptions", cart.products?.length);
+        this.productsShoppingCart = cart.products?.length || 0;
+      })
+    )
+
+
+
   }
 
   updateItemLanguage() {
@@ -170,7 +185,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         ],
       },
       {
-        label: this.translateService.instant('HEADER.PRODUCTS'),
+        label: this.translateService.instant('HEADER.FAVORITES'),
         icon: 'pi pi-shop',
         visible: true,
       },
@@ -197,6 +212,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.initialsName = '';
           this.isVisible = false;
           this.isAuthenticated = false;
+          this.productsShoppingCart = 0;
+          this.favoriteProducts = 0;
           this.title = this.translateService.instant('HEADER.LOGIN');
           if (this.router.url === '/dashboard') {
             this.router.navigate([ '/' ]);
@@ -211,7 +228,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
+  navigateToShoppingCart() {
+    this.router.navigate([ '/shopping' ]);
+  }
+
+  getData() {
+    const userId = this.user?.userId;
+    if (userId) {
+      this.userService.getShoppingCartById(userId).subscribe((cart: any) => {
+        console.log("getData / cart:", cart);
+        this.productsShoppingCart = cart[ 0 ].products?.length || 0;
+      });
+      this.userService.getFavoriteProductById(userId).subscribe((favorites: any) => {
+        console.log("this.userService.getFavoriteProductById / favorites:", favorites);
+        this.favoriteProducts = favorites[ 0 ].products?.length || 0;
+      });
+
+    }
+  }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+
 }

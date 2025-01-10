@@ -1,13 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { ENDPOINTS } from '../core/const/constants';
+import { ShoppingCart } from '../core/models/cart.model';
+import { Favorites } from '../core/models/favorites.model';
 import { Users } from '../core/models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService {
+  shoppingCart$: BehaviorSubject<ShoppingCart> = new BehaviorSubject<ShoppingCart>({} as ShoppingCart);
 
   constructor(private _httpClient: HttpClient) { }
 
@@ -45,5 +48,17 @@ export class UsersService {
 
   }
 
+  getAllShoppingCarts(): Observable<ShoppingCart[]> {
+    return this._httpClient.get<ShoppingCart[]>(ENDPOINTS.getAllShoppingCarts)
+  }
 
+  getShoppingCartById(id: number): Observable<ShoppingCart> {
+    return this._httpClient.get<ShoppingCart>(`${ENDPOINTS.getAllShoppingCarts}?userId=${id}`);
+  }
+  getAllFavoriteProducts(): Observable<Favorites[]> {
+    return this._httpClient.get<Favorites[]>(ENDPOINTS.getAllFavoriteProducts);
+  }
+  getFavoriteProductById(id: number): Observable<Favorites> {
+    return this._httpClient.get<Favorites>(`${ENDPOINTS.getAllFavoriteProducts}?userId=${id}`);
+  }
 }

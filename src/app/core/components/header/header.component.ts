@@ -9,12 +9,13 @@ import { RippleModule } from 'primeng/ripple';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { ConfirmationService, MenuItem } from 'primeng/api';
 // Removed duplicate and incorrect import
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { Observable, Subscription } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
 import { TranslationDropdownComponent } from '../../../shared/translation-dropdown/translation-dropdown.component';
+import { UsersService } from '../../../users/users.service';
 import { Users } from '../../models/user.model';
 
 @Component({
@@ -51,13 +52,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
   title: string = '';
   isVisible: boolean = false;
   subscription = new Subscription();
+  productsShoppingCart: number = 0;
+
 
   constructor(
     private translateService: TranslateService,
     private router: Router,
     private authService: AuthService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private userService: UsersService
   ) { }
 
   ngOnInit() {
@@ -80,6 +83,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.isVisible = false;
       }
       this.updateItemLanguage();
+      this.productsShoppingCart = this.userService.shoppingCart$.value.products?.length;
+      console.log('checkAuthenticated', this.productsShoppingCart);
     } else {
       this.isAuthenticated = false;
       this.isVisible = false;
@@ -90,6 +95,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.subscription.add(this.authService.isAuthenticated$.subscribe((response) => {
       this.checkAuthenticated()
     }));
+    this.userService.shoppingCart$.subscribe((cart) => {
+      this.productsShoppingCart = cart.products?.length || 0;
+    })
   }
 
   updateItemLanguage() {
@@ -170,7 +178,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         ],
       },
       {
-        label: this.translateService.instant('HEADER.PRODUCTS'),
+        label: this.translateService.instant('HEADER.FAVORITES'),
         icon: 'pi pi-shop',
         visible: true,
       },
@@ -209,6 +217,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
       });
 
     }
+  }
+
+  navigateToShoppingCart() {
+    this.router.navigate([ '/shopping' ]);
   }
 
   ngOnDestroy(): void {

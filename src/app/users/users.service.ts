@@ -1,18 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ENDPOINTS } from '../core/const/constants';
 import { ShoppingCart } from '../core/models/cart.model';
 import { Favorites } from '../core/models/favorites.model';
 import { Users } from '../core/models/user.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UsersService {
-  shoppingCart$: BehaviorSubject<ShoppingCart> = new BehaviorSubject<ShoppingCart>({} as ShoppingCart);
+  shoppingCart$: BehaviorSubject<ShoppingCart> =
+    new BehaviorSubject<ShoppingCart>({} as ShoppingCart);
 
-  constructor(private _httpClient: HttpClient) { }
+  constructor(private _httpClient: HttpClient) {}
 
   getUsers(id: number): Observable<Users> {
     return this._httpClient.get<Users>(`${ENDPOINTS.getUser}${id}`);
@@ -23,42 +24,26 @@ export class UsersService {
   }
 
   getUserByUsername(username: string): Observable<Users> {
-
-    return this.getAllUsers().pipe(
-      map((users: Users[]) => {
-        const user = users.find(user => user.username === username);
-        if (user) {
-          switch (user.username) {
-            case 'derek':
-              user.role = 'admin';
-              break;
-            case 'kevinryan':
-              user.role = 'admin';
-              break;
-            default:
-              user.role = 'customer';
-              break;
-          }
-        } else {
-          throw new Error('User not found');
-        }
-        return user;
-      })
+    return this._httpClient.get<Users>(
+      `${ENDPOINTS.getAllUsers}?username=${username}`
     );
-
   }
 
   getAllShoppingCarts(): Observable<ShoppingCart[]> {
-    return this._httpClient.get<ShoppingCart[]>(ENDPOINTS.getAllShoppingCarts)
+    return this._httpClient.get<ShoppingCart[]>(ENDPOINTS.getAllShoppingCarts);
   }
 
   getShoppingCartById(id: number): Observable<ShoppingCart> {
-    return this._httpClient.get<ShoppingCart>(`${ENDPOINTS.getAllShoppingCarts}?userId=${id}`);
+    return this._httpClient.get<ShoppingCart>(
+      `${ENDPOINTS.getAllShoppingCarts}?userId=${id}`
+    );
   }
   getAllFavoriteProducts(): Observable<Favorites[]> {
     return this._httpClient.get<Favorites[]>(ENDPOINTS.getAllFavoriteProducts);
   }
   getFavoriteProductById(id: number): Observable<Favorites> {
-    return this._httpClient.get<Favorites>(`${ENDPOINTS.getAllFavoriteProducts}?userId=${id}`);
+    return this._httpClient.get<Favorites>(
+      `${ENDPOINTS.getAllFavoriteProducts}?userId=${id}`
+    );
   }
 }

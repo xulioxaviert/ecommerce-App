@@ -229,7 +229,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   navigateToShoppingCart() {
-    this.router.navigate([ '/shopping' ]);
+    if (this.authService.isAuthenticated()) {
+      const user = this.authService.getSessionStorage('user');
+      this.router.navigate([ `/cart/${user.userId}` ]);
+    } else{
+      
+    }
   }
 
   getData() {

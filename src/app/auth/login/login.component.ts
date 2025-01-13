@@ -74,14 +74,13 @@ export class LoginComponent implements OnInit {
           })
         ).subscribe({
           next: (data) => {
-            console.log("singIn / data:", data[0].userId);
+            console.log("singIn / data:", data[ 0 ].userId);
             this.authService.user$.next(data);
-            console.log('.subscribe / next', data[0]);
-            this.authService.setSessionStorage('user', JSON.stringify(data[0]));
+            console.log('.subscribe / next', data[ 0 ]);
+            this.authService.setSessionStorage('user', JSON.stringify(data[ 0 ]));
             this.router.navigate([ '/' ]);
             this.authService.isAuthenticated$.next(true);
-            this.usersService.getShoppingCartById(data[0].userId).subscribe((cart: any) => {
-              console.log("this.usersService.getShoppingCartById / cart:", { cart });
+            this.usersService.getShoppingCartById(data[ 0 ].userId).subscribe((cart: any) => {
               this.usersService.shoppingCart$.next(cart[ 0 ]);
             })
           },

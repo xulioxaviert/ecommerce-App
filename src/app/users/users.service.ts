@@ -12,6 +12,8 @@ import { Users } from '../core/models/user.model';
 export class UsersService {
   shoppingCart$: BehaviorSubject<ShoppingCart> =
     new BehaviorSubject<ShoppingCart>({} as ShoppingCart);
+  favoriteProducts$: BehaviorSubject<ShoppingCart> =
+    new BehaviorSubject<ShoppingCart>({} as ShoppingCart);
 
   constructor(private _httpClient: HttpClient) {}
 

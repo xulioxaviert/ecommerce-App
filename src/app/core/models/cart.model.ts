@@ -1,12 +1,17 @@
 export interface ShoppingCart {
-  id:       number;
+  cartId:   number;
   userId:   number;
   date:     Date;
-  products: CartProducts[];
-  __v:      number;
+  products: Product[];
+  id:       string;
 }
 
-export interface CartProducts {
+export interface Product {
   productId: number;
-  quantity:  number;
+  size:      Size[];
+}
+
+export interface Size {
+  size:     string;
+  quantity: number;
 }

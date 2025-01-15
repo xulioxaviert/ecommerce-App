@@ -15,7 +15,7 @@ export class UsersService {
   favoriteProducts$: BehaviorSubject<ShoppingCart> =
     new BehaviorSubject<ShoppingCart>({} as ShoppingCart);
 
-  constructor(private _httpClient: HttpClient) {}
+  constructor(private _httpClient: HttpClient) { }
 
   getUsers(id: number): Observable<Users> {
     return this._httpClient.get<Users>(`${ENDPOINTS.getUser}${id}`);
@@ -46,6 +46,18 @@ export class UsersService {
   getFavoriteProductById(id: number): Observable<Favorites> {
     return this._httpClient.get<Favorites>(
       `${ENDPOINTS.getAllFavoriteProducts}?userId=${id}`
+    );
+  }
+  putShoppingCart(id: string, data: any): Observable<ShoppingCart> {
+    return this._httpClient.put<ShoppingCart>(
+      `${ENDPOINTS.getAllShoppingCarts}/${id}`,
+      data
+    );
+  }
+  createShoppingCart(data: any): Observable<ShoppingCart> {
+    return this._httpClient.post<ShoppingCart>(
+      ENDPOINTS.getAllShoppingCarts,
+      data
     );
   }
 }

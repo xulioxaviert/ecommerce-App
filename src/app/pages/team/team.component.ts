@@ -2,7 +2,6 @@ import { NgForOf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ENDPOINTS } from '../../core/const/constants';
-import { CategoryFake } from '../../core/models/products.model';
 import { HttpService } from '../../core/services/http.service';
 import { UserRandom } from '../../core/models/user-random.model';
 

@@ -34,7 +34,7 @@ import { Users } from '../../models/user.model';
     RouterModule,
     NgClass,
     NgIf,
-    ConfirmPopupModule
+    ConfirmPopupModule,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
@@ -48,12 +48,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup;
   user: Users | undefined;
   initialsName: string = '';
-  title: string = '';
+  title = 'HEADER.LOGOUT'
   isVisible: boolean = false;
   subscription = new Subscription();
   productsShoppingCart: number = 0;
   favoriteProducts: number = 0;
-
 
   constructor(
     private translateService: TranslateService,
@@ -64,134 +63,118 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.updateItemLanguage();
     this.checkAuthenticated();
     this.getSubscriptions();
-    this.updateItemLanguage();
-
   }
 
   checkAuthenticated() {
-    if (this.authService.isAuthenticated()) {
-      this.user = this.authService.getSessionStorage('user');
-      this.initialsName =
-        (this.user?.name?.firstname.toUpperCase().toString().charAt(0) || '') +
-        (this.user?.name?.lastname.toUpperCase().toString().charAt(0) || '');
-      this.isAuthenticated = true;
-      if (this.user?.role === 'admin') {
-        this.isVisible = true;
-      } else {
-        this.isVisible = false;
-      }
-      this.updateItemLanguage();
-      this.getData();
-    } else {
-      this.isAuthenticated = false;
-      this.isVisible = false;
-      this.productsShoppingCart = 0;
-    }
+    if (!this.authService.isAuthenticated()) return;
+
+    this.user = this.authService.getSessionStorage('user');
+    const { firstname, lastname } = this.user?.name || {
+      firstname: '',
+      lastname: '',
+    };
+
+    this.initialsName =
+      (firstname[ 0 ].toUpperCase() || '') + (lastname[ 0 ].toUpperCase() || '');
+
+    this.isAuthenticated = true;
+    this.isVisible = this.user?.role === 'admin' ? true : false;
+
+    this.updateItemLanguage();
+    this.getData();
+
   }
 
   getSubscriptions() {
-    this.subscription.add(this.authService.isAuthenticated$.subscribe((response) => {
-      this.checkAuthenticated()
-    }));
+    this.subscription.add(
+      this.authService.isAuthenticated$.subscribe((response) => {
+        this.checkAuthenticated();
+      })
+    );
 
     this.subscription.add(
       this.userService.shoppingCart$.subscribe((cart: any) => {
-        console.log("getSubscriptions", cart.products?.length);
+        console.log('getSubscriptions', cart.products?.length);
         this.productsShoppingCart = cart.products?.length || 0;
       })
-    )
-
-
-
+    );
   }
 
   updateItemLanguage() {
-    if (!this.authService.isAuthenticated()) {
-      this.title = this.translateService.instant('HEADER.LOGIN');
-      this.isVisible = false;
-    } else {
-      this.title = this.translateService.instant('HEADER.LOGOUT');
-      if (this.user?.role === 'admin') {
-        this.isVisible = true;
-      } else {
-        this.isVisible = false;
-      }
-    }
+
+    this.title = 'HEADER.LOGIN'
+    this.isVisible = this.user?.role === 'admin' ? true : false;
+
     this.items = [
       {
-        label: this.translateService.instant('HEADER.HOME'),
+        //TODO revisar traducciones
+        //TODO Revisar el ícono para la función click
+        //TODO Tooltip para el title del ícono
+        label: 'HEADER.HOME',
         icon: 'pi pi-home',
         visible: true,
-        // route: '/',
-        command: () => {
-          this.router.navigate([ '/' ]);
-        },
+        route: '/',
       },
       {
-        label: this.translateService.instant('HEADER.NEW_ARRIVALS'),
+        label: 'HEADER.NEW_ARRIVALS',
         icon: 'pi pi-shop',
         visible: true,
         route: '/categories/feature',
       },
       {
-        label: this.translateService.instant('HEADER.FEATURED'),
+        label: 'HEADER.FEATURED',
         icon: 'pi pi-shop',
         visible: true,
-        command: () => {
-          this.router.navigate([ '/categories/feature' ]);
-        },
+        route: '/category/featured',
       },
       {
-        label: this.translateService.instant('HEADER.OUTLET'),
+        label: 'HEADER.OUTLET',
         icon: 'pi pi-shop',
         visible: true,
-        command: () => {
-          this.router.navigate([ '/category/featured' ]);
-        },
+        route: '/categories/outlet',
       },
       {
-        label: this.translateService.instant('HEADER.CATEGORY'),
+        label: 'HEADER.CATEGORY',
         icon: 'pi pi-shopping-bag',
         visible: true,
         route: '/categories',
         items: [
           {
-            label: this.translateService.instant('HEADER.MEN_CLOTHING'),
+            label: 'HEADER.MEN_CLOTHING',
             icon: 'pi pi-pencil',
             visible: true,
             route: '/categories/men',
           },
           {
-            label: this.translateService.instant('HEADER.WOMEN_CLOTHING'),
+            label: 'HEADER.WOMEN_CLOTHING',
             icon: 'pi pi-palette',
             visible: true,
             route: '/categories/women',
           },
           {
-            label: this.translateService.instant('HEADER.ELECTRONICS'),
+            label: 'HEADER.ELECTRONICS',
             icon: 'pi pi-bolt',
             visible: true,
             route: '/categories/electronics',
           },
           {
-            label: this.translateService.instant('HEADER.JEWELRY'),
+            label: 'HEADER.JEWELRY',
             icon: 'pi pi-server',
             visible: true,
             route: '/categories/jewelry',
-          }
-
+          },
         ],
       },
       {
-        label: this.translateService.instant('HEADER.FAVORITES'),
+        label: 'HEADER.FAVORITES',
         icon: 'pi pi-shop',
         visible: true,
       },
-
       {
-        label: this.translateService.instant('HEADER.DASHBOARD'),
+        label: 'HEADER.DASHBOARD',
         icon: 'pi pi-shop',
         visible: this.isVisible,
         route: '/dashboard',
@@ -218,37 +201,41 @@ export class HeaderComponent implements OnInit, OnDestroy {
           if (this.router.url === '/dashboard') {
             this.router.navigate([ '/' ]);
           }
-
         },
-        reject: () => {
-
-        }
+        reject: () => { },
       });
-
     }
   }
 
   navigateToShoppingCart() {
-    this.router.navigate([ '/shopping' ]);
+    //TODO revisar flujo del carrito de compras y guardar en local storage cuando no está logeado
+    if (this.authService.isAuthenticated()) {
+      const user = this.authService.getSessionStorage('user');
+      this.router.navigate([ `/cart/${user.userId}` ]);
+    } else {
+    }
   }
 
   getData() {
     const userId = this.user?.userId;
     if (userId) {
       this.userService.getShoppingCartById(userId).subscribe((cart: any) => {
-        console.log("getData / cart:", cart);
+        console.log('getData / cart:', cart);
         this.productsShoppingCart = cart[ 0 ].products?.length || 0;
       });
-      this.userService.getFavoriteProductById(userId).subscribe((favorites: any) => {
-        console.log("this.userService.getFavoriteProductById / favorites:", favorites);
-        this.favoriteProducts = favorites[ 0 ].products?.length || 0;
-      });
-
+      this.userService
+        .getFavoriteProductById(userId)
+        .subscribe((favorites: any) => {
+          console.log(
+            'this.userService.getFavoriteProductById / favorites:',
+            favorites
+          );
+          this.favoriteProducts = favorites[ 0 ].products?.length || 0;
+        });
     }
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
-
 }

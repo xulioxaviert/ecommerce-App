@@ -222,6 +222,7 @@
                 src="{{ product.image }}"
                 alt="{{ product.title }}"
                 class="aspect-[3/4] w-full object-cover object-top hover:scale-110 transition-all duration-700"
+                (click)="navigateToProduct(product)"
               />
             </div>
 

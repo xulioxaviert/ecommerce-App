@@ -1,12 +1,14 @@
 export interface Products {
-  productId: number;
-  title: string;
-  price: number;
-  quantity: QuantityClass | number;
+  productId:   number;
+  title:       string;
+  price:       number;
+  size?:       SizeElement[];
+  stock:       number;
   description: string;
-  category: Category;
-  image: string;
-  rating: Rating;
+  category:    Category;
+  image:       string;
+  rating:      Rating;
+  id:          string;
 }
 
 export enum Category {
@@ -16,28 +18,21 @@ export enum Category {
   WomenSClothing = "women's clothing",
 }
 
-export interface QuantityClass {
-  xs: number;
-  s: number;
-  m: number;
-  l: number;
-  xl: number;
-  xxl: number;
-  xxxl: number;
-}
-
 export interface Rating {
-  rate: number;
+  rate:  number;
   count: number;
 }
 
-export interface CategoryFake {
-  category:     string;
-  name:         string;
-  title:        string;
-  descriptions: string;
-  img:         string;
+export interface SizeElement {
+  size:     SizeEnum;
+  quantity: number;
 }
 
-
-
+export enum SizeEnum {
+  L = "l",
+  M = "m",
+  S = "s",
+  Xl = "xl",
+  XS = "xs",
+  XXL = "xxl",
+}

@@ -16,7 +16,6 @@ export class HttpService {
 
   constructor(private _http: HttpClient) { }
 
-
   getData(url: string, params?: HttpParams): Observable<any> {
     return this.http
       .get<any[]>(url, {
@@ -32,6 +31,9 @@ export class HttpService {
   }
   getAllProducts(): Observable<Products[]> {
     return this.http.get<Products[]>(ENDPOINTS.getAllProducts, this.options)
+  }
+  getProductsById(id: string): Observable<Products> {
+    return this.http.get<Products>(`${ENDPOINTS.getAllProducts}/${id}`, this.options)
   }
   getAllCategories(): Observable<Products[]> {
     return this.http.get<Products[]>(ENDPOINTS.getAllCategories, this.options)

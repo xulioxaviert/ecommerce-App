@@ -4,6 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ENDPOINTS } from '../../../core/const/constants';
 import { Products } from '../../../core/models/products.model';
 import { HttpService } from '../../../core/services/http.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-women',
@@ -15,7 +16,7 @@ import { HttpService } from '../../../core/services/http.service';
 export class WomenComponent implements OnInit {
   products: Products[] = [];
 
-  constructor(private http: HttpService) { }
+  constructor(private http: HttpService, private router: Router) { }
   ngOnInit(): void {
     this.getData();
   }
@@ -27,5 +28,10 @@ export class WomenComponent implements OnInit {
         .forEach((product: Products) => this.products.push(product));
       console.log('products', this.products);
     });
+  }
+  navigateToProduct(product: Products) {
+    console.log('product', product);
+    this.router.navigate([ `/product/detail/${product.id}` ])
+
   }
 }

@@ -7,17 +7,20 @@
         <div class="w-32 h-full shrink-0">
           <img
             src="{{ cart.image }}"
-            class="w-full aspect-[112/149] object-contain"
+            class="w-full aspect-[112/149] object-contain cursor-pointer"
+            (click)="navigateToProductDetail(cart)"
           />
         </div>
 
         <div class="flex items-start gap-4 w-full">
           <div>
-            <h3 class="text-base font-bold text-gray-800 mb-1">
+            <h3
+              class="text-base font-bold text-gray-800 mb-1 cursor-pointer"
+              (click)="navigateToProductDetail(cart)"
+            >
               {{ cart.title }}
             </h3>
             <div class="space-y-1">
-              
               <h6 class="text-sm text-gray-800">
                 Color: <strong class="ml-2">Black</strong>
               </h6>

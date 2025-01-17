@@ -29,7 +29,7 @@ export class MenComponent implements OnInit {
       console.log('products', this.products);
     });
   }
-  navigateToProduct(product: Products) {
+  navigateToProductDetail(product: Products) {
     console.log('product', product);
     this.router.navigate([ `/product/detail/${product.id}` ])
 

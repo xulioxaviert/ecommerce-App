@@ -16,6 +16,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
 import { TranslationDropdownComponent } from '../../../shared/translation-dropdown/translation-dropdown.component';
 import { UsersService } from '../../../users/users.service';
+import { ShoppingCart } from '../../models/cart.model';
 import { Users } from '../../models/user.model';
 
 @Component({
@@ -53,6 +54,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
   productsShoppingCart: number = 0;
   favoriteProducts: number = 0;
+  cart: ShoppingCart | undefined;
 
   constructor(
     private translateService: TranslateService,
@@ -211,7 +213,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     //TODO revisar flujo del carrito de compras y guardar en local storage cuando no está logeado
     if (this.authService.isAuthenticated()) {
       const user = this.authService.getSessionStorage('user');
-      this.router.navigate([ `/cart/${user.userId}` ]);
+
+      this.router.navigate([ `/carts/${this.cart?.id}` ]);
     } else {
     }
   }
@@ -219,9 +222,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   getData() {
     const userId = this.user?.userId;
     if (userId) {
-      this.userService.getShoppingCartById(userId).subscribe((cart: any) => {
+      this.userService.getShoppingCartByUserId(userId).subscribe((cart: any) => {
         console.log('getData / cart:', cart);
         this.productsShoppingCart = cart[ 0 ].products?.length || 0;
+        this.cart = cart[ 0 ];
       });
       this.userService
         .getFavoriteProductById(userId)

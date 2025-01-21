@@ -2,7 +2,9 @@ import { NgClass, NgFor, NgIf, UpperCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../auth/auth.service';
+import { ShoppingCart } from '../../../core/models/cart.model';
 import { Products, SizeElement } from '../../../core/models/products.model';
+import { Users } from '../../../core/models/user.model';
 import { HttpService } from '../../../core/services/http.service';
 import { UsersService } from '../../../users/users.service';
 
@@ -17,6 +19,9 @@ export class ProductsDetailComponent implements OnInit {
   productDetail: Products;
   selectedSizes: any[] = [];
   size: SizeElement[] = [];
+  hasShoppingCart: boolean = false;
+  user: Users;
+  cart: ShoppingCart
 
   quantity: number = 1;
   constructor(
@@ -34,6 +39,13 @@ export class ProductsDetailComponent implements OnInit {
     this.route.params.subscribe((params) => {
       this.getProductDetail(params[ 'id' ]);
     });
+    if (this.authService.isAuthenticated()) {
+      const user = this.authService.getSessionStorage('user')
+      this.usersService.getShoppingCartByUserId(user.userId).subscribe((cart) => {
+        this.cart = cart;
+        console.log('this.usersService.getShoppingCartById / this.cart:', this.cart);
+      });
+    }
   }
   getProductDetail(id: string): void {
     this.http.getProductsById(id).subscribe((product) => {
@@ -70,7 +82,7 @@ export class ProductsDetailComponent implements OnInit {
   }
 
   addToCart(): void {
-    // if (this.authService.isAuthenticated()) {
+
     this.size = [];
     this.selectedSizes.forEach((item) => {
       this.size.push({ size: item, quantity: this.quantity });
@@ -83,6 +95,8 @@ export class ProductsDetailComponent implements OnInit {
       size: this.size,
     }
     console.log("addToCart / data:", data);
+
+
 
     // this.usersService.createShoppingCart(data).subscribe({
     //   next: (cart) => {

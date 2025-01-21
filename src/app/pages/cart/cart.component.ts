@@ -1,15 +1,16 @@
 import { DecimalPipe, NgFor, UpperCasePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, switchMap } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { HttpService } from '../../core/services/http.service';
 import { UsersService } from '../../users/users.service';
+import { Products } from '../../core/models/products.model';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [NgFor, DecimalPipe, UpperCasePipe],
+  imports: [ NgFor, DecimalPipe, UpperCasePipe ],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss',
 })
@@ -25,7 +26,7 @@ export class CartComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     private httpService: HttpService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getData();
@@ -35,12 +36,13 @@ export class CartComponent implements OnInit, OnDestroy {
     if (this.authService.isAuthenticated()) {
       const user = this.authService.getSessionStorage('user');
       this.usersService
-        .getShoppingCartById(user.userId)
+        .getShoppingCartByUserId(user.userId)
         .pipe(
+          tap(console.log),
           switchMap((shoppingCart: any) =>
             this.httpService.getAllProducts().pipe(
               map((products: any) => ({
-                shoppingCart: shoppingCart[0],
+                shoppingCart: shoppingCart[ 0 ],
                 products,
               }))
             )
@@ -50,7 +52,7 @@ export class CartComponent implements OnInit, OnDestroy {
           this.shoppingCartCalculation(shoppingCart, products);
         });
     } else {
-      this.router.navigate(['/login']);
+      this.router.navigate([ '/login' ]);
     }
   }
 
@@ -61,7 +63,7 @@ export class CartComponent implements OnInit, OnDestroy {
       );
       let subTotal = 0;
       let totalProducts = 0;
-      product.sizeQuantities.forEach((element: any) => {
+      product.size.forEach((element: any) => {
         subTotal += productData.price * element.quantity;
         totalProducts += element.quantity;
       });
@@ -79,8 +81,16 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   addProduct(product: any): void {
-    
+
   }
 
-  ngOnDestroy(): void {}
+
+  navigateToProductDetail(product: Products) {
+      console.log('product', product);
+      this.router.navigate([ `/product/detail/${product.id}` ])
+
+    }
+  ngOnDestroy(): void { }
 }
+
+

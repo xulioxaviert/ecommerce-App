@@ -26,21 +26,16 @@
               </h6>
 
               <h6 class="mt-6 flex flex-wrap mr-1">
-                @for (size of cart.size; track $index) {
-
-                <!-- <strong class="bg-black text-white py-1 px-2"
-                  >Size {{ size.size | uppercase }} :
-                </strong>
-                <strong class="bg-black text-white py-1 px-2">{{
-                  size.quantity
-                }}</strong> -->
+                @for (size of cart.quantity; track $index) { @if(size.size !==
+                "U"){
                 <div
                   class="flex gap-2 items-center border border-gray-300 bg-white px-3 py-2 w-max mr-2"
                 >
                   {{ size.size | uppercase }} :
-                  <button type="button" class="border-none outline-none"
-                  (click)="decrementQuantity(cart, size)"
-
+                  <button
+                    type="button"
+                    class="border-none outline-none"
+                    (click)="decrementQuantity(cart, size)"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -56,8 +51,11 @@
                   <span class="text-gray-800 text-sm font-semibold px-3">{{
                     size.quantity
                   }}</span>
-                  <button type="button" class="border-none outline-none"
-                  (click)="incrementQuantity(cart.productId, size)">
+                  <button
+                    type="button"
+                    class="border-none outline-none"
+                    (click)="incrementQuantity(cart.productId, size)"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       class="w-2.5 h-2.5"
@@ -74,7 +72,7 @@
                     </svg>
                   </button>
                 </div>
-                }
+                } }
               </h6>
             </div>
 
@@ -122,7 +120,13 @@
             <div
               class="flex gap-2 items-center border border-gray-300 bg-white px-3 py-2 w-max"
             >
-              <button type="button" class="border-none outline-none">
+              @if(cart.oneSize===true){
+
+              <button
+                type="button"
+                class="border-none outline-none"
+                (click)="decrementQuantity(cart, cart.quantity[0])"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="w-2.5 h-2.5"
@@ -134,10 +138,16 @@
                   />
                 </svg>
               </button>
+
               <span class="text-gray-800 text-sm font-semibold px-3">{{
-                cart.cartProductTotal
+                cart.quantity[0].quantity
               }}</span>
-              <button type="button" class="border-none outline-none">
+
+              <button
+                type="button"
+                class="border-none outline-none"
+                (click)="incrementQuantity(cart.productId, cart.quantity[0])"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="w-2.5 h-2.5"
@@ -153,8 +163,12 @@
                   />
                 </svg>
               </button>
+              } @else {
+              <span class="text-gray-800 text-sm font-semibold px-7">{{
+                cart.cartProductTotal
+              }}</span>
+              }
             </div>
-
             <div class="mt-6">
               <h4 class="text-base font-bold text-gray-800">
                 $ {{ cart.price }}

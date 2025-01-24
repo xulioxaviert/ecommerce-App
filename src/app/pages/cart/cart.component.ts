@@ -63,12 +63,18 @@ export class CartComponent implements OnInit, OnDestroy {
     shoppingCart.products.forEach((product: any) => {
       const productData = products.find(
         (p: any) => p.productId === product.productId
+
       );
+
+      let oneSize = false;
       let subTotal = 0;
       let cartProductTotal = 0;
-      product.size.forEach((element: any) => {
+      product.quantity.forEach((element: any) => {
         subTotal += productData.price * element.quantity;
         cartProductTotal += element.quantity;
+        if (element.size === 'U') {
+          oneSize = true;
+        }
       });
 
       this.shoppingCart.push({
@@ -76,13 +82,16 @@ export class CartComponent implements OnInit, OnDestroy {
         ...product,
         subTotal,
         cartProductTotal,
+        oneSize,
       });
       this.subTotal += subTotal;
     });
 
     this.tax = this.subTotal * 0.21;
     this.total = this.subTotal + this.tax + this.shipping;
+    console.log('this.shoppingCart', this.shoppingCart);
   }
+
 
   addProduct(product: any): void {
 
@@ -101,9 +110,10 @@ export class CartComponent implements OnInit, OnDestroy {
     console.log('decrementQuantity', cart, size);
     this.shoppingCart = this.shoppingCart.map(product => {
       if (product.productId === cart.productId) {
-        product.size = product.size.map((s: any) => {
+        product.size = product.quantity.map((s: any) => {
           if (s.size === size.size) {
             if (s.quantity <= 0) return s;
+            
             s.quantity -= 1;
             product.subTotal -= product.price;
           }
@@ -123,7 +133,7 @@ export class CartComponent implements OnInit, OnDestroy {
     console.log('incrementQuantity', productId, size);
     this.shoppingCart = this.shoppingCart.map(product => {
       if (product.productId === productId) {
-        product.size = product.size.map((s: any) => {
+        product.size = product.quantity.map((s: any) => {
           if (s.size === size.size) {
             s.quantity += 1;
             product.subTotal += product.price;

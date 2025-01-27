@@ -26,15 +26,53 @@
               </h6>
 
               <h6 class="mt-6 flex flex-wrap mr-1">
-                @for (size of cart.sizeQuantities; track $index) {
-
-                <strong class="bg-black text-white py-1 px-2"
-                  >{{ size.size | uppercase }} :
-                </strong>
-                <strong class="bg-black text-white py-1 px-2">{{
-                  size.quantity
-                }}</strong>
-                }
+                @for (size of cart.quantity; track $index) { @if(size.size !==
+                "U"){
+                <div
+                  class="flex gap-2 items-center border border-gray-300 bg-white px-3 py-2 w-max mr-2"
+                >
+                  {{ size.size | uppercase }} :
+                  <button
+                    type="button"
+                    class="border-none outline-none"
+                    (click)="decrementQuantity(cart, size)"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="w-2.5 h-2.5"
+                      viewBox="0 0 121.805 121.804"
+                    >
+                      <path
+                        d="M7.308 68.211h107.188a7.309 7.309 0 0 0 7.309-7.31 7.308 7.308 0 0 0-7.309-7.309H7.308a7.31 7.31 0 0 0 0 14.619z"
+                        data-original="#000000"
+                      />
+                    </svg>
+                  </button>
+                  <span class="text-gray-800 text-sm font-semibold px-3">{{
+                    size.quantity
+                  }}</span>
+                  <button
+                    type="button"
+                    class="border-none outline-none"
+                    (click)="incrementQuantity(cart.productId, size)"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="w-2.5 h-2.5"
+                      viewBox="0 0 512 512"
+                    >
+                      <path
+                        d="M256 509.892c-19.058 0-34.5-15.442-34.5-34.5V36.608c0-19.058 15.442-34.5 34.5-34.5s34.5 15.442 34.5 34.5v438.784c0 19.058-15.442 34.5-34.5 34.5z"
+                        data-original="#000000"
+                      />
+                      <path
+                        d="M475.392 290.5H36.608c-19.058 0-34.5-15.442-34.5-34.5s15.442-34.5 34.5-34.5h438.784c19.058 0 34.5 15.442 34.5 34.5s-15.442 34.5-34.5 34.5z"
+                        data-original="#000000"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                } }
               </h6>
             </div>
 
@@ -82,7 +120,13 @@
             <div
               class="flex gap-2 items-center border border-gray-300 bg-white px-3 py-2 w-max"
             >
-              <button type="button" class="border-none outline-none">
+              @if(cart.oneSize===true){
+
+              <button
+                type="button"
+                class="border-none outline-none"
+                (click)="decrementQuantity(cart, cart.quantity[0])"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="w-2.5 h-2.5"
@@ -94,10 +138,16 @@
                   />
                 </svg>
               </button>
+
               <span class="text-gray-800 text-sm font-semibold px-3">{{
-                cart.totalProducts
+                cart.quantity[0].quantity
               }}</span>
-              <button type="button" class="border-none outline-none">
+
+              <button
+                type="button"
+                class="border-none outline-none"
+                (click)="incrementQuantity(cart.productId, cart.quantity[0])"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="w-2.5 h-2.5"
@@ -113,8 +163,12 @@
                   />
                 </svg>
               </button>
+              } @else {
+              <span class="text-gray-800 text-sm font-semibold px-7">{{
+                cart.cartProductTotal
+              }}</span>
+              }
             </div>
-
             <div class="mt-6">
               <h4 class="text-base font-bold text-gray-800">
                 $ {{ cart.price }}
@@ -157,6 +211,7 @@
       <button
         type="button"
         class="mt-4 text-sm px-4 py-2.5 w-full bg-blue-600 hover:bg-blue-700 text-white tracking-wide"
+        (click)="makePayment()"
       >
         Make Payment
       </button>

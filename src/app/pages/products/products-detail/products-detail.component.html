@@ -4,8 +4,8 @@
       <div class="img">
         <div class="img-box h-full max-lg:mx-auto">
           <img
-            src="{{ productDetail?.image }}"
-            alt="{{ productDetail?.title }}"
+            src="{{ productDetail.image }}"
+            alt="{{ productDetail.title }}"
             class="max-lg:mx-auto lg:ml-auto h-full object-cover"
           />
         </div>
@@ -15,18 +15,18 @@
       >
         <div class="data w-full max-w-xl">
           <p class="text-lg font-medium leading-8 text-indigo-600 mb-4">
-            {{ productDetail?.category | uppercase }}
+            {{ productDetail.category | uppercase }}
           </p>
           <h2
             class="font-manrope font-bold text-3xl leading-10 text-gray-900 mb-2 capitalize"
           >
-            {{ productDetail?.title }}
+            {{ productDetail.title }}
           </h2>
           <div class="flex flex-col sm:flex-row sm:items-center mb-6">
             <h6
               class="font-manrope font-semibold text-2xl leading-9 text-gray-900 pr-5 sm:border-r border-gray-200 mr-5"
             >
-              $ {{ productDetail?.price }}
+              $ {{ productDetail.price }}
             </h6>
             <div class="flex items-center gap-2">
               <div class="flex items-center gap-1">
@@ -132,7 +132,7 @@
             </div>
           </div>
           <p class="text-gray-500 text-base font-normal mb-5">
-            {{ productDetail?.description }}
+            {{ productDetail.description }}
           </p>
           <ul class="grid gap-y-4 mb-8">
             <li class="flex items-center gap-3">
@@ -216,7 +216,7 @@
               >
             </li>
           </ul>
-          @if(productDetail?.size){
+          @if(productDetail.size){
 
           <p class="text-gray-900</div> text-lg leading-8 font-medium mb-4">
             Size
@@ -225,7 +225,7 @@
             <div
               class="grid grid-cols-3 min-[400px]:grid-cols-5 gap-3 max-w-md"
             >
-              @for (size of productDetail?.size; track $index) {
+              @for (size of productDetail.size; track $index) {
               <button
                 class="bg-white text-center py-1.5 px-6 w-full font-semibold text-lg leading-8 text-gray-900 border border-gray-200 flex items-center rounded-full justify-center transition-all duration-300 hover:bg-gray-50 hover:shadow-sm hover:shadow-gray-100 hover:border-gray-300 cursor-pointer"
                 (click)="selectedSize(size.size)"

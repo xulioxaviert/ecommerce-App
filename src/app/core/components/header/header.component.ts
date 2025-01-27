@@ -234,7 +234,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
             'this.userService.getFavoriteProductById / favorites:',
             favorites
           );
-          this.favoriteProducts = favorites[ 0 ].products?.length || 0;
+          this.favoriteProducts = favorites[ 0 ]?.products?.length || 0;
         });
     }
   }

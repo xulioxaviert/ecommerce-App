@@ -27,7 +27,7 @@ export class JewelryComponent implements OnInit {
   getData() {
     this.http.getData(ENDPOINTS.getAllProducts).subscribe((products) => {
       products.body
-        .filter((product: Products) => product.category === "jewelery")
+        .filter((product: Products) => product.category === "jewelry")
         .forEach((product: Products) => this.products.push(product));
       console.log('products', this.products);
     })

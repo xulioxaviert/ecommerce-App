@@ -12,7 +12,7 @@ export const routes: Routes = [
     path: '',
     component: CategoriesComponent,
     children: [
-      
+
       {
         path: 'electronics',
         loadComponent: () => import('./electronics/electronics.component').then(m => m.ElectronicsComponent),

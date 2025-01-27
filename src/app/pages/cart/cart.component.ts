@@ -1,9 +1,11 @@
 import { DecimalPipe, NgFor, UpperCasePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, switchMap, tap } from 'rxjs';
+import { map, switchMap } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
+import { ShoppingCart } from '../../core/models/cart.model';
 import { Products } from '../../core/models/products.model';
+import { Users } from '../../core/models/user.model';
 import { HttpService } from '../../core/services/http.service';
 import { UsersService } from '../../users/users.service';
 
@@ -21,6 +23,7 @@ export class CartComponent implements OnInit, OnDestroy {
   tax: number = 0;
   subTotal: number = 0;
   cartProductTotal: number = 0;
+  user: Users;
 
   constructor(
     private usersService: UsersService,
@@ -35,11 +38,10 @@ export class CartComponent implements OnInit, OnDestroy {
 
   getData(): void {
     if (this.authService.isAuthenticated()) {
-      const user = this.authService.getSessionStorage('user');
+      this.user = this.authService.getSessionStorage('user');
       this.usersService
-        .getShoppingCartByUserId(user.userId)
+        .getShoppingCartByUserId(this.user.userId)
         .pipe(
-          tap(console.log),
           switchMap((shoppingCart: any) =>
             this.httpService.getAllProducts().pipe(
               map((products: any) => ({
@@ -60,15 +62,14 @@ export class CartComponent implements OnInit, OnDestroy {
 
   shoppingCartCalculation(shoppingCart: any, products: any) {
 
+    let oneSize = false;
+    let subTotal = 0;
+    let cartProductTotal = 0;
     shoppingCart.products.forEach((product: any) => {
       const productData = products.find(
         (p: any) => p.productId === product.productId
 
       );
-
-      let oneSize = false;
-      let subTotal = 0;
-      let cartProductTotal = 0;
       product.quantity.forEach((element: any) => {
         subTotal += productData.price * element.quantity;
         cartProductTotal += element.quantity;
@@ -76,7 +77,7 @@ export class CartComponent implements OnInit, OnDestroy {
           oneSize = true;
         }
       });
-
+      //TODO: Ojo pendioente de todas las propiedades
       this.shoppingCart.push({
         ...productData,
         ...product,
@@ -113,7 +114,7 @@ export class CartComponent implements OnInit, OnDestroy {
         product.size = product.quantity.map((s: any) => {
           if (s.size === size.size) {
             if (s.quantity <= 0) return s;
-            
+
             s.quantity -= 1;
             product.subTotal -= product.price;
           }
@@ -147,6 +148,27 @@ export class CartComponent implements OnInit, OnDestroy {
     this.subTotal = this.shoppingCart.reduce((total: number, product: any) => total += product.subTotal, 0);
     this.tax = this.subTotal * 0.21 + this.shipping * 0.21;
     this.total = this.subTotal + this.tax + this.shipping;
+  }
+
+  makePayment(): void {
+    if (this.authService.isAuthenticated()) {
+      const user = this.authService.getSessionStorage('user');
+      console.log("makePayment / user:", this.shoppingCart);
+      let newShoppingCart: ShoppingCart = {} as ShoppingCart;
+      this.usersService.getShoppingCartByUserId(this.user.userId).subscribe((shoppingCart: any) => {
+        newShoppingCart = shoppingCart[ 0 ];
+        newShoppingCart.products = [
+          ...this.shoppingCart,
+        ]
+
+        console.log("makePayment / newShoppingCart:", newShoppingCart);
+        newShoppingCart.products.forEach((product: any) => {
+          product.quantity = 0;
+          delete product.quantity
+        })
+      })
+
+    }
   }
 }
 

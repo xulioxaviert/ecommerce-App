@@ -56,18 +56,12 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   shoppingCartCalculation(shoppingCart: any) {
-    this.shoppingCart.products.forEach((product) => {
-      if (product.type === 'composite') {
-        this.subTotal = product.properties[ 0 ].size.reduce(
-          (total: number, s: any) => (total += s.quantity),
-          0
-        );
-      } else if (product.type === 'simple') {
-        this.subTotal = product.quantity * product.price;
-      }
-    });
-
-    this.tax = this.subTotal * 0.21;
+    this.subTotal = shoppingCart.products.reduce(
+      (total: number, product: any) =>
+        (total += product.quantity * product.price),
+      0
+    );
+    this.tax = this.subTotal * 0.21 + this.shipping * 0.21;
     this.total = this.subTotal + this.tax + this.shipping;
   }
 

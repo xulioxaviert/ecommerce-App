@@ -56,12 +56,19 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   shoppingCartCalculation(shoppingCart: any) {
-    let subTotal = 0;
-    let cartProductTotal = 0;
+    this.shoppingCart.products.forEach((product) => {
+      if (product.type === 'composite') {
+        this.subTotal = product.properties[ 0 ].size.reduce(
+          (total: number, s: any) => (total += s.quantity),
+          0
+        );
+      } else if (product.type === 'simple') {
+        this.subTotal = product.quantity * product.price;
+      }
+    });
 
     this.tax = this.subTotal * 0.21;
     this.total = this.subTotal + this.tax + this.shipping;
-    console.log('this.shoppingCart', this.shoppingCart);
   }
 
   addProduct(product: any): void { }
@@ -73,48 +80,63 @@ export class CartComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void { }
 
   decrementQuantity(id: number, size: any): void {
-    console.log('decrementQuantity', id, size);
-    this.shoppingCart.products = this.shoppingCart.products.map((products) => {
-      if (products.productId === id) {
-        products.properties[ 0 ].size = products.properties[ 0 ].size.map((s: any) => {
-          if (s.size === size.size) {
-            if (s.quantity <= 0) return s;
-            s.quantity -= 1;
-          }
-          return s;
-        });
+    this.shoppingCart.products.forEach((product) => {
+      if (product.productId === id) {
+        if (product.type === 'composite') {
+          product.properties.forEach((property) => {
+            property.size.forEach((s) => {
+              if (s.size === size.size) {
+                if (s.quantity <= 0) return s;
+                s.quantity -= 1;
+                product.quantity -= 1;
+              }
+              return s;
+            });
+          });
+        } else if (product.type === 'simple') {
+          if (product.quantity <= 0) return product;
+          product.quantity -= 1;
+        }
       }
-      return products;
+      return product;
     });
-    this.shoppingCart.products[ 0 ].quantity = this.shoppingCart.products[ 0 ].properties[ 0 ].size.reduce((total: number, s: any) => total += s.quantity, 0);
-
-    this.subTotal = this.shoppingCart.products[ 0 ].quantity * this.shoppingCart.products[ 0 ].price;
+    this.subTotal = this.shoppingCart.products.reduce(
+      (total: number, product: any) =>
+        (total += product.quantity * product.price),
+      0
+    );
     this.tax = this.subTotal * 0.21 + this.shipping * 0.21;
     this.total = this.subTotal + this.tax + this.shipping;
-
   }
 
   incrementQuantity(id: number, size: any) {
-    console.log("incrementQuantity / id:", id);
-    this.shoppingCart.products = this.shoppingCart.products.map((products) => {
-      if (products.productId === id) {
-        products.properties[ 0 ].size = products.properties[ 0 ].size.map((s: any) => {
-          if (s.size === size.size) {
-            if (s.quantity <= 0) return s;
-            s.quantity += 1;
-          }
-          return s;
-        });
+    this.shoppingCart.products = this.shoppingCart.products.map((product) => {
+      if (product.productId === id) {
+        if (product.type === 'composite') {
+          product.properties.forEach((property) => {
+            property.size.forEach((s) => {
+              if (s.size === size.size) {
+                s.quantity += 1;
+                product.quantity += 1;
+              }
+              return s;
+            });
+          });
+        } else if (product.type === 'simple') {
+          product.quantity += 1;
+        }
       }
-      return products;
+      return product;
     });
-    this.shoppingCart.products[ 0 ].quantity = this.shoppingCart.products[ 0 ].properties[ 0 ].size.reduce((total: number, s: any) => total += s.quantity, 0);
+    this.subTotal = this.shoppingCart.products.reduce(
+      (total: number, product: any) =>
+        (total += product.quantity * product.price),
+      0
+    );
 
-    this.subTotal = this.shoppingCart.products[ 0 ].quantity * this.shoppingCart.products[ 0 ].price;
     this.tax = this.subTotal * 0.21 + this.shipping * 0.21;
     this.total = this.subTotal + this.tax + this.shipping;
   }
-
 
   // makePayment(): void {
   //   if(this.authService.isAuthenticated()) {

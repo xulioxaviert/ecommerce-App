@@ -132,23 +132,12 @@ export class CartComponent implements OnInit, OnDestroy {
     this.total = this.subTotal + this.tax + this.shipping;
   }
 
-  // makePayment(): void {
-  //   if(this.authService.isAuthenticated()) {
-  //   const user = this.authService.getSessionStorage('user');
-  //   console.log("makePayment / user:", this.shoppingCart);
-  //   let newShoppingCart: ShoppingCart = {} as ShoppingCart;
-  //   // this.usersService.getShoppingCartByUserId(this.user.userId).subscribe((shoppingCart: any) => {
-  //   //   newShoppingCart = shoppingCart[ 0 ];
-  //   //   newShoppingCart.products = [
-  //   //     ...this.shoppingCart,
-  //   //   ]
-
-  //   //   console.log("makePayment / newShoppingCart:", newShoppingCart);
-  //   //   newShoppingCart.products.forEach((product: any) => {
-  //   //     product.quantity = 0;
-  //   //     delete product.quantity
-  //   //   })
-  //   // })
-
-  // }
+  makePayment(): void {
+    console.log('makePayment', this.shoppingCart);
+    
+    console.log('SubTotal', this.subTotal);
+    console.log('Total', this.total);
+    console.log('Tax', this.tax);
+    console.log('Shipping', this.shipping);
+  }
 }

@@ -21,7 +21,7 @@ export class ProductsDetailComponent implements OnInit {
   size: SizeElement[] = [];
   hasShoppingCart: boolean = false;
   user: Users;
-  cart: ShoppingCart
+  cart: ShoppingCart[] = [];
 
   quantity: number = 1;
   constructor(

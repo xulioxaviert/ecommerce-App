@@ -35,8 +35,8 @@ export class UsersService {
     return this._httpClient.get<ShoppingCart[]>(ENDPOINTS.getAllShoppingCarts);
   }
 
-  getShoppingCartByUserId(id: number): Observable<ShoppingCart> {
-    return this._httpClient.get<ShoppingCart>(
+  getShoppingCartByUserId(id: number): Observable<ShoppingCart[]> {
+    return this._httpClient.get<ShoppingCart[]>(
       `${ENDPOINTS.getAllShoppingCarts}?userId=${id}`
     );
   }

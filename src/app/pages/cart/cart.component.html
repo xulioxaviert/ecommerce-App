@@ -1,14 +1,14 @@
 <div class="font-sans">
   <div class="grid lg:grid-cols-3 gap-10 p-4">
-    <!-- <div class="lg:col-span-2 bg-white divide-y">
+    <div class="lg:col-span-2 bg-white divide-y">
       @for (cart of shoppingCart.products; track $index) {
 
       <div class="flex items-start max-sm:flex-col gap-4 py-4">
         <div class="w-32 h-full shrink-0">
           <img
-            src="{{ cart }}"
+            src="{{ cart.image }}"
             class="w-full aspect-[112/149] object-contain cursor-pointer"
-            (click)="navigateToProductDetail(cart)"
+            (click)="navigateToProductDetail(cart.id)"
           />
         </div>
 
@@ -16,18 +16,19 @@
           <div>
             <h3
               class="text-base font-bold text-gray-800 mb-1 cursor-pointer"
-              (click)="navigateToProductDetail(cart)"
+              (click)="navigateToProductDetail(cart.id)"
             >
               {{ cart.title }}
             </h3>
-            <div class="space-y-1">
-              <h6 class="text-sm text-gray-800">
-                Color: <strong class="ml-2">Black</strong>
-              </h6>
 
+            <div class="space-y-1">
+              @for (property of cart.properties; track $index) {
+              <h6 class="text-sm text-gray-800">
+                Color:
+                <strong class="ml-2">{{ property.color | uppercase }}</strong>
+              </h6>
               <h6 class="mt-6 flex flex-wrap mr-1">
-                @for (size of cart.quantity; track $index) { @if(size.size !==
-                "U"){
+                @for (size of property.size; track $index) {
                 <div
                   class="flex gap-2 items-center border border-gray-300 bg-white px-3 py-2 w-max mr-2"
                 >
@@ -35,7 +36,7 @@
                   <button
                     type="button"
                     class="border-none outline-none"
-                    (click)="decrementQuantity(cart, size)"
+                    (click)="decrementQuantity(cart.productId, size)"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -72,8 +73,9 @@
                     </svg>
                   </button>
                 </div>
-                } }
+                }
               </h6>
+              }
             </div>
 
             <div class="mt-6 flex flex-wrap gap-4">
@@ -120,12 +122,12 @@
             <div
               class="flex gap-2 items-center border border-gray-300 bg-white px-3 py-2 w-max"
             >
-              @if(cart.oneSize===true){
+              @if(cart.type==='simple'){
 
               <button
                 type="button"
                 class="border-none outline-none"
-                (click)="decrementQuantity(cart, cart.quantity[0])"
+                (click)="decrementQuantity(cart.productId, cart)"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -140,13 +142,13 @@
               </button>
 
               <span class="text-gray-800 text-sm font-semibold px-3">{{
-                cart.quantity[0].quantity
+                cart.quantity
               }}</span>
 
               <button
                 type="button"
                 class="border-none outline-none"
-                (click)="incrementQuantity(cart.productId, cart.quantity[0])"
+                (click)="incrementQuantity(cart.productId, cart)"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -164,11 +166,13 @@
                 </svg>
               </button>
               } @else {
-              <span class="text-gray-800 text-sm font-semibold px-7">{{
-                cart.cartProductTotal
+
+              <span class="text-gray-800 text-sm font-semibold px-8">{{
+                cart.quantity
               }}</span>
               }
             </div>
+
             <div class="mt-6">
               <h4 class="text-base font-bold text-gray-800">
                 $ {{ cart.price }}
@@ -182,7 +186,7 @@
         <h3 class="text-lg font-bold text-gray-800">No items in the cart</h3>
       </div>
       }
-    </div> -->
+    </div>
 
     <div class="shadow-md p-6 lg:sticky lg:top-0 h-max">
       <h3 class="text-lg font-bold text-gray-800 border-b pb-4">
@@ -211,7 +215,6 @@
       <button
         type="button"
         class="mt-4 text-sm px-4 py-2.5 w-full bg-blue-600 hover:bg-blue-700 text-white tracking-wide"
-        (click)="makePayment()"
       >
         Make Payment
       </button>

@@ -1,6 +1,7 @@
 import { DecimalPipe, NgFor, UpperCasePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ConfirmationService } from 'primeng/api';
 import { AuthService } from '../../auth/auth.service';
 import { ShoppingCart } from '../../core/models/cart.model';
 import { Users } from '../../core/models/user.model';
@@ -27,7 +28,8 @@ export class CartComponent implements OnInit, OnDestroy {
     private usersService: UsersService,
     private authService: AuthService,
     private router: Router,
-    private httpService: HttpService
+    private httpService: HttpService,
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit(): void {
@@ -65,7 +67,19 @@ export class CartComponent implements OnInit, OnDestroy {
     this.total = this.subTotal + this.tax + this.shipping;
   }
 
-  addProduct(product: any): void { }
+  removeProduct(event: Event): void {
+    console.log('removedProduct', event);
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: '¿Estás seguro que deseas eliminar el producto?',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        
+      },
+      reject: () => { },
+    });
+
+  }
 
   navigateToProductDetail(id: string) {
     console.log('product', id);
@@ -134,7 +148,6 @@ export class CartComponent implements OnInit, OnDestroy {
 
   makePayment(): void {
     console.log('makePayment', this.shoppingCart);
-    
     console.log('SubTotal', this.subTotal);
     console.log('Total', this.total);
     console.log('Tax', this.tax);

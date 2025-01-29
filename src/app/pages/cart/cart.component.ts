@@ -1,5 +1,5 @@
 import { DecimalPipe, NgFor, UpperCasePipe } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { AuthService } from '../../auth/auth.service';
@@ -7,11 +7,12 @@ import { ShoppingCart } from '../../core/models/cart.model';
 import { Users } from '../../core/models/user.model';
 import { HttpService } from '../../core/services/http.service';
 import { UsersService } from '../../users/users.service';
+import { CartListComponent } from "./cart-list/cart-list.component";
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [ NgFor, DecimalPipe, UpperCasePipe ],
+  imports: [ NgFor, DecimalPipe, UpperCasePipe, CartListComponent ],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss',
 })
@@ -33,8 +34,8 @@ export class CartComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.getData();
     this.getIdFromUrl();
+    this.getData();
   }
 
   getIdFromUrl(): string {
@@ -74,76 +75,80 @@ export class CartComponent implements OnInit, OnDestroy {
       message: '¿Estás seguro que deseas eliminar el producto?',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        
+
       },
       reject: () => { },
     });
 
   }
 
-  navigateToProductDetail(id: string) {
+  navigateToProductDetail(id: string): void {
     console.log('product', id);
     this.router.navigate([ `/product/detail/${id}` ]);
   }
   ngOnDestroy(): void { }
 
-  decrementQuantity(id: number, size: any): void {
-    this.shoppingCart.products.forEach((product) => {
-      if (product.productId === id) {
-        if (product.type === 'composite') {
-          product.properties.forEach((property) => {
-            property.size.forEach((s) => {
-              if (s.size === size.size) {
-                if (s.quantity <= 0) return s;
-                s.quantity -= 1;
-                product.quantity -= 1;
-              }
-              return s;
-            });
-          });
-        } else if (product.type === 'simple') {
-          if (product.quantity <= 0) return product;
-          product.quantity -= 1;
-        }
-      }
-      return product;
-    });
-    this.subTotal = this.shoppingCart.products.reduce(
-      (total: number, product: any) =>
-        (total += product.quantity * product.price),
-      0
-    );
-    this.tax = this.subTotal * 0.21 + this.shipping * 0.21;
-    this.total = this.subTotal + this.tax + this.shipping;
+  decrementQuantity(event: Event): void {
+    console.log("decrementQuantity / event:", event);
+
+    // this.shoppingCart.products.forEach((product) => {
+    //   if (product.productId === id) {
+    //     if (product.type === 'composite') {
+    //       product.properties.forEach((property) => {
+    //         property.size.forEach((s) => {
+    //           if (s.size === size.size) {
+    //             if (s.quantity <= 0) return s;
+    //             s.quantity -= 1;
+    //             product.quantity -= 1;
+    //           }
+    //           return s;
+    //         });
+    //       });
+    //     } else if (product.type === 'simple') {
+    //       if (product.quantity <= 0) return product;
+    //       product.quantity -= 1;
+    //     }
+    //   }
+    //   return product;
+    // });
+    // this.subTotal = this.shoppingCart.products.reduce(
+    //   (total: number, product: any) =>
+    //     (total += product.quantity * product.price),
+    //   0
+    // );
+    // this.tax = this.subTotal * 0.21 + this.shipping * 0.21;
+    // this.total = this.subTotal + this.tax + this.shipping;
   }
 
-  incrementQuantity(id: number, size: any) {
-    this.shoppingCart.products = this.shoppingCart.products.map((product) => {
-      if (product.productId === id) {
-        if (product.type === 'composite') {
-          product.properties.forEach((property) => {
-            property.size.forEach((s) => {
-              if (s.size === size.size) {
-                s.quantity += 1;
-                product.quantity += 1;
-              }
-              return s;
-            });
-          });
-        } else if (product.type === 'simple') {
-          product.quantity += 1;
-        }
-      }
-      return product;
-    });
-    this.subTotal = this.shoppingCart.products.reduce(
-      (total: number, product: any) =>
-        (total += product.quantity * product.price),
-      0
-    );
+  incrementQuantity(event: Event) {
+    console.log("incrementQuantity / event:", event);
 
-    this.tax = this.subTotal * 0.21 + this.shipping * 0.21;
-    this.total = this.subTotal + this.tax + this.shipping;
+    // this.shoppingCart.products = this.shoppingCart.products.map((product) => {
+    //   if (product.productId === id) {
+    //     if (product.type === 'composite') {
+    //       product.properties.forEach((property) => {
+    //         property.size.forEach((s) => {
+    //           if (s.size === size.size) {
+    //             s.quantity += 1;
+    //             product.quantity += 1;
+    //           }
+    //           return s;
+    //         });
+    //       });
+    //     } else if (product.type === 'simple') {
+    //       product.quantity += 1;
+    //     }
+    //   }
+    //   return product;
+    // });
+    // this.subTotal = this.shoppingCart.products.reduce(
+    //   (total: number, product: any) =>
+    //     (total += product.quantity * product.price),
+    //   0
+    // );
+
+    // this.tax = this.subTotal * 0.21 + this.shipping * 0.21;
+    // this.total = this.subTotal + this.tax + this.shipping;
   }
 
   makePayment(): void {

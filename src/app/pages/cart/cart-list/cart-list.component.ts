@@ -12,12 +12,20 @@ import { ShoppingCart } from '../../../core/models/cart.model';
 export class CartListComponent {
   @Input() shoppingCart: ShoppingCart;
   @Output() removeProduct: EventEmitter<Event> = new EventEmitter<Event>();
-  @Output() incrementQuantity: EventEmitter<Event> = new EventEmitter<Event>();
-  @Output() decrementQuantity: EventEmitter<Event> = new EventEmitter<Event>();
+  @Output() decrementQuantity: EventEmitter<{ id: number, size: any }> = new EventEmitter<{ id: number, size: any }>();
+  @Output() incrementQuantity: EventEmitter<{ id: number, size: any }> = new EventEmitter<{ id: number, size: any }>();
   @Output() idProductDetail: EventEmitter<string> = new EventEmitter<string>();
 
   navigateToProductDetail(id: string): void {
-    console.log("navigateToProductDetail / id:", id);
     this.idProductDetail.emit(id);
   }
+
+  decrementQuantityProduct(id: number, size: any): void {
+    this.decrementQuantity.emit( {id, size} );
+  }
+  incrementQuantityProduct(id: number, size: any): void {
+    this.incrementQuantity.emit( {id, size} );
+  }
+
+
 }

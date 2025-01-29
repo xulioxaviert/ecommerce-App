@@ -30,7 +30,11 @@
             class="flex gap-2 items-center border border-gray-300 bg-white px-3 py-2 w-max mr-2"
           >
             {{ size.size | uppercase }} :
-            <button type="button" class="border-none outline-none">
+            <button
+              type="button"
+              class="border-none outline-none"
+              (click)="decrementQuantityProduct(cart.productId, size)"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="w-2.5 h-2.5"
@@ -45,7 +49,11 @@
             <span class="text-gray-800 text-sm font-semibold px-3">{{
               size.quantity
             }}</span>
-            <button type="button" class="border-none outline-none">
+            <button
+              type="button"
+              class="border-none outline-none"
+              (click)="incrementQuantityProduct(cart.productId, size)"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="w-2.5 h-2.5"
@@ -113,7 +121,11 @@
       >
         @if(cart.type==='simple'){
 
-        <button type="button" class="border-none outline-none">
+        <button
+          type="button"
+          class="border-none outline-none"
+          (click)="decrementQuantityProduct(cart.productId, cart)"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="w-2.5 h-2.5"
@@ -130,7 +142,11 @@
           cart.quantity
         }}</span>
 
-        <button type="button" class="border-none outline-none">
+        <button
+          type="button"
+          class="border-none outline-none"
+          (click)="incrementQuantityProduct(cart.productId, cart)"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="w-2.5 h-2.5"

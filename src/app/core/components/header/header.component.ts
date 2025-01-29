@@ -190,7 +190,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     } else {
       this.confirmationService.confirm({
         target: event.target as EventTarget,
-        message: '¿Estás seguro que deseas cerrar sesión?',
+        message: this.translateService.instant('HEADER.LOGOUT_CONFIRMATION'),
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
           this.authService.logout();

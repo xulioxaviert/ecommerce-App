@@ -13,7 +13,14 @@
   },
   "PRODUCTS": {
     "TITLE": "Productos",
-    "DESCRIPTION": "¡Encuentra los mejores productos aquí!"
+    "DESCRIPTION": "¡Encuentra los mejores productos aquí!",
+    "SEASONAL_PRODUCTS": "Productos de temporada",
+    "DISCOUNTS": "Descuentos",
+    "NEW_ARRIVALS": "Nueva colección",
+    "FEATURED": "Destacados",
+    "SHOP_NOW": "Comprar ahora",
+    "REMOVE_TO_CART": "Eliminar producto del carrito de la compra",
+    "ADD_TO_CART": "Añadir al carrito de la compra"
   },
   "LOGIN": {
     "TITLE": "Iniciar sesión",
@@ -32,7 +39,10 @@
     "USERNAME_REQUIRED": "El nombre de usuario es obligatorio",
     "USERNAME_MIN_LENGTH": "El nombre de usuario debe tener al menos 3 caracteres",
     "PASSWORD_MIN_LENGTH": "La contraseña debe tener al menos 3 caracteres",
-    "PASSWORD_REQUIRED": "La contraseña es obligatoria"
+    "PASSWORD_REQUIRED": "La contraseña es obligatoria",
+    "ARE_YOU_SURE_YOU_WANT_TO_LOG_OUT": "¿Estás seguro que quieres cerrar sesión?",
+    "YES": "Sí",
+    "NO": "No"
   },
   "ERROR": {
     "404": {
@@ -73,8 +83,8 @@
     "DASHBOARD": "Panel de control",
     "CART": "Carrito de compras",
     "MEET_TEAM": "Conoce nuestro equipo",
-    "TESTIMONIALS": "Testimonios"
-
+    "TESTIMONIALS": "Testimonios",
+    "FAVORITES": "Favoritos"
   },
   "REGISTER": {
     "TITLE": "Registro",

@@ -27,6 +27,16 @@ export const routes: Routes = [
     loadComponent: () => import('./admin/dashboard/dashboard.component').then(m => m.DashboardComponent),
     canActivate: [ AuthGuard ]
   },
+  {
+    path: 'carts/:id',
+    loadComponent: () => import('./pages/cart/cart.component').then(m => m.CartComponent),
+    canActivate: [ AuthGuard ]
+  },
+  {
+    path: 'product/detail/:id',
+    loadComponent: () => import('./pages/products/products-detail/products-detail.component').then(m => m.ProductsDetailComponent),
+
+  },
 
 
 ];

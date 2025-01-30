@@ -8,11 +8,10 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { catchError, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, of, switchMap, tap } from 'rxjs';
 import { ToastService } from '../../core/services/toast.service';
 import { UsersService } from '../../users/users.service';
 import { AuthService } from '../auth.service';
-import { Users } from '../../core/models/user.model';
 
 @Component({
   selector: 'app-login',
@@ -75,14 +74,17 @@ export class LoginComponent implements OnInit {
           })
         ).subscribe({
           next: (data) => {
+            console.log("singIn / data:", data[ 0 ].userId);
             this.authService.user$.next(data);
-            console.log('.subscribe / next', data);
-            this.authService.setSessionStorage('user', JSON.stringify(data));
+            console.log('.subscribe / next', data[ 0 ]);
+            this.authService.setSessionStorage('user', JSON.stringify(data[ 0 ]));
             this.router.navigate([ '/' ]);
             this.authService.isAuthenticated$.next(true);
+            this.usersService.getShoppingCartByUserId(data[ 0 ].userId).subscribe((cart: any) => {
+              this.usersService.shoppingCart$.next(cart[ 0 ]);
+            })
           },
           error: (error) => {
-            // const errorMessage = this.translateService.instant('ERROR.LOGIN');
             this.toastService.showError('Error', error);
             this.loginForm.reset();
           },

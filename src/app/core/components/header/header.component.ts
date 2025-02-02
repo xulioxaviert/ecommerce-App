@@ -190,7 +190,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     } else {
       this.confirmationService.confirm({
         target: event.target as EventTarget,
-        message: this.translateService.instant('HEADER.LOGOUT_CONFIRMATION'),
+        message: this.translateService.instant('LOGIN.ARE_YOU_SURE_YOU_WANT_TO_LOG_OUT'),
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
           this.authService.logout();

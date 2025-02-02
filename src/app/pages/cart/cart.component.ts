@@ -3,16 +3,17 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { AuthService } from '../../auth/auth.service';
-import { ShoppingCart } from '../../core/models/cart.model';
+import { Product, ShoppingCart } from '../../core/models/cart.model';
 import { Users } from '../../core/models/user.model';
 import { HttpService } from '../../core/services/http.service';
 import { UsersService } from '../../users/users.service';
 import { CartListComponent } from "./cart-list/cart-list.component";
+import { OrderSummaryComponent } from "./order-summary/order-summary.component";
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [ NgFor, DecimalPipe, UpperCasePipe, CartListComponent ],
+  imports: [ NgFor, DecimalPipe, UpperCasePipe, CartListComponent, OrderSummaryComponent ],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss',
 })
@@ -151,11 +152,24 @@ export class CartComponent implements OnInit, OnDestroy {
     this.total = this.subTotal + this.tax + this.shipping;
   }
 
-  makePayment(): void {
+  makePayment(shoppingCart: ShoppingCart): void {
     console.log('makePayment', this.shoppingCart);
-    console.log('SubTotal', this.subTotal);
-    console.log('Total', this.total);
-    console.log('Tax', this.tax);
-    console.log('Shipping', this.shipping);
+    const payload = JSON.parse(JSON.stringify(this.shoppingCart));
+
+    payload.products.forEach((product: Product) => {
+      if (product.type === 'composite') {
+        product.properties.forEach((property) => {
+          property.size = property.size.filter(s => s.quantity > 0);
+        });
+      } else if (product.type === 'simple') {
+        if (product.quantity <= 0) {
+          payload.products = payload.products.filter((p: Product) => p.productId !== product.productId);
+        }
+      }
+    });
+
+    console.log('payload', payload);
+    console.log('Original shopping cart mantiene sus valores:', this.shoppingCart);
+
   }
 }

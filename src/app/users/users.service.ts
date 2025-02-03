@@ -53,7 +53,7 @@ export class UsersService {
       `${ENDPOINTS.getAllFavoriteProducts}?userId=${id}`
     );
   }
-  putShoppingCart(id: string, data: any): Observable<ShoppingCart> {
+  putShoppingCart(id: string, data: ShoppingCart): Observable<ShoppingCart> {
     return this._httpClient.put<ShoppingCart>(
       `${ENDPOINTS.getAllShoppingCarts}/${id}`,
       data

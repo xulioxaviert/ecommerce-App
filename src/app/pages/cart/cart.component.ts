@@ -153,23 +153,28 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   makePayment(shoppingCart: ShoppingCart): void {
-    console.log('makePayment', this.shoppingCart);
-    const payload = JSON.parse(JSON.stringify(this.shoppingCart));
-
+    const payload = JSON.parse(JSON.stringify(shoppingCart));
     payload.products.forEach((product: Product) => {
       if (product.type === 'composite') {
         product.properties.forEach((property) => {
           property.size = property.size.filter(s => s.quantity > 0);
         });
+        if (product.properties.every(property => property.size.length === 0)) {
+          payload.products = payload.products.filter((p: Product) => p.productId !== product.productId);
+        }
       } else if (product.type === 'simple') {
         if (product.quantity <= 0) {
           payload.products = payload.products.filter((p: Product) => p.productId !== product.productId);
         }
       }
     });
-
     console.log('payload', payload);
-    console.log('Original shopping cart mantiene sus valores:', this.shoppingCart);
+    this.usersService.putShoppingCart(this.shoppingCart.id, payload).subscribe((cart) => {
+      console.log('cart', cart);
+      this.usersService.shoppingCart$.next(cart);
+
+      this.router.navigate([ '/checkout', this.shoppingCart.id ]);
+    })
 
   }
 }

@@ -59,6 +59,8 @@ export class AuthService {
     const token = sessionStorage.getItem('token');
     if (token) {
       this._authenticated = true;
+    } else {
+      this._authenticated = false;
     }
     return this._authenticated;
   }

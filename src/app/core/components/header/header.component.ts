@@ -49,7 +49,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   formGroup!: FormGroup;
   user: Users | undefined;
   initialsName: string = '';
-  title = 'HEADER.LOGOUT'
+  title = 'HEADER.LOGIN';
   isVisible: boolean = false;
   subscription = new Subscription();
   productsShoppingCart: number = 0;
@@ -84,6 +84,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.isAuthenticated = true;
     this.isVisible = this.user?.role === 'admin' ? true : false;
+    this.title = 'HEADER.LOGOUT';
+
 
     this.updateItemLanguage();
     this.getData();
@@ -106,9 +108,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   updateItemLanguage() {
-
-    this.title = 'HEADER.LOGIN'
-    this.isVisible = this.user?.role === 'admin' ? true : false;
 
     this.items = [
       {
@@ -190,19 +189,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
     } else {
       this.confirmationService.confirm({
         target: event.target as EventTarget,
-        message: this.translateService.instant('HEADER.LOGOUT_CONFIRMATION'),
+        message: this.translateService.instant('LOGIN.ARE_YOU_SURE_YOU_WANT_TO_LOG_OUT'),
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
-          this.authService.logout();
           this.initialsName = '';
           this.isVisible = false;
           this.isAuthenticated = false;
           this.productsShoppingCart = 0;
           this.favoriteProducts = 0;
-          this.title = this.translateService.instant('HEADER.LOGIN');
+          this.title = 'HEADER.LOGIN';
           if (this.router.url === '/dashboard') {
             this.router.navigate([ '/' ]);
+          } else if (this.router.url.includes('/carts/')) {
+            this.router.navigate([ '/' ]);
           }
+          else if (this.router.url.includes('/checkout/')) {
+            this.router.navigate([ '/' ]);
+          }
+          this.updateItemLanguage();
+          this.authService.logout();
         },
         reject: () => { },
       });
@@ -212,8 +217,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   navigateToShoppingCart() {
     //TODO revisar flujo del carrito de compras y guardar en local storage cuando no está logeado
     if (this.authService.isAuthenticated()) {
-      const user = this.authService.getSessionStorage('user');
-
       this.router.navigate([ `/carts/${this.cart?.id}` ]);
     } else {
     }

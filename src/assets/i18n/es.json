@@ -57,7 +57,8 @@
       "TITLE": "401",
       "DESCRIPTION": "No autorizado"
     },
-    "LOGIN": "Usuario o contraseña incorrectos"
+    "LOGIN": "Usuario o contraseña incorrectos",
+    "REQUIRED": "Campo obligatorio"
   },
   "HEADER": {
     "HOME": "Inicio",

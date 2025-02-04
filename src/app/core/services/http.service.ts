@@ -3,8 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, of, take } from 'rxjs';
 import { ENDPOINTS } from '../const/constants';
 import { testimonials } from '../mocks/mock-data';
-import { Products } from '../models/products.model';
 import { Testimonial } from '../models/testimonial.model';
+import { Product } from '../models/cart.model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,14 +29,14 @@ export class HttpService {
         })
       );
   }
-  getAllProducts(): Observable<Products[]> {
-    return this.http.get<Products[]>(ENDPOINTS.getAllProducts, this.options)
+  getAllProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(ENDPOINTS.getAllProducts, this.options)
   }
-  getProductsById(id: string): Observable<Products> {
-    return this.http.get<Products>(`${ENDPOINTS.getAllProducts}/${id}`, this.options)
+  getProductsById(id: string): Observable<Product> {
+    return this.http.get<Product>(`${ENDPOINTS.getAllProducts}/${id}`, this.options)
   }
-  getAllCategories(): Observable<Products[]> {
-    return this.http.get<Products[]>(ENDPOINTS.getAllCategories, this.options)
+  getAllCategories(): Observable<Product[]> {
+    return this.http.get<Product[]>(ENDPOINTS.getAllCategories, this.options)
   }
 
   getTestimonials(): Observable<Testimonial[]> {

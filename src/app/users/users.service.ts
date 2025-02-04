@@ -14,6 +14,8 @@ export class UsersService {
     new BehaviorSubject<ShoppingCart>({} as ShoppingCart);
   favoriteProducts$: BehaviorSubject<ShoppingCart> =
     new BehaviorSubject<ShoppingCart>({} as ShoppingCart);
+  private _ifShoppingCart = false;
+
 
   constructor(private _httpClient: HttpClient) { }
 
@@ -59,10 +61,29 @@ export class UsersService {
       data
     );
   }
+  deleteShoppingCart(id: string): Observable<ShoppingCart> {
+    return this._httpClient.delete<ShoppingCart>(`${ENDPOINTS.getAllShoppingCarts}/${id}`)
+  }
+
   createShoppingCart(data: any): Observable<ShoppingCart> {
     return this._httpClient.post<ShoppingCart>(
       ENDPOINTS.getAllShoppingCarts,
       data
     );
+  }
+
+  checkAndSetIfShoppingCart(userId: number): void {
+    this.getShoppingCartByUserId(userId).subscribe((cart) => {
+      console.log("this.getShoppingCartByUserId / cart:", cart);
+      if (cart) {
+        return this._ifShoppingCart = true;
+      } else {
+        return this._ifShoppingCart = false;
+      }
+    })
+  }
+
+  get ifShoppingCart(): boolean {
+    return this._ifShoppingCart;
   }
 }

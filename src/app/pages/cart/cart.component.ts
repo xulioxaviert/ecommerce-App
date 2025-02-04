@@ -30,7 +30,6 @@ export class CartComponent implements OnInit, OnDestroy {
     private usersService: UsersService,
     private authService: AuthService,
     private router: Router,
-    private httpService: HttpService,
     private confirmationService: ConfirmationService
   ) { }
 

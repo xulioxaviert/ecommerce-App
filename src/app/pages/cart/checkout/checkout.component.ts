@@ -1,18 +1,24 @@
-import { NgFor, NgIf, UpperCasePipe } from '@angular/common';
+import { DecimalPipe, NgFor, NgIf, UpperCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ConfirmationService } from 'primeng/api';
 import { AuthService } from '../../../auth/auth.service';
 import { ShoppingCart } from '../../../core/models/cart.model';
+import { Sales } from '../../../core/models/sales.model';
 import { Users } from '../../../core/models/user.model';
 import { UsersService } from '../../../users/users.service';
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [ NgIf, NgFor, UpperCasePipe, ReactiveFormsModule, TranslateModule ],
+  imports: [ NgIf, NgFor, UpperCasePipe, ReactiveFormsModule, TranslateModule, DecimalPipe ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss',
 })
@@ -20,7 +26,10 @@ export class CheckoutComponent implements OnInit {
   shoppingCart: ShoppingCart = {} as ShoppingCart;
   user: Users;
   checkOutForm: FormGroup = new FormGroup({});
-
+  subtotal = 0;
+  shipping = 0;
+  tax = 0;
+  total = 0;
 
   constructor(
     private usersService: UsersService,
@@ -31,18 +40,18 @@ export class CheckoutComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getData()
-    this.initForm()
-
+    this.getData();
+    this.initForm();
   }
 
   getData(): void {
-
-    this.usersService.getShoppingCartById(this.getIdFromUrl()).subscribe((shoppingCart: ShoppingCart) => {
-      this.shoppingCart = shoppingCart;
-    });
-    this.user = this.authService.getSessionStorage('user')
-
+    this.usersService
+      .getShoppingCartById(this.getIdFromUrl())
+      .subscribe((shoppingCart: ShoppingCart) => {
+        this.shoppingCart = shoppingCart;
+        this.calculateTotal();
+      });
+    this.user = this.authService.getSessionStorage('user');
   }
   getIdFromUrl(): string {
     const url = this.router.url;
@@ -53,29 +62,115 @@ export class CheckoutComponent implements OnInit {
   initForm(): void {
     this.checkOutForm = this.fb.group({
       name: [ this.user, [ Validators.required, Validators.minLength(3) ] ],
-      email: [ '', [ Validators.required, Validators.minLength(3), Validators.email ] ],
+      email: [
+        '',
+        [ Validators.required, Validators.minLength(3), Validators.email ],
+      ],
       creditCardHoler: [ '', [ Validators.required, Validators.minLength(3) ] ],
-      creditCardNumber: [ '', [ Validators.required, Validators.minLength(3) ] ],
-      expirationDate: [ '', [ Validators.required, Validators.minLength(3) ] ],
-      cvc: [ '', [ Validators.required, Validators.minLength(3) ] ],
+      creditCardNumber: [ '', [ Validators.required, Validators.maxLength(19) ] ],
+      expirationDate: [ '', [ Validators.required, Validators.maxLength(5) ] ],
+      cvc: [ '', [ Validators.required, Validators.maxLength(3) ] ],
     });
-    this.loadData()
+    this.loadData();
   }
 
   loadData(): void {
     this.checkOutForm.patchValue({
-      name: this.user.name.firstname.toUpperCase() + ' ' + this.user.name.lastname.toUpperCase(),
+      name:
+        this.user.name.firstname.toUpperCase() +
+        ' ' +
+        this.user.name.lastname.toUpperCase(),
       email: this.user.email,
-    })
+      creditCardHoler:
+        this.user.name.firstname.toUpperCase() +
+        ' ' +
+        this.user.name.lastname.toUpperCase(),
+    });
+  }
+
+  calculateTotal(): void {
+    this.subtotal = this.shoppingCart.products.reduce((acc, product) => {
+      return acc + product.price * product.quantity;
+    }, 0);
+    this.shipping = 10;
+    this.tax = this.subtotal * 0.21;
+    this.total = this.subtotal + this.shipping + this.tax;
   }
 
   pay(): void {
+    if (this.checkOutForm.valid) {
 
-    this.usersService.deleteShoppingCart(this.shoppingCart.id).subscribe(() => {
-      this.router.navigate([ '/' ]);
-    });
-    this.usersService.shoppingCart$.next({} as ShoppingCart)
+      const paymentData: Sales = {
+        name: this.checkOutForm.value.name,
+        email: this.checkOutForm.value.email,
+        creditCardHoler: this.checkOutForm.value.creditCardHoler,
+        creditCardNumber: this.checkOutForm.value.creditCardNumber,
+        expirationDate: this.checkOutForm.value.expirationDate,
+        cvc: this.checkOutForm.value.cvc,
+        sales: [ this.shoppingCart ]
+      }
+      this.usersService
+        .createSale(paymentData)
+        .subscribe(() => {
+          this.router.navigate([ '/' ]);
+          this.deleteShoppingCart(this.shoppingCart.id);
+        });
+      this.usersService.shoppingCart$.next({} as ShoppingCart);
+    } else {
+      this.checkOutForm.markAllAsTouched();
+      this.checkOutForm.setErrors({ valid: false });
+    }
+
+  }
+
+  deleteShoppingCart(id: string): void {
+    this.usersService.deleteShoppingCart(id).subscribe(response => {
+      console.log(`se ha eliminado exitosamente el carrito${response.id}`, response);
+    })
+  }
+
+  formatCreditCardNumber(event: any): void {
+    let value = event.target.value.replace(/\D/g, '');
+    if (value.length > 16) {
+      value = value.slice(0, 16);
+    }
+    const formattedValue = value.replace(/(.{4})/g, '$1-').replace(/-$/, '');
+
+    if (value.length < 16) {
+      this.checkOutForm.setErrors({ valid: false });
+    } else {
+      this.checkOutForm.setErrors(null);
+    }
+
+    this.checkOutForm.patchValue({ creditCardNumber: formattedValue });
+  }
+  formatExpirationDate(event: any): void {
+    let value = event.target.value.replace(/\D/g, '');
+    if (value.length > 4) {
+      value = value.slice(0, 4);
+    }
+    const formattedValue = value.replace(/(\d{2})(\d{2})/, '$1/$2');
+
+    if (value.length < 4) {
+      this.checkOutForm.setErrors({ valid: false });
+    } else {
+      this.checkOutForm.setErrors(null);
+    }
+
+    this.checkOutForm.patchValue({ expirationDate: formattedValue });
+  }
+  formatCVC(event: any): void {
+    let value = event.target.value.replace(/\D/g, '');
+    if (value.length > 3) {
+      value = value.slice(0, 3);
+    }
+
+    if (value.length < 3) {
+      this.checkOutForm.setErrors({ valid: false });
+    } else {
+      this.checkOutForm.setErrors(null);
+    }
+
+    this.checkOutForm.patchValue({ cvc: value });
   }
 }
-
-

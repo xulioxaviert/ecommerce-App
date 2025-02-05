@@ -5,13 +5,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ENDPOINTS } from '../../../core/const/constants';
 import { Product } from '../../../core/models/cart.model';
 import { HttpService } from '../../../core/services/http.service';
-import { ModalService } from '../../../shared/modal/modal-service.service';
-import { ModalComponent } from "../../../shared/modal/modal.component";
+import { ModalService } from '../../../shared/modal/product-modal-service.service';
+import { ProductModal } from "../../../shared/modal/product-modal.component";
 
 @Component({
   selector: 'app-mens',
   standalone: true,
-  imports: [ NgForOf, TranslateModule, ModalComponent ],
+  imports: [ NgForOf, TranslateModule, ProductModal ],
   templateUrl: './men.component.html',
   styleUrl: './men.component.scss',
   providers: []

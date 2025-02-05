@@ -1,17 +1,17 @@
+import { UpperCasePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { Product } from '../../core/models/cart.model';
-import { ModalService } from './modal-service.service';
-import { UpperCasePipe } from '@angular/common';
+import { ModalService } from './product-modal-service.service';
 
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [ DialogModule, UpperCasePipe],
-  templateUrl: './modal.component.html',
-  styleUrl: './modal.component.scss'
+  imports: [ DialogModule, UpperCasePipe ],
+  templateUrl: './product-modal.component.html',
+  styleUrl: './product-modal.component.scss'
 })
-export class ModalComponent implements OnInit {
+export class ProductModal implements OnInit {
   @Input() currentProduct: Product;
   visible: boolean = false;
 

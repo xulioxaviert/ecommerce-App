@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { ENDPOINTS } from '../core/const/constants';
 import { ShoppingCart } from '../core/models/cart.model';
 import { Favorites } from '../core/models/favorites.model';
+import { Sales } from '../core/models/sales.model';
 import { Users } from '../core/models/user.model';
 
 @Injectable({
@@ -63,6 +64,9 @@ export class UsersService {
   }
   deleteShoppingCart(id: string): Observable<ShoppingCart> {
     return this._httpClient.delete<ShoppingCart>(`${ENDPOINTS.getAllShoppingCarts}/${id}`)
+  }
+  createSale(sale: Sales): Observable<Sales> {
+    return this._httpClient.post<Sales>(`${ENDPOINTS.getAllSales}`, sale)
   }
 
   createShoppingCart(data: any): Observable<ShoppingCart> {

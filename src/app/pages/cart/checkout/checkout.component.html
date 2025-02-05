@@ -180,6 +180,7 @@
                   formControlName="creditCardNumber"
                   class="w-full rounded-md border border-gray-200 px-2 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                   placeholder="xxxx-xxxx-xxxx-xxxx"
+                  (input)="formatCreditCardNumber($event)"
                 />
                 <div
                   class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3"
@@ -224,16 +225,14 @@
                   formControlName="expirationDate"
                   class="w-full rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                   placeholder="MM/YY"
+                  (input)="formatExpirationDate($event)"
                 />
-
               </div>
               <div class="error-text font-light text-[10px]">
                 <span
-                class="text-[11px]"
+                  class="text-[11px]"
                   *ngIf="
-                    checkOutForm
-                      .get('expirationDate')
-                      ?.hasError('required') &&
+                    checkOutForm.get('expirationDate')?.hasError('required') &&
                     checkOutForm.get('expirationDate')?.touched
                   "
                 >
@@ -245,22 +244,20 @@
             <div>
               <div class="relative w-25 mr-2 flex-shrink-0">
                 <input
-                  type="text"
+                  type="number"
                   id="card-no"
                   name="card-no"
                   formControlName="cvc"
                   class="w-full rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
                   placeholder="CVC"
+                  (input)="formatCVC($event)"
                 />
-
               </div>
               <div class="error-text font-light">
                 <span
-                class="text-[11px]"
+                  class="text-[11px]"
                   *ngIf="
-                    checkOutForm
-                      .get('cvc')
-                      ?.hasError('required') &&
+                    checkOutForm.get('cvc')?.hasError('required') &&
                     checkOutForm.get('cvc')?.touched
                   "
                 >
@@ -275,16 +272,22 @@
         <div class="mt-6 border-t border-b py-2">
           <div class="flex items-center justify-between">
             <p class="text-sm font-medium text-gray-900">Subtotal</p>
-            <p class="font-semibold text-gray-900">$399.00</p>
+            <p class="font-semibold text-gray-900">$ {{ subtotal }}</p>
           </div>
           <div class="flex items-center justify-between">
             <p class="text-sm font-medium text-gray-900">Shipping</p>
-            <p class="font-semibold text-gray-900">$8.00</p>
+            <p class="font-semibold text-gray-900">$ {{ shipping }}</p>
+          </div>
+          <div class="flex items-center justify-between">
+            <p class="text-sm font-medium text-gray-900">Tax</p>
+            <p class="font-semibold text-gray-900">$ {{ tax | number }}</p>
           </div>
         </div>
         <div class="mt-6 flex items-center justify-between">
           <p class="text-sm font-medium text-gray-900">Total</p>
-          <p class="text-2xl font-semibold text-gray-900">$408.00</p>
+          <p class="text-2xl font-semibold text-gray-900">
+            $ {{ total | number }}
+          </p>
         </div>
       </div>
     </form>

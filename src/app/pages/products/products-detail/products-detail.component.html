@@ -216,7 +216,7 @@
               >
             </li>
           </ul>
-          @if(productDetail.size){
+          @if(productDetail.type ==='composite'){
 
           <p class="text-gray-900</div> text-lg leading-8 font-medium mb-4">
             Size
@@ -225,7 +225,7 @@
             <div
               class="grid grid-cols-3 min-[400px]:grid-cols-5 gap-3 max-w-md"
             >
-              @for (size of productDetail.size; track $index) {
+              @for (size of productDetail.properties[0].size; track $index) {
               <button
                 class="bg-white text-center py-1.5 px-6 w-full font-semibold text-lg leading-8 text-gray-900 border border-gray-200 flex items-center rounded-full justify-center transition-all duration-300 hover:bg-gray-50 hover:shadow-sm hover:shadow-gray-100 hover:border-gray-300 cursor-pointer"
                 (click)="selectedSize(size.size)"

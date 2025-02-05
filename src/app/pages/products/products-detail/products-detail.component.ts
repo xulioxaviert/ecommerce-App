@@ -2,8 +2,8 @@ import { NgClass, NgFor, NgIf, UpperCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../auth/auth.service';
-import { ShoppingCart } from '../../../core/models/cart.model';
-import { Products, SizeElement } from '../../../core/models/products.model';
+import { Product, ShoppingCart } from '../../../core/models/cart.model';
+
 import { Users } from '../../../core/models/user.model';
 import { HttpService } from '../../../core/services/http.service';
 import { UsersService } from '../../../users/users.service';
@@ -16,9 +16,8 @@ import { UsersService } from '../../../users/users.service';
   styleUrl: './products-detail.component.scss',
 })
 export class ProductsDetailComponent implements OnInit {
-  productDetail: Products;
+  productDetail: Product;
   selectedSizes: any[] = [];
-  size: SizeElement[] = [];
   hasShoppingCart: boolean = false;
   user: Users;
   cart: ShoppingCart[] = [];
@@ -83,18 +82,18 @@ export class ProductsDetailComponent implements OnInit {
 
   addToCart(): void {
 
-    this.size = [];
-    this.selectedSizes.forEach((item) => {
-      this.size.push({ size: item, quantity: this.quantity });
-    })
+    // this.size = [];
+    // this.selectedSizes.forEach((item) => {
+    //   this.size.push({ size: item, quantity: this.quantity });
+    // })
 
-    console.log('addToCart / size:', this.size);
+    // console.log('addToCart / size:', this.size);
 
-    const data = {
-      ...this.productDetail,
-      size: this.size,
-    }
-    console.log("addToCart / data:", data);
+    // const data = {
+    //   ...this.productDetail,
+    //   size: this.size,
+    // }
+    // console.log("addToCart / data:", data);
 
 
 

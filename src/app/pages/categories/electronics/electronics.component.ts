@@ -1,9 +1,9 @@
 import { NgForOf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { ENDPOINTS } from '../../../core/const/constants';
-import { Products } from '../../../core/models/products.model';
+import { Product } from '../../../core/models/cart.model';
 import { HttpService } from '../../../core/services/http.service';
 
 @Component({
@@ -14,7 +14,7 @@ import { HttpService } from '../../../core/services/http.service';
   styleUrl: './electronics.component.scss',
 })
 export class ElectronicsComponent implements OnInit {
-  products: Products[] = [];
+  products: Product[] = [];
   constructor(
     private http: HttpService,
     private router: Router
@@ -26,12 +26,12 @@ export class ElectronicsComponent implements OnInit {
   getData() {
     this.http.getData(ENDPOINTS.getAllProducts).subscribe((products) => {
       products.body
-        .filter((product: Products) => product.category === "electronics")
-        .forEach((product: Products) => this.products.push(product));
+        .filter((product: Product) => product.category === "electronics")
+        .forEach((product: Product) => this.products.push(product));
       console.log('products', this.products);
     })
   }
-  navigateToProduct(product: Products) {
+  navigateToProduct(product: Product) {
     console.log('product', product);
     this.router.navigate([ `/product/detail/${product.id}` ])
 

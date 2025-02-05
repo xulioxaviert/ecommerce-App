@@ -1,10 +1,10 @@
 import { NgForOf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ENDPOINTS } from '../../../core/const/constants';
-import { Products } from '../../../core/models/products.model';
+import { Product } from '../../../core/models/cart.model';
 import { HttpService } from '../../../core/services/http.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-jewelry',
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
   styleUrl: './jewelry.component.scss',
 })
 export class JewelryComponent implements OnInit {
-  products: Products[] = [];
+  products: Product[] = [];
   constructor(
     private translateService: TranslateService,
     private http: HttpService,
@@ -27,12 +27,12 @@ export class JewelryComponent implements OnInit {
   getData() {
     this.http.getData(ENDPOINTS.getAllProducts).subscribe((products) => {
       products.body
-        .filter((product: Products) => product.category === "jewelry")
-        .forEach((product: Products) => this.products.push(product));
+        .filter((product: Product) => product.category === "jewelry")
+        .forEach((product: Product) => this.products.push(product));
       console.log('products', this.products);
     })
   }
-  navigateToProduct(product: Products) {
+  navigateToProduct(product: Product) {
     console.log('product', product);
     this.router.navigate([ `/product/detail/${product.id}` ])
 

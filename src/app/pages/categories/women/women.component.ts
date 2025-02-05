@@ -1,10 +1,10 @@
 import { NgForOf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ENDPOINTS } from '../../../core/const/constants';
-import { Products } from '../../../core/models/products.model';
 import { HttpService } from '../../../core/services/http.service';
-import { Router } from '@angular/router';
+import { Product } from '../../../core/models/cart.model';
 
 @Component({
   selector: 'app-women',
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
   styleUrl: './women.component.scss',
 })
 export class WomenComponent implements OnInit {
-  products: Products[] = [];
+  products: Product[] = [];
 
   constructor(private http: HttpService, private router: Router) { }
   ngOnInit(): void {
@@ -24,12 +24,12 @@ export class WomenComponent implements OnInit {
   getData() {
     this.http.getData(ENDPOINTS.getAllProducts).subscribe((products) => {
       products.body
-        .filter((product: Products) => product.category === "women's clothing")
-        .forEach((product: Products) => this.products.push(product));
+        .filter((product: Product) => product.category === "women's clothing")
+        .forEach((product: Product) => this.products.push(product));
       console.log('products', this.products);
     });
   }
-  navigateToProduct(product: Products) {
+  navigateToProduct(product: Product) {
     console.log('product', product);
     this.router.navigate([ `/product/detail/${product.id}` ])
 

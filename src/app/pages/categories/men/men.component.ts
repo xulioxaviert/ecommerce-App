@@ -5,18 +5,25 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ENDPOINTS } from '../../../core/const/constants';
 import { Product } from '../../../core/models/cart.model';
 import { HttpService } from '../../../core/services/http.service';
+import { ModalService } from '../../../shared/modal/modal-service.service';
+import { ModalComponent } from "../../../shared/modal/modal.component";
 
 @Component({
   selector: 'app-mens',
   standalone: true,
-  imports: [ NgForOf, TranslateModule ],
+  imports: [ NgForOf, TranslateModule, ModalComponent ],
   templateUrl: './men.component.html',
   styleUrl: './men.component.scss',
+  providers: []
 })
 export class MenComponent implements OnInit {
   products: Product[] = [];
+  currentProduct: Product = {} as Product;
 
-  constructor(private http: HttpService, private router: Router) { }
+
+
+
+  constructor(private http: HttpService, private router: Router, private modalService: ModalService) { }
   ngOnInit(): void {
     this.getData();
   }
@@ -34,4 +41,11 @@ export class MenComponent implements OnInit {
     this.router.navigate([ `/product/detail/${product.id}` ])
 
   }
+  openModalSize(product: Product) {
+    this.modalService.openModal(product);
+
+
+  }
+
+
 }

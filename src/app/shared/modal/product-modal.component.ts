@@ -54,7 +54,7 @@ export class ProductModal implements OnInit, OnDestroy {
       this.usersService
         .getShoppingCartByUserId(this.user.userId)
         .subscribe((shoppingCart: any) => {
-          this.shoppingCart = shoppingCart[0];
+          this.shoppingCart = shoppingCart[ 0 ];
 
         });
     }
@@ -69,34 +69,50 @@ export class ProductModal implements OnInit, OnDestroy {
       }
     });
     this.subscription.add(this.usersService.shoppingCart$.subscribe((shoppingCart: any) => {
+      console.log("this.subscription.add / shoppingCart:", shoppingCart);
       this.shoppingCart = shoppingCart;
     }))
     this.subscription.add(this.authService.user$.subscribe((user) => {
+      console.log("this.subscription.add / user:", user);
       this.user = user;
     }))
   }
   addProductToNewCart() {
 
-    const productExists = this.shoppingCart?.products.some(
-      (product) => product.id === this.currentProduct.id
-    );
 
-    const payload = {
+    const productExists = this.shoppingCart?.products?.some(
+      (product) => product.id === this.currentProduct.id
+    ) || false;
+
+    const updatedProducts = productExists
+      ? this.shoppingCart.products
+      : [ ...(this.shoppingCart?.products || []), this.currentProduct ];
+
+    const payload: any = {
       id: this.shoppingCart?.id || '0',
       userId: this.authService.isAuthenticated() ? this.user.userId : 0,
       date: new Date(),
       cartId: this.shoppingCart?.cartId || 0,
-      products: productExists
-        ? this.shoppingCart.products
-        : [ ...(this.shoppingCart?.products || []), this.currentProduct ],
+      products: updatedProducts,
     };
 
     console.log('payload', payload);
     this.shoppingCart = payload;
     this.visible = false;
-    this.usersService.shoppingCart$.next(payload);
-    this.usersService.putShoppingCart(payload.id, payload).subscribe((cart) => {
-      console.log('cart', cart);
-    })
+
+    if (this.shoppingCart.id === '0') {
+      delete payload.id;
+      this.usersService.createShoppingCart(payload).subscribe((shoppingCart) => {
+        console.log('cart', shoppingCart);
+        this.shoppingCart = shoppingCart;
+        this.usersService.shoppingCart$.next(shoppingCart);
+      })
+    } else {
+      this.usersService.putShoppingCart(this.shoppingCart.id, payload).subscribe((shoppingCart) => {
+        console.log('cart', shoppingCart);
+        this.shoppingCart = shoppingCart;
+        this.usersService.shoppingCart$.next(shoppingCart);
+      })
+    }
   }
 }

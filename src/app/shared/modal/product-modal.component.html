@@ -5,7 +5,6 @@
     [(visible)]="visible"
     [style]="{ width: '50rem' }"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-    [maximizable]="true"
   >
     <div class="flex items-start max-sm:flex-col gap-4 py-4">
       <div class="w-32 h-full shrink-0">
@@ -47,7 +46,7 @@
                   </svg>
                 </button>
                 <span class="text-gray-800 text-sm font-semibold px-3">{{
-                  size.quantity
+                  quantitySize
                 }}</span>
                 <button type="button" class="border-none outline-none">
                   <svg
@@ -69,45 +68,6 @@
               }
             </h6>
             }
-          </div>
-
-          <div class="mt-6 flex flex-wrap gap-4">
-            <button
-              type="button"
-              class="font-semibold text-red-500 text-sm flex items-center gap-2 shrink-0"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-4 fill-current inline"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M19 7a1 1 0 0 0-1 1v11.191A1.92 1.92 0 0 1 15.99 21H8.01A1.92 1.92 0 0 1 6 19.191V8a1 1 0 0 0-2 0v11.191A3.918 3.918 0 0 0 8.01 23h7.98A3.918 3.918 0 0 0 20 19.191V8a1 1 0 0 0-1-1Zm1-3h-4V2a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v2H4a1 1 0 0 0 0 2h16a1 1 0 0 0 0-2ZM10 4V3h4v1Z"
-                  data-original="#000000"
-                ></path>
-                <path
-                  d="M11 17v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Zm4 0v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Z"
-                  data-original="#000000"
-                ></path>
-              </svg>
-              Remove
-            </button>
-            <button
-              type="button"
-              class="font-semibold text-pink-500 text-sm flex items-center gap-2 shrink-0"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-4 fill-current inline"
-                viewBox="0 0 64 64"
-              >
-                <path
-                  d="M45.5 4A18.53 18.53 0 0 0 32 9.86 18.5 18.5 0 0 0 0 22.5C0 40.92 29.71 59 31 59.71a2 2 0 0 0 2.06 0C34.29 59 64 40.92 64 22.5A18.52 18.52 0 0 0 45.5 4ZM32 55.64C26.83 52.34 4 36.92 4 22.5a14.5 14.5 0 0 1 26.36-8.33 2 2 0 0 0 3.27 0A14.5 14.5 0 0 1 60 22.5c0 14.41-22.83 29.83-28 33.14Z"
-                  data-original="#000000"
-                ></path>
-              </svg>
-              Move to wish list
-            </button>
           </div>
         </div>
 
@@ -131,7 +91,7 @@
             </button>
 
             <span class="text-gray-800 text-sm font-semibold px-3">{{
-              currentProduct.quantity
+              quantitySize
             }}</span>
 
             <button type="button" class="border-none outline-none">
@@ -153,7 +113,7 @@
             } @else {
 
             <span class="text-gray-800 text-sm font-semibold px-8">{{
-              currentProduct.quantity
+              totalProduct
             }}</span>
             }
           </div>
@@ -165,6 +125,14 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="flex justify-end gap-2">
+      <p-button
+        label="Add to cart"
+        severity="primary"
+        class="bg-[#ffa500] text-white rounded-sm"
+        (click)="addProductToNewCart()"
+      />
     </div>
   </p-dialog>
 </div>

@@ -1,4 +1,4 @@
-import { NgForOf } from '@angular/common';
+import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -11,7 +11,7 @@ import { ProductModal } from "../../../shared/modal/product-modal.component";
 @Component({
   selector: 'app-mens',
   standalone: true,
-  imports: [ NgForOf, TranslateModule, ProductModal ],
+  imports: [ CommonModule, NgForOf, TranslateModule, ProductModal, NgIf ],
   templateUrl: './men.component.html',
   styleUrl: './men.component.scss',
   providers: []
@@ -19,6 +19,7 @@ import { ProductModal } from "../../../shared/modal/product-modal.component";
 export class MenComponent implements OnInit {
   products: Product[] = [];
   currentProduct: Product = {} as Product;
+  visible: boolean = false;
 
 
 
@@ -42,6 +43,7 @@ export class MenComponent implements OnInit {
 
   }
   openModalSize(product: Product) {
+    this.visible = true;
     this.modalService.openModal(product);
 
 

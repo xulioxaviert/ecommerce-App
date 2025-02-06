@@ -15,7 +15,6 @@ export class UsersService {
     new BehaviorSubject<ShoppingCart>({} as ShoppingCart);
   favoriteProducts$: BehaviorSubject<ShoppingCart> =
     new BehaviorSubject<ShoppingCart>({} as ShoppingCart);
-  private _ifShoppingCart = false;
 
 
   constructor(private _httpClient: HttpClient) { }
@@ -76,18 +75,5 @@ export class UsersService {
     );
   }
 
-  checkAndSetIfShoppingCart(userId: number): void {
-    this.getShoppingCartByUserId(userId).subscribe((cart) => {
-      console.log("this.getShoppingCartByUserId / cart:", cart);
-      if (cart) {
-        return this._ifShoppingCart = true;
-      } else {
-        return this._ifShoppingCart = false;
-      }
-    })
-  }
 
-  get ifShoppingCart(): boolean {
-    return this._ifShoppingCart;
-  }
 }

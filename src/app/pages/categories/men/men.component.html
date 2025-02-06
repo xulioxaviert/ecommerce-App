@@ -387,4 +387,4 @@
     </div>
   </footer>
 </section>
-<app-modal [currentProduct]="currentProduct"></app-modal>
+<app-modal *ngIf="visible" [currentProduct]="currentProduct"></app-modal>

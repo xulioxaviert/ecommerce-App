@@ -218,7 +218,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   navigateToShoppingCart() {
-    debugger
     //TODO revisar flujo del carrito de compras y guardar en local storage cuando no está logeado
     if (this.authService.isAuthenticated()) {
       this.router.navigate([ `/carts/${this.cart?.id}` ]);

@@ -2,11 +2,16 @@ import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../../auth/auth.service';
 import { ENDPOINTS } from '../../../core/const/constants';
-import { Product } from '../../../core/models/cart.model';
+import { Product, ShoppingCart } from '../../../core/models/cart.model';
+import { Users } from '../../../core/models/user.model';
 import { HttpService } from '../../../core/services/http.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { ModalService } from '../../../shared/modal/product-modal-service.service';
 import { ProductModal } from "../../../shared/modal/product-modal.component";
+import { UsersService } from '../../../users/users.service';
 
 @Component({
   selector: 'app-mens',
@@ -20,13 +25,17 @@ export class MenComponent implements OnInit {
   products: Product[] = [];
   currentProduct: Product = {} as Product;
   visible: boolean = false;
+  subscription: Subscription = new Subscription();
+  user: Users = {} as Users;
+  shoppingCart: ShoppingCart = {} as ShoppingCart;
 
+  constructor(private http: HttpService, private router: Router, private modalService: ModalService, private authService: AuthService, private usersService: UsersService, private toastService: ToastService) { }
 
-
-
-  constructor(private http: HttpService, private router: Router, private modalService: ModalService) { }
   ngOnInit(): void {
     this.getData();
+    // this.getSubscriptions();
+    this.checkShoppingCart();
+
   }
 
   getData() {
@@ -37,6 +46,21 @@ export class MenComponent implements OnInit {
       console.log('products', this.products);
     });
   }
+
+  getSubscriptions() {
+
+    this.subscription.add(
+      this.authService.user$.subscribe((user) => {
+        console.log('this.subscription.add / user:', user);
+        if (user && Object.keys(user).length > 0) {
+          this.user = user;
+          this.checkShoppingCart();
+
+        }
+      })
+    );
+  }
+
   navigateToProductDetail(product: Product) {
     console.log('product', product);
     this.router.navigate([ `/product/detail/${product.id}` ])
@@ -46,8 +70,19 @@ export class MenComponent implements OnInit {
     this.visible = true;
     this.modalService.openModal(product);
 
+  }
+  checkShoppingCart() {
+
+    if (this.authService.isAuthenticated()) {
+      this.usersService.getShoppingCartByUserId(this.user.userId).subscribe((shoppingCart: any) => {
+        this.shoppingCart = shoppingCart[ 0 ];
+      });
+      const sessionStorageShoppingCart = this.authService.getSessionStorage('shoppingCart');
+      console.log("checkShoppingCart / shoppingCartLocalStorage:", sessionStorageShoppingCart);
+      if (this.authService.isAuthenticated() && sessionStorageShoppingCart && this.shoppingCart.products.length > 0) {
+        this.toastService.showInfo('You have already added this product to the shopping cart', 'info');
+      }
+    }
 
   }
-
-
 }

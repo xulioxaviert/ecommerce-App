@@ -201,6 +201,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.productsShoppingCart = 0;
           this.favoriteProducts = 0;
           this.title = 'HEADER.LOGIN';
+          this.userService.shoppingCart$.next({} as ShoppingCart);
+          
           if (this.router.url === '/dashboard') {
             this.router.navigate([ '/' ]);
           } else if (this.router.url.includes('/carts/')) {
@@ -222,6 +224,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (this.authService.isAuthenticated()) {
       this.router.navigate([ `/carts/${this.cart?.id}` ]);
     } else {
+      this.router.navigate([ '/carts/0' ]);
     }
   }
 

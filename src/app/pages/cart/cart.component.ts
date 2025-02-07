@@ -40,7 +40,16 @@ export class CartComponent implements OnInit, OnDestroy {
   getIdFromUrl(): string {
     const url = this.router.url;
     const cartId = url.split('/');
-    return cartId[ cartId.length - 1 ];
+    const id = cartId[ cartId.length - 1 ];
+    if (id === '0') {
+      const localStorageCart = localStorage.getItem('shoppingCart');
+      if (localStorageCart) {
+        this.shoppingCart = JSON.parse(localStorageCart);
+        this.shoppingCartCalculation(this.shoppingCart);
+      }
+      return '0';
+    }
+    return id;
   }
 
   getData(): void {

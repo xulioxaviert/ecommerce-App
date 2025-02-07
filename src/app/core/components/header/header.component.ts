@@ -101,8 +101,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.subscription.add(
       this.userService.shoppingCart$.subscribe((cart: any) => {
-        console.log('getSubscriptions', cart.products?.length);
-        this.productsShoppingCart = cart.products?.length || 0;
+        console.log('getSubscriptions', cart);
+        if (cart) {
+          this.productsShoppingCart = cart.products?.length || 0;
+          this.cart = cart;
+        }
       })
     );
   }
@@ -227,8 +230,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (userId) {
       this.userService.getShoppingCartByUserId(userId).subscribe((cart: any) => {
         console.log('getData / cart:', cart);
-        this.productsShoppingCart = cart[ 0 ].products?.length || 0;
-        this.cart = cart[ 0 ];
+        if (cart.length > 0) {
+          this.productsShoppingCart = cart[ 0 ].products?.length || 0;
+          this.cart = cart[ 0 ];
+        }
       });
       this.userService
         .getFavoriteProductById(userId)

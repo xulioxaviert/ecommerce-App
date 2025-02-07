@@ -5,7 +5,6 @@ import { ConfirmationService } from 'primeng/api';
 import { AuthService } from '../../auth/auth.service';
 import { Product, ShoppingCart } from '../../core/models/cart.model';
 import { Users } from '../../core/models/user.model';
-import { HttpService } from '../../core/services/http.service';
 import { UsersService } from '../../users/users.service';
 import { CartListComponent } from "./cart-list/cart-list.component";
 import { OrderSummaryComponent } from "./order-summary/order-summary.component";

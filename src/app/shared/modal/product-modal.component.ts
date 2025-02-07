@@ -78,8 +78,6 @@ export class ProductModal implements OnInit, OnDestroy {
     }))
   }
   addProductToNewCart() {
-
-
     const productExists = this.shoppingCart?.products?.some(
       (product) => product.id === this.currentProduct.id
     ) || false;
@@ -90,29 +88,16 @@ export class ProductModal implements OnInit, OnDestroy {
 
     const payload: any = {
       id: this.shoppingCart?.id || '0',
-      userId: this.authService.isAuthenticated() ? this.user.userId : 0,
+      userId: this.authService.isAuthenticated() ? this.user.userId : null,
       date: new Date(),
-      cartId: this.shoppingCart?.cartId || 0,
       products: updatedProducts,
     };
 
     console.log('payload', payload);
     this.shoppingCart = payload;
     this.visible = false;
+    this.usersService.shoppingCart$.next(payload);
 
-    if (this.shoppingCart.id === '0') {
-      delete payload.id;
-      this.usersService.createShoppingCart(payload).subscribe((shoppingCart) => {
-        console.log('cart', shoppingCart);
-        this.shoppingCart = shoppingCart;
-        this.usersService.shoppingCart$.next(shoppingCart);
-      })
-    } else {
-      this.usersService.putShoppingCart(this.shoppingCart.id, payload).subscribe((shoppingCart) => {
-        console.log('cart', shoppingCart);
-        this.shoppingCart = shoppingCart;
-        this.usersService.shoppingCart$.next(shoppingCart);
-      })
-    }
   }
+
 }

@@ -48,6 +48,9 @@ export class AuthService {
   getSessionStorage(key: string) {
     return JSON.parse(sessionStorage.getItem(key) || '{}');
   }
+  getLocalStorage(key: string) {
+    return JSON.parse(localStorage.getItem(key) || '{}');
+  }
 
   logout(): void {
     sessionStorage.clear();

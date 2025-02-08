@@ -33,7 +33,11 @@
                 class="flex gap-2 items-center border border-gray-300 bg-white px-3 py-2 w-max mr-2"
               >
                 {{ size.size | uppercase }} :
-                <button type="button" class="border-none outline-none">
+                <button
+                  type="button"
+                  class="border-none outline-none"
+                  (click)="decrementQuantity(currentProduct.productId, size)"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="w-2.5 h-2.5"
@@ -48,7 +52,11 @@
                 <span class="text-gray-800 text-sm font-semibold px-3">{{
                   quantitySize
                 }}</span>
-                <button type="button" class="border-none outline-none">
+                <button
+                  type="button"
+                  class="border-none outline-none"
+                  (click)="incrementQuantity(currentProduct.productId, size)"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="w-2.5 h-2.5"

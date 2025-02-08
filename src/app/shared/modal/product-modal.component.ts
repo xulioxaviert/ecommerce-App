@@ -12,7 +12,7 @@ import { ModalService } from './product-modal-service.service';
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [ DialogModule, UpperCasePipe, ButtonModule ],
+  imports: [DialogModule, UpperCasePipe, ButtonModule],
   templateUrl: './product-modal.component.html',
   styleUrl: './product-modal.component.scss',
 })
@@ -29,13 +29,11 @@ export class ProductModal implements OnInit, OnDestroy {
     private modalService: ModalService,
     private authService: AuthService,
     private usersService: UsersService
-  ) { }
-
+  ) {}
 
   ngOnInit(): void {
     this.getData();
-    this.getSubscriptions()
-
+    this.getSubscriptions();
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -54,37 +52,39 @@ export class ProductModal implements OnInit, OnDestroy {
       this.usersService
         .getShoppingCartByUserId(this.user.userId)
         .subscribe((shoppingCart: any) => {
-          this.shoppingCart = shoppingCart[ 0 ];
-
+          this.shoppingCart = shoppingCart[0];
         });
     }
-
   }
 
   getSubscriptions() {
     this.subscription = this.modalService.openModal$.subscribe((product) => {
       if (product && product.properties && product.properties.length > 0) {
         this.currentProduct = product;
-
       }
     });
-    this.subscription.add(this.usersService.shoppingCart$.subscribe((shoppingCart: any) => {
-      console.log("this.subscription.add / shoppingCart:", shoppingCart);
-      this.shoppingCart = shoppingCart;
-    }))
-    this.subscription.add(this.authService.user$.subscribe((user) => {
-      console.log("this.subscription.add / user:", user);
-      this.user = user;
-    }))
+    this.subscription.add(
+      this.usersService.shoppingCart$.subscribe((shoppingCart: any) => {
+        console.log('this.subscription.add / shoppingCart:', shoppingCart);
+        this.shoppingCart = shoppingCart;
+      })
+    );
+    this.subscription.add(
+      this.authService.user$.subscribe((user) => {
+        console.log('this.subscription.add / user:', user);
+        this.user = user;
+      })
+    );
   }
   addProductToNewCart() {
-    const productExists = this.shoppingCart?.products?.some(
-      (product) => product.id === this.currentProduct.id
-    ) || false;
+    const productExists =
+      this.shoppingCart?.products?.some(
+        (product) => product.id === this.currentProduct.id
+      ) || false;
 
     const updatedProducts = productExists
       ? this.shoppingCart.products
-      : [ ...(this.shoppingCart?.products || []), this.currentProduct ];
+      : [...(this.shoppingCart?.products || []), this.currentProduct];
 
     const payload: any = {
       id: this.shoppingCart?.id || '0',
@@ -94,10 +94,26 @@ export class ProductModal implements OnInit, OnDestroy {
     };
 
     console.log('payload', payload);
+    this.shoppingCart.products.forEach((product) => {
+      if (product.type === 'composite') {
+        product.properties.forEach((property) => {
+          property.size.forEach((s: any) => {
+            if (s.size === this.currentProduct.properties[0].size) {
+              s.quantity += 1;
+              product.quantity += 1;
+            }
+            return s;
+          });
+        });
+      } else if (product.type === 'simple') {
+        product.quantity += 1;
+      }
+    });
+
     this.shoppingCart = payload;
     this.visible = false;
     this.usersService.shoppingCart$.next(payload);
-
   }
 
+  
 }

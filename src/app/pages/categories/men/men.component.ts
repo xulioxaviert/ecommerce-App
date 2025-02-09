@@ -112,7 +112,7 @@ export class MenComponent implements OnInit, OnDestroy {
         console.log("this.usersService.getShoppingCartByUserId / cart:", cart);
         if (cart.length > 0) {
           console.log('✅ Usuario autenticado y tiene carrito en la base de datos.');
-          this.usersService.putShoppingCart(cart[0].id, this.shoppingCart).subscribe((cart) => {
+          this.usersService.putShoppingCart(cart[ 0 ].id, this.shoppingCart).subscribe((cart) => {
             console.log('this.usersService.putShoppingCart / cart:', cart);
 
           })
@@ -176,5 +176,6 @@ export class MenComponent implements OnInit, OnDestroy {
     })
   }
 
+  
 
 }

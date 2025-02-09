@@ -36,7 +36,7 @@
                 <button
                   type="button"
                   class="border-none outline-none"
-                  (click)="decrementQuantity(currentProduct.productId, size)"
+                  (click)="decrementQuantity(currentProduct, size)"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -50,12 +50,12 @@
                   </svg>
                 </button>
                 <span class="text-gray-800 text-sm font-semibold px-3">{{
-                  quantitySize
+                  size.quantity
                 }}</span>
                 <button
                   type="button"
                   class="border-none outline-none"
-                  (click)="incrementQuantity(currentProduct.productId, size)"
+                  (click)="incrementQuantity(currentProduct, size)"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

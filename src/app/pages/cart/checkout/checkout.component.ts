@@ -107,7 +107,7 @@ export class CheckoutComponent implements OnInit {
         creditCardNumber: this.checkOutForm.value.creditCardNumber,
         expirationDate: this.checkOutForm.value.expirationDate,
         cvc: this.checkOutForm.value.cvc,
-        sales: [ this.shoppingCart ]
+        sales: [ { ...this.shoppingCart, userId: this.shoppingCart.userId ?? 0 } ]
       }
       this.usersService
         .createSale(paymentData)

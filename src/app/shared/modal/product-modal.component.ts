@@ -12,24 +12,32 @@ import { ModalService } from './product-modal-service.service';
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [DialogModule, UpperCasePipe, ButtonModule],
+  imports: [ DialogModule, UpperCasePipe, ButtonModule ],
   templateUrl: './product-modal.component.html',
   styleUrl: './product-modal.component.scss',
 })
 export class ProductModal implements OnInit, OnDestroy {
   @Input() currentProduct: Product;
   visible: boolean = false;
-  quantitySize: number = 1;
-  totalProduct: number = 0;
+  quantitySize: number = 0;
+  totalProduct: number = 5;
   user: Users;
-  shoppingCart: ShoppingCart;
+  shoppingCart: ShoppingCart = {
+    id: '0',
+    userId: null,
+    date: new Date(),
+    products: [],
+    cartId: 0,
+  };
   subscription: Subscription;
 
   constructor(
     private modalService: ModalService,
     private authService: AuthService,
     private usersService: UsersService
-  ) {}
+  ) {
+    this.shoppingCart = this.createEmptyCart(this.authService.isAuthenticated() ? this.authService.getSessionStorage('user').userId : null);
+  }
 
   ngOnInit(): void {
     this.getData();
@@ -47,15 +55,19 @@ export class ProductModal implements OnInit, OnDestroy {
       }
     });
 
-    if (this.authService.isAuthenticated()) {
-      this.user = this.authService.getSessionStorage('user');
-      this.usersService
-        .getShoppingCartByUserId(this.user.userId)
-        .subscribe((shoppingCart: any) => {
-          this.shoppingCart = shoppingCart[0];
-        });
-    }
   }
+
+  private createEmptyCart(userId: number | null): ShoppingCart {
+    return {
+      id: '0',
+      userId: userId,
+      date: new Date(),
+      products: [],
+      cartId: 0,
+    };
+  }
+
+
 
   getSubscriptions() {
     this.subscription = this.modalService.openModal$.subscribe((product) => {
@@ -84,21 +96,13 @@ export class ProductModal implements OnInit, OnDestroy {
 
     const updatedProducts = productExists
       ? this.shoppingCart.products
-      : [...(this.shoppingCart?.products || []), this.currentProduct];
+      : [ ...(this.shoppingCart?.products || []), this.currentProduct ];
 
-    const payload: any = {
-      id: this.shoppingCart?.id || '0',
-      userId: this.authService.isAuthenticated() ? this.user.userId : null,
-      date: new Date(),
-      products: updatedProducts,
-    };
-
-    console.log('payload', payload);
     this.shoppingCart.products.forEach((product) => {
       if (product.type === 'composite') {
         product.properties.forEach((property) => {
           property.size.forEach((s: any) => {
-            if (s.size === this.currentProduct.properties[0].size) {
+            if (s.size === this.currentProduct.properties[ 0 ].size) {
               s.quantity += 1;
               product.quantity += 1;
             }
@@ -110,10 +114,31 @@ export class ProductModal implements OnInit, OnDestroy {
       }
     });
 
+    this.totalProduct = this.shoppingCart.products.reduce(
+      (total: number, product: any) =>
+        (total += product.quantity * product.price),
+      0
+    );
+
+    const payload: any = {
+      id: this.shoppingCart?.id || '0',
+      userId: this.authService.isAuthenticated() ? this.user.userId : null,
+      date: new Date(),
+      products: updatedProducts,
+      quantity: this.totalProduct,
+    };
+
+    console.log('payload', payload);
+
     this.shoppingCart = payload;
     this.visible = false;
     this.usersService.shoppingCart$.next(payload);
   }
+  decrementQuantity(currentProduct: Product, size: any): void {
+    console.log('decrementQuantity / currentProduct:', currentProduct, size);
 
-  
+  }
+  incrementQuantity(currentProduct: Product, size: any) {
+    console.log('incrementQuantity / id:', currentProduct, size);
+  }
 }

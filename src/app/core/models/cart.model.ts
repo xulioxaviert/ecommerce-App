@@ -1,11 +1,9 @@
-
 export interface ShoppingCart {
   id: string;
   cartId: number;
   userId: number | null;
   date: Date;
   products: Product[];
-  
 }
 
 export interface Product {
@@ -13,24 +11,38 @@ export interface Product {
   title: string;
   price: number;
   properties: Property[];
-  quantity: number;
-  type: string;
-  stock: number;
+  type: Type;
   description: string;
-  category: string;
+  category: Category;
   image: string;
   rating: Rating;
   id: string;
 }
 
+export enum Category {
+  Electronics = 'electronics',
+  Jewelry = 'jewelry',
+  MenSClothing = "men's clothing",
+  WomenSClothing = "women's clothing",
+}
+
 export interface Property {
   color: string;
-  size: Size[];
-  stock: boolean;
-  season: string;
-  fabric: string;
-  fit: string;
+  size?: Size[];
+  quantity: number;
+  stock?: Size[] | boolean;
+  totalStock: number;
+  season?: string;
+  fabric?: string;
+  fit?: string;
   style: string;
+  material?: string;
+  batteryLife?: string;
+  capacity?: string;
+  connectivity?: string;
+  features?: string[];
+  screenSize?: string;
+  specs?: string[];
 }
 
 export interface Size {
@@ -41,4 +53,9 @@ export interface Size {
 export interface Rating {
   rate: number;
   count: number;
+}
+
+export enum Type {
+  Composite = 'composite',
+  Simple = 'simple',
 }

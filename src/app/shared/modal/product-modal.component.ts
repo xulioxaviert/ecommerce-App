@@ -89,50 +89,50 @@ export class ProductModal implements OnInit, OnDestroy {
     );
   }
   addProductToNewCart() {
-    const productExists =
-      this.shoppingCart?.products?.some(
-        (product) => product.id === this.currentProduct.id
-      ) || false;
+    // const productExists =
+    //   this.shoppingCart?.products?.some(
+    //     (product) => product.id === this.currentProduct.id
+    //   ) || false;
 
-    const updatedProducts = productExists
-      ? this.shoppingCart.products
-      : [ ...(this.shoppingCart?.products || []), this.currentProduct ];
+    // const updatedProducts = productExists
+    //   ? this.shoppingCart.products
+    //   : [ ...(this.shoppingCart?.products || []), this.currentProduct ];
 
-    this.shoppingCart.products.forEach((product) => {
-      if (product.type === 'composite') {
-        product.properties.forEach((property) => {
-          property.size.forEach((s: any) => {
-            if (s.size === this.currentProduct.properties[ 0 ].size) {
-              s.quantity += 1;
-              product.quantity += 1;
-            }
-            return s;
-          });
-        });
-      } else if (product.type === 'simple') {
-        product.quantity += 1;
-      }
-    });
+    // this.shoppingCart.products.forEach((product) => {
+    //   if (product.type === 'composite') {
+    //     product.properties.forEach((property) => {
+    //       property.size.forEach((s: any) => {
+    //         if (s.size === this.currentProduct.properties[ 0 ].size) {
+    //           s.quantity += 1;
+    //           product.quantity += 1;
+    //         }
+    //         return s;
+    //       });
+    //     });
+    //   } else if (product.type === 'simple') {
+    //     product.quantity += 1;
+    //   }
+    // });
 
-    this.totalProduct = this.shoppingCart.products.reduce(
-      (total: number, product: any) =>
-        (total += product.quantity * product.price),
-      0
-    );
+    // this.totalProduct = this.shoppingCart.products.reduce(
+    //   (total: number, product: any) =>
+    //     (total += product.quantity * product.price),
+    //   0
+    // );
 
-    const payload: any = {
-      id: this.shoppingCart?.id || '0',
-      userId: this.authService.isAuthenticated() ? this.user.userId : null,
-      date: new Date(),
-      products: updatedProducts,
-      quantity: this.totalProduct,
-    };
+    // const payload: any = {
+    //   id: this.shoppingCart?.id || '0',
+    //   userId: this.authService.isAuthenticated() ? this.user.userId : null,
+    //   date: new Date(),
+    //   products: updatedProducts,
+    //   quantity: this.totalProduct,
+    // };
 
-    console.log('payload', payload);
+    // console.log('payload', payload);
 
-    this.shoppingCart = payload;
-    this.visible = false;
-    this.usersService.shoppingCart$.next(payload);
+    // this.shoppingCart = payload;
+    // this.visible = false;
+    // this.usersService.shoppingCart$.next(payload);
   }
   decrementQuantity(currentProduct: Product, size: any): void {
     console.log('decrementQuantity / currentProduct:', currentProduct, size);

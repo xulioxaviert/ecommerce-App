@@ -89,37 +89,37 @@ export class CheckoutComponent implements OnInit {
   }
 
   calculateTotal(): void {
-    this.subtotal = this.shoppingCart.products.reduce((acc, product) => {
-      return acc + product.price * product.quantity;
-    }, 0);
-    this.shipping = 10;
-    this.tax = this.subtotal * 0.21;
-    this.total = this.subtotal + this.shipping + this.tax;
+    // this.subtotal = this.shoppingCart.products.reduce((acc, product) => {
+    //   return acc + product.price * product.quantity;
+    // }, 0);
+    // this.shipping = 10;
+    // this.tax = this.subtotal * 0.21;
+    // this.total = this.subtotal + this.shipping + this.tax;
   }
 
   pay(): void {
-    if (this.checkOutForm.valid) {
+    // if (this.checkOutForm.valid) {
 
-      const paymentData: Sales = {
-        name: this.checkOutForm.value.name,
-        email: this.checkOutForm.value.email,
-        creditCardHoler: this.checkOutForm.value.creditCardHoler,
-        creditCardNumber: this.checkOutForm.value.creditCardNumber,
-        expirationDate: this.checkOutForm.value.expirationDate,
-        cvc: this.checkOutForm.value.cvc,
-        sales: [ { ...this.shoppingCart, userId: this.shoppingCart.userId ?? 0 } ]
-      }
-      this.usersService
-        .createSale(paymentData)
-        .subscribe(() => {
-          this.router.navigate([ '/' ]);
-          this.deleteShoppingCart(this.shoppingCart.id);
-        });
-      this.usersService.shoppingCart$.next({} as ShoppingCart);
-    } else {
-      this.checkOutForm.markAllAsTouched();
-      this.checkOutForm.setErrors({ valid: false });
-    }
+    //   const paymentData: Sales = {
+    //     name: this.checkOutForm.value.name,
+    //     email: this.checkOutForm.value.email,
+    //     creditCardHoler: this.checkOutForm.value.creditCardHoler,
+    //     creditCardNumber: this.checkOutForm.value.creditCardNumber,
+    //     expirationDate: this.checkOutForm.value.expirationDate,
+    //     cvc: this.checkOutForm.value.cvc,
+    //     sales: [ { ...this.shoppingCart, userId: this.shoppingCart.userId ?? 0 } ]
+    //   }
+    //   this.usersService
+    //     .createSale(paymentData)
+    //     .subscribe(() => {
+    //       this.router.navigate([ '/' ]);
+    //       this.deleteShoppingCart(this.shoppingCart.id);
+    //     });
+    //   this.usersService.shoppingCart$.next({} as ShoppingCart);
+    // } else {
+    //   this.checkOutForm.markAllAsTouched();
+    //   this.checkOutForm.setErrors({ valid: false });
+    // }
 
   }
 

@@ -1,4 +1,4 @@
-import { UpperCasePipe } from '@angular/common';
+import { NgFor, NgIf, UpperCasePipe } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -12,7 +12,7 @@ import { ModalService } from './product-modal-service.service';
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [ DialogModule, UpperCasePipe, ButtonModule ],
+  imports: [ DialogModule, UpperCasePipe, ButtonModule, NgIf, NgFor ],
   templateUrl: './product-modal.component.html',
   styleUrl: './product-modal.component.scss',
 })
@@ -22,20 +22,26 @@ export class ProductModal implements OnInit, OnDestroy {
   quantitySize: number = 1;
   totalProduct: number = 0;
   user: Users;
-  shoppingCart: ShoppingCart;
+  shoppingCart: ShoppingCart = {
+    id: '0',
+    userId: null,
+    date: new Date(),
+    products: [],
+    cartId: 0,
+  };
   subscription: Subscription;
 
   constructor(
     private modalService: ModalService,
     private authService: AuthService,
     private usersService: UsersService
-  ) { }
+  ) {
 
+  }
 
   ngOnInit(): void {
     this.getData();
-    this.getSubscriptions()
-
+    this.getSubscriptions();
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -48,56 +54,120 @@ export class ProductModal implements OnInit, OnDestroy {
         this.visible = true;
       }
     });
+    this.usersService.shoppingCart$.subscribe((shoppingCart: any) => {
+      this.shoppingCart = shoppingCart;
+    });
 
     if (this.authService.isAuthenticated()) {
-      this.user = this.authService.getSessionStorage('user');
-      this.usersService
-        .getShoppingCartByUserId(this.user.userId)
-        .subscribe((shoppingCart: any) => {
-          this.shoppingCart = shoppingCart[ 0 ];
-
-        });
+      this.authService.user$.subscribe((user) => this.user = user);
+    } else {
+      this.shoppingCart = {
+        id: '0',
+        userId: null,
+        date: new Date(),
+        products: [],
+        cartId: 0,
+      }
     }
-
   }
+
+
+
 
   getSubscriptions() {
     this.subscription = this.modalService.openModal$.subscribe((product) => {
       if (product && product.properties && product.properties.length > 0) {
         this.currentProduct = product;
-
       }
     });
-    this.subscription.add(this.usersService.shoppingCart$.subscribe((shoppingCart: any) => {
-      console.log("this.subscription.add / shoppingCart:", shoppingCart);
-      this.shoppingCart = shoppingCart;
-    }))
-    this.subscription.add(this.authService.user$.subscribe((user) => {
-      console.log("this.subscription.add / user:", user);
-      this.user = user;
-    }))
+    this.subscription.add(
+      this.usersService.shoppingCart$.subscribe((shoppingCart: any) => {
+        console.log('this.subscription.add / shoppingCart:', shoppingCart);
+        this.shoppingCart = shoppingCart;
+      })
+    );
+    this.subscription.add(
+      this.authService.user$.subscribe((user) => {
+        console.log('this.subscription.add / user:', user);
+        this.user = user;
+      })
+    );
   }
   addProductToNewCart() {
-    const productExists = this.shoppingCart?.products?.some(
-      (product) => product.id === this.currentProduct.id
-    ) || false;
+    // const productExists =
+    //   this.shoppingCart?.products?.some(
+    //     (product) => product.id === this.currentProduct.id
+    //   ) || false;
 
-    const updatedProducts = productExists
-      ? this.shoppingCart.products
-      : [ ...(this.shoppingCart?.products || []), this.currentProduct ];
+    // const updatedProducts = productExists
+    //   ? this.shoppingCart.products
+    //   : [ ...(this.shoppingCart?.products || []), this.currentProduct ];
 
-    const payload: any = {
-      id: this.shoppingCart?.id || '0',
-      userId: this.authService.isAuthenticated() ? this.user.userId : null,
-      date: new Date(),
-      products: updatedProducts,
-    };
+    // this.shoppingCart.products.forEach((product) => {
+    //   if (product.type === 'composite') {
+    //     product.properties.forEach((property) => {
+    //       property.size.forEach((s: any) => {
+    //         if (s.size === this.currentProduct.properties[ 0 ].size) {
+    //           s.quantity += 1;
+    //           product.quantity += 1;
+    //         }
+    //         return s;
+    //       });
+    //     });
+    //   } else if (product.type === 'simple') {
+    //     product.quantity += 1;
+    //   }
+    // });
 
-    console.log('payload', payload);
-    this.shoppingCart = payload;
-    this.visible = false;
-    this.usersService.shoppingCart$.next(payload);
+    // this.totalProduct = this.shoppingCart.products.reduce(
+    //   (total: number, product: any) =>
+    //     (total += product.quantity * product.price),
+    //   0
+    // );
 
+    // const payload: any = {
+    //   id: this.shoppingCart?.id || '0',
+    //   userId: this.authService.isAuthenticated() ? this.user.userId : null,
+    //   date: new Date(),
+    //   products: updatedProducts,
+    //   quantity: this.totalProduct,
+    // };
+
+    // console.log('payload', payload);
+
+    // this.shoppingCart = payload;
+    // this.visible = false;
+    // this.usersService.shoppingCart$.next(payload);
   }
+  decrementQuantity(currentProduct: Product, size: any): void {
 
+    currentProduct.properties.forEach((property) => {
+      property?.size?.forEach((s: any) => {
+        if (s.quantity <= 0) return;
+        if (s.size === size.size) {
+          s.quantity -= 1;
+          property.quantity -= 1;
+        }
+      })
+    })
+
+    this.totalProduct = currentProduct.properties.reduce((total, property) => {
+      return total + (property?.size ? property.size.reduce((sizeTotal, s) => sizeTotal + s.quantity, 0) : 0);
+    }, 0);
+  }
+  incrementQuantity(currentProduct: Product, size: any) {
+    currentProduct.properties.forEach((property) => {
+      property?.size?.forEach((s: any) => {
+        if (s.quantity <= 0) return;
+        if (s.size === size.size) {
+          s.quantity += 1;
+          property.quantity += 1;
+        }
+      })
+    })
+
+    this.totalProduct = currentProduct.properties.reduce((total, property) => {
+      return total + (property?.size ? property.size.reduce((sizeTotal, s) => sizeTotal + s.quantity, 0) : 0);
+    }, 0);
+  }
 }

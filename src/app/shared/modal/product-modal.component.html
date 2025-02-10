@@ -28,7 +28,7 @@
               <strong class="ml-2">{{ property.color | uppercase }}</strong>
             </h6>
             <h6 class="mt-6 flex flex-wrap mr-1">
-              @for (size of property.size; track $index) {
+              @for (size of property.size; track $index){
               <div
                 class="flex gap-2 items-center border border-gray-300 bg-white px-3 py-2 w-max mr-2"
               >
@@ -99,7 +99,7 @@
             </button>
 
             <span class="text-gray-800 text-sm font-semibold px-3">{{
-              quantitySize
+              currentProduct.properties[0].quantity
             }}</span>
 
             <button type="button" class="border-none outline-none">
@@ -118,12 +118,13 @@
                 />
               </svg>
             </button>
-            } @else {
+            } @else { @for (products of currentProduct.properties; track $index)
+            {
 
             <span class="text-gray-800 text-sm font-semibold px-8">{{
-              totalProduct
+              products?.quantity
             }}</span>
-            }
+            } }
           </div>
 
           <div class="mt-6">

@@ -30,7 +30,7 @@ export interface Property {
   color: string;
   size?: Size[];
   quantity: number;
-  stock?: Size[] | boolean;
+  stock?: Size[];
   totalStock: number;
   season?: string;
   fabric?: string;

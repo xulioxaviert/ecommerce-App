@@ -1,4 +1,4 @@
-import { UpperCasePipe } from '@angular/common';
+import { NgFor, NgIf, UpperCasePipe } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -12,15 +12,15 @@ import { ModalService } from './product-modal-service.service';
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [ DialogModule, UpperCasePipe, ButtonModule ],
+  imports: [ DialogModule, UpperCasePipe, ButtonModule, NgIf, NgFor ],
   templateUrl: './product-modal.component.html',
   styleUrl: './product-modal.component.scss',
 })
 export class ProductModal implements OnInit, OnDestroy {
   @Input() currentProduct: Product;
   visible: boolean = false;
-  quantitySize: number = 0;
-  totalProduct: number = 5;
+  quantitySize: number = 1;
+  totalProduct: number = 0;
   user: Users;
   shoppingCart: ShoppingCart = {
     id: '0',
@@ -36,7 +36,7 @@ export class ProductModal implements OnInit, OnDestroy {
     private authService: AuthService,
     private usersService: UsersService
   ) {
-    this.shoppingCart = this.createEmptyCart(this.authService.isAuthenticated() ? this.authService.getSessionStorage('user').userId : null);
+
   }
 
   ngOnInit(): void {
@@ -54,18 +54,23 @@ export class ProductModal implements OnInit, OnDestroy {
         this.visible = true;
       }
     });
+    this.usersService.shoppingCart$.subscribe((shoppingCart: any) => {
+      this.shoppingCart = shoppingCart;
+    });
 
+    if (this.authService.isAuthenticated()) {
+      this.authService.user$.subscribe((user) => this.user = user);
+    } else {
+      this.shoppingCart = {
+        id: '0',
+        userId: null,
+        date: new Date(),
+        products: [],
+        cartId: 0,
+      }
+    }
   }
 
-  private createEmptyCart(userId: number | null): ShoppingCart {
-    return {
-      id: '0',
-      userId: userId,
-      date: new Date(),
-      products: [],
-      cartId: 0,
-    };
-  }
 
 
 
@@ -135,10 +140,34 @@ export class ProductModal implements OnInit, OnDestroy {
     // this.usersService.shoppingCart$.next(payload);
   }
   decrementQuantity(currentProduct: Product, size: any): void {
-    console.log('decrementQuantity / currentProduct:', currentProduct, size);
 
+    currentProduct.properties.forEach((property) => {
+      property?.size?.forEach((s: any) => {
+        if (s.quantity <= 0) return;
+        if (s.size === size.size) {
+          s.quantity -= 1;
+          property.quantity -= 1;
+        }
+      })
+    })
+
+    this.totalProduct = currentProduct.properties.reduce((total, property) => {
+      return total + (property?.size ? property.size.reduce((sizeTotal, s) => sizeTotal + s.quantity, 0) : 0);
+    }, 0);
   }
   incrementQuantity(currentProduct: Product, size: any) {
-    console.log('incrementQuantity / id:', currentProduct, size);
+    currentProduct.properties.forEach((property) => {
+      property?.size?.forEach((s: any) => {
+        if (s.quantity <= 0) return;
+        if (s.size === size.size) {
+          s.quantity += 1;
+          property.quantity += 1;
+        }
+      })
+    })
+
+    this.totalProduct = currentProduct.properties.reduce((total, property) => {
+      return total + (property?.size ? property.size.reduce((sizeTotal, s) => sizeTotal + s.quantity, 0) : 0);
+    }, 0);
   }
 }

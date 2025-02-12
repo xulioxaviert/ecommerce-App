@@ -78,9 +78,4 @@ export class MenComponent implements OnInit, OnDestroy {
     this.modalService.openModal(product);
   }
 
-
-
-
-
-
 }

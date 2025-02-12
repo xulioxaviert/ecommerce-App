@@ -19,7 +19,7 @@ import { ModalService } from './product-modal-service.service';
 export class ProductModal implements OnInit, OnDestroy {
   @Input() currentProduct: Product;
   visible: boolean = false;
-  quantitySize: number = 1;
+  quantityProduct: number = 1;
   totalProduct: number = 0;
   user: Users;
   shoppingCart: ShoppingCart = {
@@ -71,42 +71,62 @@ export class ProductModal implements OnInit, OnDestroy {
   }
 
 
-  decrementQuantity(currentProduct: Product, size: any): void {
+  decrementQuantity(currentProduct: Product, size?: any): void {
     console.log("decrementQuantity / currentProduct:", currentProduct);
-
-    currentProduct.properties.forEach((property) => {
-      property?.size?.forEach((s: any) => {
-        if (s.quantity <= 0) return;
-        if (s.size === size.size) {
-          s.quantity -= 1;
-          property.quantity -= 1;
-        }
+    if (currentProduct.type === 'composite') {
+      currentProduct.properties.forEach((property) => {
+        property?.size?.forEach((s: any) => {
+          if (s.quantity <= 0) return;
+          if (s.size === size.size) {
+            s.quantity -= 1;
+            property.quantity -= 1;
+          }
+        })
       })
-    })
 
-    this.totalProduct = currentProduct.properties.reduce((total, property) => {
-      return total + (property?.size ? property.size.reduce((sizeTotal, s) => sizeTotal + s.quantity, 0) : 0);
-    }, 0);
-
-    this.usersService.selectedProduct.set(currentProduct);
+      this.totalProduct = currentProduct.properties.reduce((total, property) => {
+        return total + (property?.size ? property.size.reduce((sizeTotal, s) => sizeTotal + s.quantity, 0) : 0);
+      }, 0);
+      this.usersService.selectedProduct.set(currentProduct);
+    } else {
+      currentProduct.properties.forEach((property) => {
+        if (property.quantity <= 0) return;
+        property.quantity -= 1;
+      });
+      this.totalProduct = currentProduct.properties.reduce((total, property) => {
+        return total + property.quantity;
+      }, 0);
+      this.usersService.selectedProduct.set(currentProduct)
+    }
   }
-  incrementQuantity(currentProduct: Product, size: any) {
+  incrementQuantity(currentProduct: Product, size?: any) {
 
-    currentProduct.properties.forEach((property) => {
-      property?.size?.forEach((s: any) => {
-        if (s.quantity <= 0) return;
-        if (s.size === size.size) {
-          s.quantity += 1;
-          property.quantity += 1;
-        }
+    if (currentProduct.type === 'composite') {
+      currentProduct.properties.forEach((property) => {
+        property?.size?.forEach((s: any) => {
+          if (s.quantity <= 0) return;
+          if (s.size === size.size) {
+            s.quantity += 1;
+            property.quantity += 1;
+          }
+        })
       })
-    })
 
-    this.totalProduct = currentProduct.properties.reduce((total, property) => {
-      return total + (property?.size ? property.size.reduce((sizeTotal, s) => sizeTotal + s.quantity, 0) : 0);
-    }, 0);
-    this.usersService.selectedProduct.set(currentProduct);
+      this.totalProduct = currentProduct.properties.reduce((total, property) => {
+        return total + (property?.size ? property.size.reduce((sizeTotal, s) => sizeTotal + s.quantity, 0) : 0);
+      }, 0);
+      this.usersService.selectedProduct.set(currentProduct);
 
+    } else {
+      currentProduct.properties.forEach((property) => {
+        if (property.quantity <= 0) return;
+        property.quantity += 1;
+      });
+      this.totalProduct = currentProduct.properties.reduce((total, property) => {
+        return total + property.quantity;
+      }, 0);
+      this.usersService.selectedProduct.set(currentProduct)
+    }
   }
 
   checkUserCartStatus(): number {
@@ -125,9 +145,9 @@ export class ProductModal implements OnInit, OnDestroy {
           case isAuthenticated && Object.keys(this.cart).length > 0:
             console.log('✅ Usuario autenticado y tiene carrito en (BBDD).');
             return 1;
-            case isAuthenticated && Object.keys(localCart).length > 0:
-              console.log('⚠️ Usuario autenticado y tiene carrito en el LocalStorage.');
-              return 5;
+          case isAuthenticated && Object.keys(localCart).length > 0:
+            console.log('⚠️ Usuario autenticado y tiene carrito en el LocalStorage.');
+            return 5;
           case isAuthenticated && Object.keys(this.cart).length === 0:
             console.log('⚠️ Usuario autenticado no tiene carrito (BBDD).');
             return 2;

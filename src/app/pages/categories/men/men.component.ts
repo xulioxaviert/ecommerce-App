@@ -42,8 +42,6 @@ export class MenComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getData();
-    // this.getSubscriptions();
-    // this.checkAuthenticationAndCart();
     this.getSubscriptions();
   }
   ngOnDestroy(): void {
@@ -55,29 +53,19 @@ export class MenComponent implements OnInit, OnDestroy {
       products.body
         .filter((product: Product) => product.category === "men's clothing")
         .forEach((product: Product) => this.products.push(product));
-      console.log('products', this.products);
     });
 
-    this.authService.isAuthenticated$ ? this.user = this.authService.getSessionStorage('user') : null;
   }
+
 
   getSubscriptions() {
     this.subscription.add(
       this.authService.isAuthenticated$.subscribe((isAuthenticated) => {
-        console.log('this.subscription.add / isAuthenticated:', isAuthenticated);
-        this.checkAuthenticationAndCart()
+
       })
     );
     this.subscription.add(
-      this.usersService.shoppingCart$.subscribe((shoppingCart) => {
-        console.log(
-          'this.subscription.add / shoppingCart:', shoppingCart
-        );
-        this.shoppingCart = shoppingCart
-        if (shoppingCart) {
-          this.checkAuthenticationAndCart();
-        }
-      })
+
     );
   }
 
@@ -90,92 +78,9 @@ export class MenComponent implements OnInit, OnDestroy {
     this.modalService.openModal(product);
   }
 
-  checkAuthenticationAndCart() {
-    if (this.authService.isAuthenticated()) {
-      // Usuario está autenticado
-      if (this.shoppingCart?.products?.length > 0) {
-        if (this.shoppingCart.userId === null) {
-          this.shoppingCart.userId = this.user.userId;
-        }
-        const payload = {
-          userId: this.user.userId,
-          date: new Date(),
-          products: [ ...this.shoppingCart.products ],
-        }
-        console.log('✅ Usuario autenticado y tiene productos en el carrito (WEB).');
 
-      } else {
-        console.log('⚠️ Usuario autenticado pero su carrito está vacío (WEB).');
-      }
-      // Verificar si tiene carrito en la base de datos
-      this.usersService.getShoppingCartByUserId(this.user.userId).subscribe((cart) => {
-        console.log("this.usersService.getShoppingCartByUserId / cart:", cart);
-        if (cart.length > 0) {
-          console.log('✅ Usuario autenticado y tiene carrito en la base de datos.');
-          this.usersService.putShoppingCart(cart[ 0 ].id, this.shoppingCart).subscribe((cart) => {
-            console.log('this.usersService.putShoppingCart / cart:', cart);
 
-          })
 
-        } else {
-          console.log('⚠️ Usuario autenticado pero no tiene carrito en la base de datos.');
-          this.confirmationService.confirm({
-            // target: event.target as EventTarget,
-            message: 'Tienes productos en el carrito, ¿Deseas unificarlos?',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-              this.groupShoppingCar()
-            },
-            reject: () => { },
-          });
-        }
-      });
-      //Verificar si tiene carrito en el localStorage
-      const localCart = this.authService.getLocalStorage('shoppingCart')
-      if (localCart && localCart.products?.length > 0) {
-        console.log('✅ Usuario autenticado y tiene carrito en el localStorage.');
-        const shoppingCart = this.authService.getLocalStorage('shoppingCart');
-        const payload = {
-          userId: this.user.userId,
-          date: new Date(),
-          products: [ ...shoppingCart.products ],
-        }
-        this.authService.setLocalStorage('shoppingCart', JSON.stringify(payload));
-      } else {
-        console.log('⚠️ Usuario autenticado pero no tiene carrito en el localStorage.');
-      }
-    } else {
-      // Usuario no autenticado
-      if (this.shoppingCart?.products?.length > 0) {
-        console.log('🔒 Usuario no autenticado y tiene productos en el carrito de (WEB).');
-        const payload = {
-          userId: null,
-          date: new Date(),
-          products: [ ...this.shoppingCart.products ],
-        }
-        this.authService.setLocalStorage('shoppingCart', JSON.stringify(payload));
-      } else {
-        console.log('🚫 Usuario no autenticado y no tiene productos en el carrito (WEB).');
-      }
-      //Verificar si tiene carrito en el localStorage
-      const localCart = this.authService.getLocalStorage('shoppingCart')
-      if (localCart && localCart.products?.length > 0) {
-        console.log('🚫 Usuario no autenticado y tiene carrito en el localStorage.');
-      } else {
-        console.log('🚫 Usuario no autenticado y no tiene carrito en el localStorage.');
-      }
-    }
 
-  }
-  groupShoppingCar() {
-    const localCart = this.authService.getLocalStorage('shoppingCart');
-    this.usersService.createShoppingCart(localCart).subscribe((cart) => {
-      console.log('this.usersService.createShoppingCart / cart:', cart);
-      this.usersService.shoppingCart$.next(cart);
-      this.authService.removeLocalStorage('shoppingCart');
-    })
-  }
-
-  
 
 }

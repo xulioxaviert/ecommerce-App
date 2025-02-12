@@ -201,8 +201,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.productsShoppingCart = 0;
           this.favoriteProducts = 0;
           this.title = 'HEADER.LOGIN';
-          this.userService.shoppingCart$.next({} as ShoppingCart);
-          
           if (this.router.url === '/dashboard') {
             this.router.navigate([ '/' ]);
           } else if (this.router.url.includes('/carts/')) {
@@ -252,5 +250,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.userService.shoppingCart$.unsubscribe()
+    this.userService.favoriteProducts$.unsubscribe()
+
+
   }
 }

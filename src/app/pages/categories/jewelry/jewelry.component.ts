@@ -1,27 +1,51 @@
-import { NgForOf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { CommonModule, NgForOf, NgIf } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { ConfirmationService } from 'primeng/api';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../../auth/auth.service';
 import { ENDPOINTS } from '../../../core/const/constants';
-import { Product } from '../../../core/models/cart.model';
+import { Product, ShoppingCart } from '../../../core/models/cart.model';
+import { Users } from '../../../core/models/user.model';
 import { HttpService } from '../../../core/services/http.service';
+import { ToastService } from '../../../core/services/toast.service';
+import { ModalService } from '../../../shared/modal/product-modal-service.service';
+import { ProductModal } from '../../../shared/modal/product-modal.component';
+import { UsersService } from '../../../users/users.service';
 
 @Component({
-  selector: 'app-jewelry',
+  selector: 'app-mens',
   standalone: true,
-  imports: [ NgForOf, TranslateModule ],
+  imports: [ CommonModule, NgForOf, TranslateModule, ProductModal, NgIf ],
   templateUrl: './jewelry.component.html',
   styleUrl: './jewelry.component.scss',
+  providers: [],
 })
-export class JewelryComponent implements OnInit {
+export class JewelryComponent implements OnInit, OnDestroy {
   products: Product[] = [];
+  currentProduct: Product = {} as Product;
+  visible: boolean = false;
+  subscription: Subscription = new Subscription();
+  user: Users = {} as Users;
+  shoppingCart: ShoppingCart = {} as ShoppingCart;
+
   constructor(
-    private translateService: TranslateService,
     private http: HttpService,
-    private router: Router
+    private router: Router,
+    private modalService: ModalService,
+    private authService: AuthService,
+    private usersService: UsersService,
+    private toastService: ToastService,
+    private confirmationService: ConfirmationService
   ) { }
+
   ngOnInit(): void {
     this.getData();
+    this.getSubscriptions();
+  }
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   getData() {
@@ -29,13 +53,29 @@ export class JewelryComponent implements OnInit {
       products.body
         .filter((product: Product) => product.category === "jewelry")
         .forEach((product: Product) => this.products.push(product));
-      console.log('products', this.products);
-    })
-  }
-  navigateToProduct(product: Product) {
-    console.log('product', product);
-    this.router.navigate([ `/product/detail/${product.id}` ])
+    });
 
+  }
+
+
+  getSubscriptions() {
+    this.subscription.add(
+      this.authService.isAuthenticated$.subscribe((isAuthenticated) => {
+
+      })
+    );
+    this.subscription.add(
+
+    );
+  }
+
+  navigateToProductDetail(product: Product) {
+    console.log('product', product);
+    this.router.navigate([ `/product/detail/${product.id}` ]);
+  }
+  openModalSize(product: Product) {
+    this.visible = true;
+    this.modalService.openModal(product);
   }
 
 }

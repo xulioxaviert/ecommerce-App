@@ -221,8 +221,8 @@
               <img
                 src="{{ product.image }}"
                 alt="{{ product.title }}"
+                (click)="navigateToProductDetail(product)"
                 class="aspect-[3/4] w-full object-cover object-top hover:scale-110 transition-all duration-700"
-                (click)="navigateToProduct(product)"
               />
             </div>
 
@@ -250,6 +250,7 @@
                   type="button"
                   title="Add to cart"
                   class="bg-transparent outline-none border-none"
+                  (click)="openModalSize(product)"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -388,3 +389,4 @@
     </div>
   </footer>
 </section>
+<app-modal *ngIf="visible" [currentProduct]="currentProduct"></app-modal>

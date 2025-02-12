@@ -2,7 +2,7 @@ import { NgFor, NgIf, UpperCasePipe } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
-import { Subscription } from 'rxjs';
+import { Subscription, tap } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { Product, ShoppingCart } from '../../core/models/cart.model';
 import { Users } from '../../core/models/user.model';
@@ -19,7 +19,7 @@ import { ModalService } from './product-modal-service.service';
 export class ProductModal implements OnInit, OnDestroy {
   @Input() currentProduct: Product;
   visible: boolean = false;
-  quantitySize: number = 1;
+  quantityProduct: number = 1;
   totalProduct: number = 0;
   user: Users;
   shoppingCart: ShoppingCart = {
@@ -30,6 +30,7 @@ export class ProductModal implements OnInit, OnDestroy {
     cartId: 0,
   };
   subscription: Subscription;
+  cart: any
 
   constructor(
     private modalService: ModalService,
@@ -54,25 +55,7 @@ export class ProductModal implements OnInit, OnDestroy {
         this.visible = true;
       }
     });
-    this.usersService.shoppingCart$.subscribe((shoppingCart: any) => {
-      this.shoppingCart = shoppingCart;
-    });
-
-    if (this.authService.isAuthenticated()) {
-      this.authService.user$.subscribe((user) => this.user = user);
-    } else {
-      this.shoppingCart = {
-        id: '0',
-        userId: null,
-        date: new Date(),
-        products: [],
-        cartId: 0,
-      }
-    }
   }
-
-
-
 
   getSubscriptions() {
     this.subscription = this.modalService.openModal$.subscribe((product) => {
@@ -80,94 +63,117 @@ export class ProductModal implements OnInit, OnDestroy {
         this.currentProduct = product;
       }
     });
-    this.subscription.add(
-      this.usersService.shoppingCart$.subscribe((shoppingCart: any) => {
-        console.log('this.subscription.add / shoppingCart:', shoppingCart);
-        this.shoppingCart = shoppingCart;
-      })
-    );
-    this.subscription.add(
-      this.authService.user$.subscribe((user) => {
-        console.log('this.subscription.add / user:', user);
-        this.user = user;
-      })
-    );
+
   }
   addProductToNewCart() {
-    // const productExists =
-    //   this.shoppingCart?.products?.some(
-    //     (product) => product.id === this.currentProduct.id
-    //   ) || false;
 
-    // const updatedProducts = productExists
-    //   ? this.shoppingCart.products
-    //   : [ ...(this.shoppingCart?.products || []), this.currentProduct ];
-
-    // this.shoppingCart.products.forEach((product) => {
-    //   if (product.type === 'composite') {
-    //     product.properties.forEach((property) => {
-    //       property.size.forEach((s: any) => {
-    //         if (s.size === this.currentProduct.properties[ 0 ].size) {
-    //           s.quantity += 1;
-    //           product.quantity += 1;
-    //         }
-    //         return s;
-    //       });
-    //     });
-    //   } else if (product.type === 'simple') {
-    //     product.quantity += 1;
-    //   }
-    // });
-
-    // this.totalProduct = this.shoppingCart.products.reduce(
-    //   (total: number, product: any) =>
-    //     (total += product.quantity * product.price),
-    //   0
-    // );
-
-    // const payload: any = {
-    //   id: this.shoppingCart?.id || '0',
-    //   userId: this.authService.isAuthenticated() ? this.user.userId : null,
-    //   date: new Date(),
-    //   products: updatedProducts,
-    //   quantity: this.totalProduct,
-    // };
-
-    // console.log('payload', payload);
-
-    // this.shoppingCart = payload;
-    // this.visible = false;
-    // this.usersService.shoppingCart$.next(payload);
+    this.checkUserCartStatus()
   }
-  decrementQuantity(currentProduct: Product, size: any): void {
 
-    currentProduct.properties.forEach((property) => {
-      property?.size?.forEach((s: any) => {
-        if (s.quantity <= 0) return;
-        if (s.size === size.size) {
-          s.quantity -= 1;
-          property.quantity -= 1;
-        }
+
+  decrementQuantity(currentProduct: Product, size?: any): void {
+    console.log("decrementQuantity / currentProduct:", currentProduct);
+    if (currentProduct.type === 'composite') {
+      currentProduct.properties.forEach((property) => {
+        property?.size?.forEach((s: any) => {
+          if (s.quantity <= 0) return;
+          if (s.size === size.size) {
+            s.quantity -= 1;
+            property.quantity -= 1;
+          }
+        })
       })
-    })
 
-    this.totalProduct = currentProduct.properties.reduce((total, property) => {
-      return total + (property?.size ? property.size.reduce((sizeTotal, s) => sizeTotal + s.quantity, 0) : 0);
-    }, 0);
+      this.totalProduct = currentProduct.properties.reduce((total, property) => {
+        return total + (property?.size ? property.size.reduce((sizeTotal, s) => sizeTotal + s.quantity, 0) : 0);
+      }, 0);
+      this.usersService.selectedProduct.set(currentProduct);
+    } else {
+      currentProduct.properties.forEach((property) => {
+        if (property.quantity <= 0) return;
+        property.quantity -= 1;
+      });
+      this.totalProduct = currentProduct.properties.reduce((total, property) => {
+        return total + property.quantity;
+      }, 0);
+      this.usersService.selectedProduct.set(currentProduct)
+    }
   }
-  incrementQuantity(currentProduct: Product, size: any) {
-    currentProduct.properties.forEach((property) => {
-      property?.size?.forEach((s: any) => {
-        if (s.quantity <= 0) return;
-        if (s.size === size.size) {
-          s.quantity += 1;
-          property.quantity += 1;
-        }
-      })
-    })
+  incrementQuantity(currentProduct: Product, size?: any) {
 
-    this.totalProduct = currentProduct.properties.reduce((total, property) => {
-      return total + (property?.size ? property.size.reduce((sizeTotal, s) => sizeTotal + s.quantity, 0) : 0);
-    }, 0);
+    if (currentProduct.type === 'composite') {
+      currentProduct.properties.forEach((property) => {
+        property?.size?.forEach((s: any) => {
+          if (s.quantity <= 0) return;
+          if (s.size === size.size) {
+            s.quantity += 1;
+            property.quantity += 1;
+          }
+        })
+      })
+
+      this.totalProduct = currentProduct.properties.reduce((total, property) => {
+        return total + (property?.size ? property.size.reduce((sizeTotal, s) => sizeTotal + s.quantity, 0) : 0);
+      }, 0);
+      this.usersService.selectedProduct.set(currentProduct);
+
+    } else {
+      currentProduct.properties.forEach((property) => {
+        if (property.quantity <= 0) return;
+        property.quantity += 1;
+      });
+      this.totalProduct = currentProduct.properties.reduce((total, property) => {
+        return total + property.quantity;
+      }, 0);
+      this.usersService.selectedProduct.set(currentProduct)
+    }
+  }
+
+  checkUserCartStatus(): number {
+    const isAuthenticated = this.authService.isAuthenticated();
+    const localCart = this.authService.getLocalStorage('shoppingCart');
+    let DBCart: any = [];
+
+    if (isAuthenticated) {
+      const user = this.authService.getSessionStorage('user');
+      this.usersService.getShoppingCartByUserId(user.userId).pipe(
+        tap(cart => this.cart = cart)
+      ).subscribe((shoppingCarts: ShoppingCart[]) => {
+        DBCart = shoppingCarts;
+
+        switch (true) {
+          case isAuthenticated && Object.keys(this.cart).length > 0:
+            console.log('✅ Usuario autenticado y tiene carrito en (BBDD).');
+            return 1;
+          case isAuthenticated && Object.keys(localCart).length > 0:
+            console.log('⚠️ Usuario autenticado y tiene carrito en el LocalStorage.');
+            return 5;
+          case isAuthenticated && Object.keys(this.cart).length === 0:
+            console.log('⚠️ Usuario autenticado no tiene carrito (BBDD).');
+            return 2;
+          default:
+            console.log('Estado del carrito no identificado.');
+            return 0;
+        }
+      });
+    } else {
+      switch (true) {
+        case !isAuthenticated && Object.keys(localCart).length > 0:
+          console.log('⚠️ Usuario no autenticado y tiene carrito en el localStorage.');
+          return 3;
+        case !isAuthenticated && (!localCart || Object.keys(localCart).length === 0):
+          console.log('🚫 Usuario no autenticado y no tiene carrito en el localStorage.');
+          this.authService.setLocalStorage('shoppingCart', JSON.stringify({
+            "id": "cart1",
+            "userId": null
+          }));
+          return 4;
+        default:
+          console.log('Estado del carrito no identificado.');
+          return 0;
+      }
+    }
+    return 0;
   }
 }
+

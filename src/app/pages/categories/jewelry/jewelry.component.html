@@ -157,6 +157,8 @@
     </div>
   </div>
 
+  
+
   <section class="bg-white py-8">
     <div class="container mx-auto flex items-center flex-wrap pt-4 pb-12">
       <nav id="store" class="w-full z-30 top-0 px-6 py-1">
@@ -217,8 +219,8 @@
               <img
                 src="{{ product.image }}"
                 alt="{{ product.title }}"
+                (click)="navigateToProductDetail(product)"
                 class="aspect-[3/4] w-full object-cover object-top hover:scale-110 transition-all duration-700"
-                (click)="navigateToProduct(product)"
               />
             </div>
 
@@ -246,6 +248,7 @@
                   type="button"
                   title="Add to cart"
                   class="bg-transparent outline-none border-none"
+                  (click)="openModalSize(product)"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -384,3 +387,4 @@
     </div>
   </footer>
 </section>
+<app-modal *ngIf="visible" [currentProduct]="currentProduct"></app-modal>

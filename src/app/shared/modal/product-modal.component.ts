@@ -1,5 +1,6 @@
 import { NgFor, NgIf, UpperCasePipe } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { Subscription, tap } from 'rxjs';
@@ -12,7 +13,7 @@ import { ModalService } from './product-modal-service.service';
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [DialogModule, UpperCasePipe, ButtonModule, NgIf, NgFor],
+  imports: [ DialogModule, UpperCasePipe, ButtonModule, NgIf, NgFor ],
   templateUrl: './product-modal.component.html',
   styleUrl: './product-modal.component.scss',
 })
@@ -23,7 +24,7 @@ export class ProductModal implements OnInit, OnDestroy {
   totalProduct: number = 0;
   user: Users;
   shoppingCart: ShoppingCart = {
-    id: '0',
+
     userId: null,
     date: new Date(),
     products: [],
@@ -35,8 +36,10 @@ export class ProductModal implements OnInit, OnDestroy {
   constructor(
     private modalService: ModalService,
     private authService: AuthService,
-    private usersService: UsersService
-  ) {}
+    private usersService: UsersService,
+    private confirmationService: ConfirmationService
+
+  ) { }
 
   ngOnInit(): void {
     this.getData();
@@ -86,9 +89,9 @@ export class ProductModal implements OnInit, OnDestroy {
             total +
             (property?.size
               ? property.size.reduce(
-                  (sizeTotal, s) => sizeTotal + s.quantity,
-                  0
-                )
+                (sizeTotal, s) => sizeTotal + s.quantity,
+                0
+              )
               : 0)
           );
         },
@@ -126,9 +129,9 @@ export class ProductModal implements OnInit, OnDestroy {
             total +
             (property?.size
               ? property.size.reduce(
-                  (sizeTotal, s) => sizeTotal + s.quantity,
-                  0
-                )
+                (sizeTotal, s) => sizeTotal + s.quantity,
+                0
+              )
               : 0)
           );
         },
@@ -155,7 +158,7 @@ export class ProductModal implements OnInit, OnDestroy {
     const localCart = this.authService.getLocalStorage('shoppingCart');
     let DBCart: any = [];
     const cart: ShoppingCart = {
-      id: '0',
+
       userId: null,
       date: new Date(),
       products: [],
@@ -179,6 +182,7 @@ export class ProductModal implements OnInit, OnDestroy {
               console.log('✅ Usuario autenticado y tiene carrito en (BBDD).');
               return 1;
             case isAuthenticated && Object.keys(localCart).length > 0:
+              this.loggedUserHasCartLocalStorage(user)
               console.log(
                 '⚠️ Usuario autenticado y tiene carrito en el LocalStorage.'
               );
@@ -217,18 +221,44 @@ export class ProductModal implements OnInit, OnDestroy {
   createLocalStoreCart(cart: ShoppingCart): void {
     console.log('createLocalStoreCart / cart:', cart);
     this.authService.setLocalStorage('shoppingCart', JSON.stringify(cart));
+    this.visible = false;
+    this.usersService.shoppingCart$.next(cart);
   }
   updateLocalStoreCart(): void {
     const cart = this.authService.getLocalStorage('shoppingCart');
     const products = this.usersService.selectedProduct();
     cart.products.push(products);
 
-
-      cart.products = cart.products.filter(
-        (product: Product) => product.id !== products.id
-      );
-      cart.products.push(products);
-      this.authService.setLocalStorage('shoppingCart', JSON.stringify(cart));
-    
+    cart.products = cart.products.filter(
+      (product: Product) => product.id !== products.id
+    );
+    cart.products.push(products);
+    this.authService.setLocalStorage('shoppingCart', JSON.stringify(cart));
+    this.usersService.shoppingCart$.next(cart);
+    this.visible = false;
   }
+  loggedUserHasCartLocalStorage(user: Users) {
+
+    let cartLocalStorage = this.authService.getLocalStorage('shoppingCart');
+    cartLocalStorage.products.push(this.usersService.selectedProduct());
+
+    this.confirmationService.confirm({
+      target: document.body,
+      message: 'Do you want to save the products in the shopping cart?',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        cartLocalStorage = {
+          ...cartLocalStorage,
+          userId: user.userId,
+        }
+        this.authService.removeLocalStorage('shoppingCart')
+        this.usersService.createShoppingCart(cartLocalStorage).subscribe((cart) => {
+          this.usersService.shoppingCart$.next(cart);
+        });
+      },
+      reject: () => { },
+    });
+
+  }
+
 }

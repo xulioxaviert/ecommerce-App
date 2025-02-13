@@ -1,5 +1,5 @@
 export interface ShoppingCart {
-  id: string;
+  id?: string;
   cartId: number;
   userId: number | null;
   date: Date;

@@ -56,6 +56,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   favoriteProducts: number = 0;
   cart: ShoppingCart | undefined;
 
+
   constructor(
     private translateService: TranslateService,
     private router: Router,
@@ -71,6 +72,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   checkAuthenticated() {
+    const cartLocalStorage = this.authService.getLocalStorage('shoppingCart') || undefined;
+    if (cartLocalStorage) { this.userService.shoppingCart$.next(cartLocalStorage) }
     if (!this.authService.isAuthenticated()) return;
 
     this.user = this.authService.getSessionStorage('user');

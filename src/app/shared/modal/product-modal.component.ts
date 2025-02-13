@@ -223,12 +223,12 @@ export class ProductModal implements OnInit, OnDestroy {
     const products = this.usersService.selectedProduct();
     cart.products.push(products);
 
-    cart.products.forEach((product: Product) => {
+
       cart.products = cart.products.filter(
         (product: Product) => product.id !== products.id
       );
       cart.products.push(products);
       this.authService.setLocalStorage('shoppingCart', JSON.stringify(cart));
-    });
+    
   }
 }

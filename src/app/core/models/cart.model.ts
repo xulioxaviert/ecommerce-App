@@ -1,5 +1,5 @@
 export interface ShoppingCart {
-  id: string;
+  id?: string;
   cartId: number;
   userId: number | null;
   date: Date;
@@ -56,4 +56,13 @@ export interface Rating {
 export enum Type {
   Composite = "composite",
   Simple = "simple",
+}
+
+export enum CartStatus {
+  AuthenticatedWithDBCart = 1,
+  AuthenticatedWithLocalCart = 5,
+  AuthenticatedWithoutCart = 2,
+  UnauthenticatedWithLocalCart = 3,
+  UnauthenticatedWithoutCart = 4,
+  Unknown = 0,
 }

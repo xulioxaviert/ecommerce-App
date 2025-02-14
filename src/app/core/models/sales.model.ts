@@ -9,7 +9,7 @@ export interface Sales {
 }
 
 export interface Sale {
-  id:       string;
+  id?:       string;
   cartId:   number;
   userId:   number;
   date:     Date;

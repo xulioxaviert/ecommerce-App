@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { AuthService } from '../../auth/auth.service';
-import { ShoppingCart } from '../../core/models/cart.model';
+import { Product, ShoppingCart } from '../../core/models/cart.model';
 import { Users } from '../../core/models/user.model';
 import { UsersService } from '../../users/users.service';
 import { CartListComponent } from "./cart-list/cart-list.component";
@@ -69,7 +69,7 @@ export class CartComponent implements OnInit, OnDestroy {
   shoppingCartCalculation(shoppingCart: any) {
     this.subTotal = shoppingCart.products.reduce(
       (total: number, product: any) =>
-        (total += product.quantity * product.price),
+        (total += product.properties[ 0 ].quantity * product.price),
       0
     );
     this.tax = this.subTotal * 0.21 + this.shipping * 0.21;
@@ -99,29 +99,29 @@ export class CartComponent implements OnInit, OnDestroy {
   decrementQuantity(event: { id: number, size: any }): void {
     const { id, size } = event;
 
-    this.shoppingCart.products.forEach((product) => {
-      // if (product.productId === id) {
-      //   if (product.type === 'composite') {
-      //     product.properties.forEach((property) => {
-      //       property.size.forEach((s) => {
-      //         if (s.size === size.size) {
-      //           if (s.quantity <= 0) return s;
-      //           s.quantity -= 1;
-      //           product.quantity -= 1;
-      //         }
-      //         return s;
-      //       });
-      //     });
-      //   } else if (product.type === 'simple') {
-      //     if (product.quantity <= 0) return product;
-      //     product.quantity -= 1;
-      //   }
-      // }
+    this.shoppingCart.products.forEach((product: Product) => {
+      if (product.productId === id) {
+        if (product.type === 'composite') {
+          product.properties.forEach((property) => {
+            property?.size?.forEach((s) => {
+              if (s.size === size.size) {
+                if (s.quantity <= 0) return s;
+                s.quantity -= 1;
+                product.properties[ 0 ].quantity -= 1;
+              }
+              return s;
+            });
+          });
+        } else if (product.type === 'simple') {
+          if (product.properties[ 0 ].quantity <= 0) return product;
+          product.properties[ 0 ].quantity -= 1;
+        }
+      }
       return product;
     });
     this.subTotal = this.shoppingCart.products.reduce(
       (total: number, product: any) =>
-        (total += product.quantity * product.price),
+        (total += product.properties[ 0 ].quantity * product.price),
       0
     );
     this.tax = this.subTotal * 0.21 + this.shipping * 0.21;
@@ -129,59 +129,59 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   incrementQuantity(event: { id: number, size: any }) {
-    // const { id, size } = event;
+    const { id, size } = event;
 
-    // this.shoppingCart.products = this.shoppingCart.products.map((product) => {
-    //   if (product.productId === id) {
-    //     if (product.type === 'composite') {
-    //       product.properties.forEach((property) => {
-    //         property.size.forEach((s) => {
-    //           if (s.size === size.size) {
-    //             s.quantity += 1;
-    //             product.quantity += 1;
-    //           }
-    //           return s;
-    //         });
-    //       });
-    //     } else if (product.type === 'simple') {
-    //       product.quantity += 1;
-    //     }
-    //   }
-    //   return product;
-    // });
-    // this.subTotal = this.shoppingCart.products.reduce(
-    //   (total: number, product: any) =>
-    //     (total += product.quantity * product.price),
-    //   0
-    // );
+    this.shoppingCart.products = this.shoppingCart.products.map((product) => {
+      if (product.productId === id) {
+        if (product.type === 'composite') {
+          product.properties.forEach((property) => {
+            property?.size?.forEach((s) => {
+              if (s.size === size.size) {
+                s.quantity += 1;
+                product.properties[ 0 ].quantity += 1;
+              }
+              return s;
+            });
+          });
+        } else if (product.type === 'simple') {
+          product.properties[ 0 ].quantity += 1;
+        }
+      }
+      return product;
+    });
+    this.subTotal = this.shoppingCart.products.reduce(
+      (total: number, product: any) =>
+        (total += product.properties[0].quantity * product.price),
+      0
+    );
 
-    // this.tax = this.subTotal * 0.21 + this.shipping * 0.21;
-    // this.total = this.subTotal + this.tax + this.shipping;
+    this.tax = this.subTotal * 0.21 + this.shipping * 0.21;
+    this.total = this.subTotal + this.tax + this.shipping;
   }
 
   makePayment(shoppingCart: ShoppingCart): void {
-    //   const payload = JSON.parse(JSON.stringify(shoppingCart));
-    //   payload.products.forEach((product: Product) => {
-    //     if (product.type === 'composite') {
-    //       product.properties.forEach((property) => {
-    //         property.size = property.size.filter(s => s.quantity > 0);
-    //       });
-    //       if (product.properties.every(property => property.size.length === 0)) {
-    //         payload.products = payload.products.filter((p: Product) => p.productId !== product.productId);
-    //       }
-    //     } else if (product.type === 'simple') {
-    //       if (product.quantity <= 0) {
-    //         payload.products = payload.products.filter((p: Product) => p.productId !== product.productId);
-    //       }
-    //     }
-    //   });
-    //   console.log('payload', payload);
-    //   this.usersService.putShoppingCart(this.shoppingCart.id, payload).subscribe((cart) => {
-    //     console.log('cart', cart);
-    //     this.usersService.shoppingCart$.next(cart);
+    const payload = JSON.parse(JSON.stringify(shoppingCart));
+    payload.products.forEach((product: Product) => {
+      if (product.type === 'composite') {
+        product.properties.forEach((property) => {
+          property.size = property?.size?.filter(s => s.quantity > 0);
+        });
+        if (product.properties.every(property => property?.size?.length === 0)) {
+          payload.products = payload.products.filter((p: Product) => p.productId !== product.productId);
+        }
+      } else if (product.type === 'simple') {
+        if (product.properties[ 0 ].quantity <= 0) {
+          payload.products = payload.products.filter((p: Product) => p.productId !== product.productId);
+        }
+      }
+    });
+    console.log('payload', payload);
+    this.usersService.putShoppingCart(this.shoppingCart.id, payload).subscribe((cart) => {
+      console.log('cart', cart);
+      this.usersService.shoppingCart$.next(cart);
 
-    //     this.router.navigate([ '/checkout', this.shoppingCart.id ]);
-    //   })
+      this.router.navigate([ '/checkout', this.shoppingCart.id ]);
+    })
 
   }
 }

@@ -89,44 +89,56 @@ export class CheckoutComponent implements OnInit {
   }
 
   calculateTotal(): void {
-    // this.subtotal = this.shoppingCart.products.reduce((acc, product) => {
-    //   return acc + product.price * product.quantity;
-    // }, 0);
-    // this.shipping = 10;
-    // this.tax = this.subtotal * 0.21;
-    // this.total = this.subtotal + this.shipping + this.tax;
+    this.subtotal = this.shoppingCart.products.reduce((acc, product) => {
+      return acc + product.price * product.properties[ 0 ].quantity
+    }, 0);
+    this.shipping = 10;
+    this.tax = this.subtotal * 0.21;
+    this.total = this.subtotal + this.shipping + this.tax;
   }
 
   pay(): void {
-    // if (this.checkOutForm.valid) {
+    debugger
+    if (this.checkOutForm.valid) {
+      const sales: any = {
+        shoppingCart: this.shoppingCart,
+        userId: this.shoppingCart.userId
+      }
 
-    //   const paymentData: Sales = {
-    //     name: this.checkOutForm.value.name,
-    //     email: this.checkOutForm.value.email,
-    //     creditCardHoler: this.checkOutForm.value.creditCardHoler,
-    //     creditCardNumber: this.checkOutForm.value.creditCardNumber,
-    //     expirationDate: this.checkOutForm.value.expirationDate,
-    //     cvc: this.checkOutForm.value.cvc,
-    //     sales: [ { ...this.shoppingCart, userId: this.shoppingCart.userId ?? 0 } ]
-    //   }
-    //   this.usersService
-    //     .createSale(paymentData)
-    //     .subscribe(() => {
-    //       this.router.navigate([ '/' ]);
-    //       this.deleteShoppingCart(this.shoppingCart.id);
-    //     });
-    //   this.usersService.shoppingCart$.next({} as ShoppingCart);
-    // } else {
-    //   this.checkOutForm.markAllAsTouched();
-    //   this.checkOutForm.setErrors({ valid: false });
-    // }
+      const paymentData: Sales = {
+        name: this.checkOutForm.value.name,
+        email: this.checkOutForm.value.email,
+        creditCardHoler: this.checkOutForm.value.creditCardHoler,
+        creditCardNumber: this.checkOutForm.value.creditCardNumber,
+        expirationDate: this.checkOutForm.value.expirationDate,
+        cvc: this.checkOutForm.value.cvc,
+        sales: [
+          sales
+        ]
+      }
+      console.log("pay / paymentData:", paymentData);
+      this.usersService
+        .createSale(paymentData)
+        .subscribe(() => {
+          this.router.navigate([ '/' ]);
+          this.deleteShoppingCart(this.shoppingCart.id);
+        });
+      this.usersService.shoppingCart$.next({} as ShoppingCart);
+    } else {
+      this.checkOutForm.markAllAsTouched();
+      this.checkOutForm.setErrors({ valid: false });
+    }
 
   }
 
-  deleteShoppingCart(id: string): void {
-    this.usersService.deleteShoppingCart(id).subscribe(response => {
-      console.log(`se ha eliminado exitosamente el carrito${response.id}`, response);
-    })
+  deleteShoppingCart(id?: string): void {
+    if (id) {
+      this.usersService.deleteShoppingCart(id).subscribe(response => {
+        console.log(`se ha eliminado exitosamente el carrito${response.id}`, response);
+      });
+    } else {
+      console.error('No se pudo eliminar el carrito: id no proporcionado');
+    }
   }
 
   formatCreditCardNumber(event: any): void {

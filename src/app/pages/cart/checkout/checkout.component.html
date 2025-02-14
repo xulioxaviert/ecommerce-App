@@ -17,12 +17,12 @@
           <div class="flex items-center gap-4">
             <p class="text-lg font-bold">
               Quantity:
-              <!-- <span class="text-gray-400">{{ product.quantity }}</span> -->
+              <span class="text-gray-400">{{ product.properties[0].quantity }}</span>
             </p>
           </div>
 
           <p class="text-lg font-bold">
-            <!-- $ {{ product.quantity * product.price }} -->
+            $ {{ product.properties[0].quantity * product.price }}
           </p>
         </div>
       </div>

@@ -1,32 +1,4 @@
 <div class="container__dashboard">
-  <!--MenuBar-->
-  <div class="container__dashboard-header">
-    <p-menubar [model]="items" />
-    <div class="flex items-center justify-end gap-2 mx-4">
-      <app-translation-dropdown></app-translation-dropdown>
-
-      <div
-        class="col-12 md:col-4 flex flex-col justify-center text-center container__avatar"
-      >
-        <div class="card flex justify-content-center">
-          <p-avatar
-            [icon]="!isAuthenticated ? 'pi pi-user' : ''"
-            [style]="{
-              'background-color': !isAuthenticated ? 'red' : 'green',
-              color: 'white',
-              cursor: 'pointer'
-            }"
-            size="large"
-            [label]="isAuthenticated ? initialsName : ''"
-            (click)="toggleAuthentication()"
-            [title]="title"
-            shape="circle"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="container__dashboard-container__card firstCardsContainer">
     <div>
       <h3 class="text-base font-semibold text-gray-900">Last 30 days</h3>

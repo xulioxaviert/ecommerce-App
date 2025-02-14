@@ -1,5 +1,5 @@
 import { CommonModule, NgClass, NgIf } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { InputTextModule } from 'primeng/inputtext';
@@ -9,10 +9,14 @@ import { RippleModule } from 'primeng/ripple';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { MenuItem } from 'primeng/api';
-import { Observable } from 'rxjs';
+import { ConfirmationService, MenuItem } from 'primeng/api';
+// Removed duplicate and incorrect import
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
 import { TranslationDropdownComponent } from '../../../shared/translation-dropdown/translation-dropdown.component';
+import { UsersService } from '../../../users/users.service';
+import { ShoppingCart } from '../../models/cart.model';
 import { Users } from '../../models/user.model';
 
 @Component({
@@ -31,152 +35,153 @@ import { Users } from '../../models/user.model';
     RouterModule,
     NgClass,
     NgIf,
+    ConfirmPopupModule,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   categories = signal<string[]>([]);
   isAuthenticated: boolean = false;
-  isAuthenticated$: Observable<boolean> = new Observable<boolean>();
 
   items: MenuItem[] | undefined;
 
   formGroup!: FormGroup;
   user: Users | undefined;
   initialsName: string = '';
-  title: string = '';
-  isVisible: boolean = true;
+  title = 'HEADER.LOGIN';
+  isVisible: boolean = false;
+  subscription = new Subscription();
+  productsShoppingCart: number = 0;
+  favoriteProducts: number = 0;
+  cart: ShoppingCart | undefined;
+
 
   constructor(
     private translateService: TranslateService,
     private router: Router,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private confirmationService: ConfirmationService,
+    private userService: UsersService
+  ) { }
 
   ngOnInit() {
+    this.updateItemLanguage();
     this.checkAuthenticated();
-    this.translateService.onLangChange.subscribe((event) => {
-      this.updateItemLanguage();
-    });
+    this.getSubscriptions();
   }
 
   checkAuthenticated() {
-    if (this.authService.isAuthenticated()) {
-      this.isAuthenticated = true;
-      this.user = this.authService.getSessionStorage('user');
-      if (this.user) {
-        switch (this.user.role) {
-          case 'admin':
-            this.isVisible = true;
-            break;
-          case 'costumer':
-            this.isVisible = false;
-            break;
-        }
-      }
-      this.initialsName =
-        (this.user?.name?.firstname.toUpperCase().toString().charAt(0) || '') +
-        (this.user?.name?.lastname.toUpperCase().toString().charAt(0) || '');
-      this.title = this.translateService.instant('HEADER.LOGOUT');
-    } else {
-      this.title = this.translateService.instant('HEADER.LOGIN');
-      this.isAuthenticated = false;
-      this.isVisible = false;
-    }
+    const cartLocalStorage = this.authService.getLocalStorage('shoppingCart') || undefined;
+    if (cartLocalStorage) { this.userService.shoppingCart$.next(cartLocalStorage) }
+    if (!this.authService.isAuthenticated()) return;
+
+    this.user = this.authService.getSessionStorage('user');
+    const { firstname, lastname } = this.user?.name || {
+      firstname: '',
+      lastname: '',
+    };
+
+    this.initialsName =
+      (firstname[ 0 ].toUpperCase() || '') + (lastname[ 0 ].toUpperCase() || '');
+
+    this.isAuthenticated = true;
+    this.isVisible = this.user?.role === 'admin' ? true : false;
+    this.title = 'HEADER.LOGOUT';
+
+
     this.updateItemLanguage();
+    this.getData();
+
+  }
+
+  getSubscriptions() {
+    this.subscription.add(
+      this.authService.isAuthenticated$.subscribe((response) => {
+        this.checkAuthenticated();
+      })
+    );
+
+    this.subscription.add(
+      this.userService.shoppingCart$.subscribe((cart: any) => {
+        console.log('getSubscriptions', cart);
+        if (cart) {
+          this.productsShoppingCart = cart.products?.length || 0;
+          this.cart = cart;
+        }
+      })
+    );
   }
 
   updateItemLanguage() {
-    if (this.isAuthenticated) {
-      this.title = this.translateService.instant('HEADER.LOGOUT');
-    } else {
-      this.title = this.translateService.instant('HEADER.LOGIN');
-    }
-    // if (this.user?.role === 'admin') {
-    //   this.isVisible = true;
-    // } else {
-    //   this.isVisible = false;
-    // }
 
     this.items = [
       {
-        label: this.translateService.instant('HEADER.HOME'),
+        //TODO revisar traducciones
+        //TODO Revisar el ícono para la función click
+        //TODO Tooltip para el title del ícono
+        label: 'HEADER.HOME',
         icon: 'pi pi-home',
         visible: true,
-        // route: '/',
-        command: () => {
-          this.router.navigate(['/']);
-        }
+        route: '/',
       },
       {
-        label: this.translateService.instant('HEADER.WOMEN'),
+        label: 'HEADER.NEW_ARRIVALS',
         icon: 'pi pi-shop',
         visible: true,
-         route: '/categories/women',
-         //Quiero una ruta que me lleve al apartado de testimonio
-
-        // command: () => {
-        //   this.router.navigate(['/categories/women']);
-        // }
+        route: '/categories/feature',
       },
       {
-        label: this.translateService.instant('HEADER.MEN'),
+        label: 'HEADER.FEATURED',
         icon: 'pi pi-shop',
         visible: true,
-        command: () => {
-          const element = document.getElementById('heroCategories')
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-          }
-        }
-
+        route: '/category/featured',
       },
       {
-        label: this.translateService.instant('HEADER.CATEGORY'),
+        label: 'HEADER.OUTLET',
+        icon: 'pi pi-shop',
+        visible: true,
+        route: '/categories/outlet',
+      },
+      {
+        label: 'HEADER.CATEGORY',
         icon: 'pi pi-shopping-bag',
         visible: true,
         route: '/categories',
         items: [
           {
-            label: this.translateService.instant('HEADER.ELECTRONICS'),
-            icon: 'pi pi-bolt',
-            visible: true,
-            route: '/categories/electronics',
-
-          },
-          {
-            label: this.translateService.instant('HEADER.JEWELRY'),
-            icon: 'pi pi-server',
-            visible: true,
-            route: '/categories/jewelry',
-          },
-          {
-            label: this.translateService.instant('HEADER.MEN_CLOTHING'),
+            label: 'HEADER.MEN_CLOTHING',
             icon: 'pi pi-pencil',
             visible: true,
-            route: '/categories/mens',
+            route: '/categories/men',
           },
           {
-            label: this.translateService.instant('HEADER.WOMEN_CLOTHING'),
+            label: 'HEADER.WOMEN_CLOTHING',
             icon: 'pi pi-palette',
             visible: true,
             route: '/categories/women',
           },
+          {
+            label: 'HEADER.ELECTRONICS',
+            icon: 'pi pi-bolt',
+            visible: true,
+            route: '/categories/electronics',
+          },
+          {
+            label: 'HEADER.JEWELRY',
+            icon: 'pi pi-server',
+            visible: true,
+            route: '/categories/jewelry',
+          },
         ],
       },
       {
-        label: this.translateService.instant('HEADER.PRODUCTS'),
+        label: 'HEADER.FAVORITES',
         icon: 'pi pi-shop',
         visible: true,
       },
       {
-        label: this.translateService.instant('HEADER.CONTACT'),
-        icon: 'pi pi-envelope',
-        visible: true,
-      },
-      {
-        label: this.translateService.instant('HEADER.DASHBOARD'),
+        label: 'HEADER.DASHBOARD',
         icon: 'pi pi-shop',
         visible: this.isVisible,
         route: '/dashboard',
@@ -184,15 +189,73 @@ export class HeaderComponent implements OnInit {
     ];
   }
 
-  toggleAuthentication() {
-    if (this.isAuthenticated === false) {
-      this.router.navigate(['/auth/login']);
+  toggleAuthentication(event: Event) {
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate([ '/auth/login' ]);
     } else {
-      this.authService.logout();
-      this.isAuthenticated = false;
-      this.title = this.translateService.instant('HEADER.LOGIN');
-      this.isVisible = false;
-      this.updateItemLanguage();
+      this.confirmationService.confirm({
+        target: event.target as EventTarget,
+        message: this.translateService.instant('LOGIN.ARE_YOU_SURE_YOU_WANT_TO_LOG_OUT'),
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          this.initialsName = '';
+          this.isVisible = false;
+          this.isAuthenticated = false;
+          this.productsShoppingCart = 0;
+          this.favoriteProducts = 0;
+          this.title = 'HEADER.LOGIN';
+          if (this.router.url === '/dashboard') {
+            this.router.navigate([ '/' ]);
+          } else if (this.router.url.includes('/carts/')) {
+            this.router.navigate([ '/' ]);
+          }
+          else if (this.router.url.includes('/checkout/')) {
+            this.router.navigate([ '/' ]);
+          }
+          this.updateItemLanguage();
+          this.authService.logout();
+        },
+        reject: () => { },
+      });
     }
+  }
+
+  navigateToShoppingCart() {
+    //TODO revisar flujo del carrito de compras y guardar en local storage cuando no está logeado
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate([ `/carts/${this.cart?.id}` ]);
+    } else {
+      this.router.navigate([ '/carts/0' ]);
+    }
+  }
+
+  getData() {
+    const userId = this.user?.userId;
+    if (userId) {
+      this.userService.getShoppingCartByUserId(userId).subscribe((cart: any) => {
+        console.log('getData / cart:', cart);
+        if (cart.length > 0) {
+          this.productsShoppingCart = cart[ 0 ].products?.length || 0;
+          this.cart = cart[ 0 ];
+        }
+      });
+      this.userService
+        .getFavoriteProductById(userId)
+        .subscribe((favorites: any) => {
+          console.log(
+            'this.userService.getFavoriteProductById / favorites:',
+            favorites
+          );
+          this.favoriteProducts = favorites[ 0 ]?.products?.length || 0;
+        });
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+    this.userService.shoppingCart$.unsubscribe()
+    this.userService.favoriteProducts$.unsubscribe()
+
+
   }
 }

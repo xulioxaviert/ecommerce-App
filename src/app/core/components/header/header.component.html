@@ -6,17 +6,29 @@
       </div>
     </ng-template>
     <ng-template pTemplate="item" let-item let-root="root">
-      <ng-container >
-            <a [routerLink]="item.route" class="p-menuitem-link">
-                <span [class]="item.icon"></span>
-                <span class="ml-2">{{ item.label }}</span>
-            </a>
-        </ng-container>
+      <ng-container>
+        <a [routerLink]="item.route" class="p-menuitem-link">
+          <span [class]="item.icon"></span>
+          <span class="ml-2">{{ item.label | translate }}</span>
+        </a>
+      </ng-container>
     </ng-template>
     <ng-template pTemplate="end">
       <div class="flex items-center justify-end gap-2 mx-4">
         <app-translation-dropdown></app-translation-dropdown>
+        
+        <i
+          class="pi pi-shopping-cart text-2xl mx-2 iconShoppingCart"
+          (click)="navigateToShoppingCart()"
+          pBadge
+          value="{{ productsShoppingCart }}"
+        ></i>
+        <i
+          class="pi pi-heart text-2xl mx-2 iconShoppingCart"
 
+          pBadge
+          value="{{ favoriteProducts }}"
+        ></i>
         <div
           class="col-12 md:col-4 flex flex-col justify-center text-center container__avatar"
         >
@@ -29,11 +41,12 @@
                 cursor: 'pointer'
               }"
               size="large"
-              [label]="isAuthenticated ? initialsName : ''"
-              (click)="toggleAuthentication()"
-              title='{{"REGISTER.LOGIN" | translate }}'
+              [label]="initialsName"
+              (click)="toggleAuthentication($event)"
+              [title]="title | translate"
               shape="circle"
             />
+            <p-confirmPopup></p-confirmPopup>
           </div>
         </div>
       </div>

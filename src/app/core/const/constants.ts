@@ -1,13 +1,16 @@
 
 export const ENDPOINTS = {
   login: 'https://fakestoreapi.com/auth/login',
-  getAllUsers: 'https://fakestoreapi.com/users',
+  getAllUsers: 'http://localhost:3000/users',
   getUser: 'https://fakestoreapi.com/users/',
-  getAllCategories: 'https://fakestoreapi.com/products/categories',
-  getAllProducts: 'https://fakestoreapi.com/products',
+  getAllCategories: 'http://localhost:3000/categories',
+  getAllProducts: 'http://localhost:3000/products',
+  getAllShoppingCarts: 'http://localhost:3000/carts',
+  getAllSales: 'http://localhost:3000/sales',
+  getAllFavoriteProducts: 'http://localhost:3000/favorites',
   getAllPlatziProducts: 'https://api.escuelajs.co/api/v1/products',
   getAllPlatziCategories: 'https://api.escuelajs.co/api/v1/categories',
-  getUsersRandom: 'https://randomuser.me/api/?results=8',
+  getUsersRandom: 'http://localhost:3000/team',
   getTestimonialsMock: '/core/mocks/mock-data.ts',
 };
 

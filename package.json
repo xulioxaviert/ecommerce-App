@@ -20,9 +20,11 @@
     "@angular/router": "^17.3.0",
     "@ngx-translate/core": "^16.0.3",
     "@ngx-translate/http-loader": "^16.0.0",
+    "chart.js": "^4.4.7",
     "primeicons": "^7.0.0",
     "primeng": "^17.18.11",
     "rxjs": "~7.8.0",
+    "tailwindcss-primeui": "^0.4.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
   },

@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
 import { TranslationDropdownComponent } from '../../../shared/translation-dropdown/translation-dropdown.component';
 import { UsersService } from '../../../users/users.service';
-import { ShoppingCart } from '../../models/cart.model';
+import { Product, ShoppingCart } from '../../models/cart.model';
 import { Users } from '../../models/user.model';
 
 @Component({
@@ -56,14 +56,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   favoriteProducts: number = 0;
   cart: ShoppingCart | undefined;
 
-
   constructor(
     private translateService: TranslateService,
     private router: Router,
     private authService: AuthService,
     private confirmationService: ConfirmationService,
     private userService: UsersService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.updateItemLanguage();
@@ -72,8 +71,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   checkAuthenticated() {
-    const cartLocalStorage = this.authService.getLocalStorage('shoppingCart') || undefined;
-    if (cartLocalStorage) { this.userService.shoppingCart$.next(cartLocalStorage) }
+    const cartLocalStorage =
+      this.authService.getLocalStorage('shoppingCart') || undefined;
+    if (cartLocalStorage) {
+      this.userService.shoppingCart$.next(cartLocalStorage);
+    }
     if (!this.authService.isAuthenticated()) return;
 
     this.user = this.authService.getSessionStorage('user');
@@ -83,16 +85,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     };
 
     this.initialsName =
-      (firstname[ 0 ].toUpperCase() || '') + (lastname[ 0 ].toUpperCase() || '');
+      (firstname[0].toUpperCase() || '') + (lastname[0].toUpperCase() || '');
 
     this.isAuthenticated = true;
     this.isVisible = this.user?.role === 'admin' ? true : false;
     this.title = 'HEADER.LOGOUT';
 
-
     this.updateItemLanguage();
     this.getData();
-
   }
 
   getSubscriptions() {
@@ -114,7 +114,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   updateItemLanguage() {
-
     this.items = [
       {
         //TODO revisar traducciones
@@ -191,11 +190,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   toggleAuthentication(event: Event) {
     if (!this.authService.isAuthenticated()) {
-      this.router.navigate([ '/auth/login' ]);
+      this.router.navigate(['/auth/login']);
     } else {
       this.confirmationService.confirm({
         target: event.target as EventTarget,
-        message: this.translateService.instant('LOGIN.ARE_YOU_SURE_YOU_WANT_TO_LOG_OUT'),
+        message: this.translateService.instant(
+          'LOGIN.ARE_YOU_SURE_YOU_WANT_TO_LOG_OUT'
+        ),
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
           this.initialsName = '';
@@ -205,17 +206,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.favoriteProducts = 0;
           this.title = 'HEADER.LOGIN';
           if (this.router.url === '/dashboard') {
-            this.router.navigate([ '/' ]);
+            this.router.navigate(['/']);
           } else if (this.router.url.includes('/carts/')) {
-            this.router.navigate([ '/' ]);
-          }
-          else if (this.router.url.includes('/checkout/')) {
-            this.router.navigate([ '/' ]);
+            this.router.navigate(['/']);
+          } else if (this.router.url.includes('/checkout/')) {
+            this.router.navigate(['/']);
           }
           this.updateItemLanguage();
           this.authService.logout();
         },
-        reject: () => { },
+        reject: () => {},
       });
     }
   }
@@ -223,22 +223,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
   navigateToShoppingCart() {
     //TODO revisar flujo del carrito de compras y guardar en local storage cuando no está logeado
     if (this.authService.isAuthenticated()) {
-      this.router.navigate([ `/carts/${this.cart?.id}` ]);
+      this.router.navigate([`/carts/${this.cart?.id}`]);
     } else {
-      this.router.navigate([ '/carts/0' ]);
+      this.router.navigate(['/carts/0']);
     }
   }
 
   getData() {
     const userId = this.user?.userId;
     if (userId) {
-      this.userService.getShoppingCartByUserId(userId).subscribe((cart: any) => {
-        console.log('getData / cart:', cart);
-        if (cart.length > 0) {
-          this.productsShoppingCart = cart[ 0 ].products?.length || 0;
-          this.cart = cart[ 0 ];
-        }
-      });
+      this.userService
+        .getShoppingCartByUserId(userId)
+        .subscribe((cart: any) => {
+          console.log('getData / cart:', cart);
+          if (cart.length > 0) {
+            this.productsShoppingCart = cart[0].products?.length || 0;
+            this.cart = cart[0];
+          }
+        });
       this.userService
         .getFavoriteProductById(userId)
         .subscribe((favorites: any) => {
@@ -246,16 +248,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
             'this.userService.getFavoriteProductById / favorites:',
             favorites
           );
-          this.favoriteProducts = favorites[ 0 ]?.products?.length || 0;
+          this.favoriteProducts = favorites[0]?.products?.length || 0;
         });
     }
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-    this.userService.shoppingCart$.unsubscribe()
-    this.userService.favoriteProducts$.unsubscribe()
-
-
+    this.userService.shoppingCart$.unsubscribe();
+    this.userService.favoriteProducts$.unsubscribe();
+    this.userService.selectedProduct.set({} as Product);
   }
 }

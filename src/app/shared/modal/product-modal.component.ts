@@ -8,6 +8,7 @@ import { AuthService } from '../../auth/auth.service';
 import { Product, ShoppingCart } from '../../core/models/cart.model';
 import { Users } from '../../core/models/user.model';
 import { UsersService } from '../../users/users.service';
+import { ShoppingCartService } from './../../core/services/shopping-cart.service';
 import { ModalService } from './product-modal-service.service';
 
 @Component({
@@ -37,7 +38,8 @@ export class ProductModal implements OnInit, OnDestroy {
     private modalService: ModalService,
     private authService: AuthService,
     private usersService: UsersService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private shoppingCartService: ShoppingCartService
 
   ) { }
 
@@ -67,7 +69,9 @@ export class ProductModal implements OnInit, OnDestroy {
   }
   addProductToNewCart() {
     this.usersService.selectedProduct.set(this.currentProduct);
-    this.checkUserCartStatus();
+    //this.checkUserCartStatus();
+    this.shoppingCartService.checkUserCartStatus()
+    this.visible = false;
   }
 
   decrementQuantity(currentProduct: Product, size?: any): void {

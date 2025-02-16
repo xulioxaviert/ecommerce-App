@@ -151,7 +151,7 @@ export class CartComponent implements OnInit, OnDestroy {
     });
     this.subTotal = this.shoppingCart.products.reduce(
       (total: number, product: any) =>
-        (total += product.properties[0].quantity * product.price),
+        (total += product.properties[ 0 ].quantity * product.price),
       0
     );
 
@@ -176,12 +176,20 @@ export class CartComponent implements OnInit, OnDestroy {
       }
     });
     console.log('payload', payload);
-    this.usersService.putShoppingCart(this.shoppingCart.id, payload).subscribe((cart) => {
-      console.log('cart', cart);
-      this.usersService.shoppingCart$.next(cart);
+    if (this.authService.isAuthenticated()) {
+      this.usersService.putShoppingCart(this.shoppingCart.id, payload).subscribe((cart) => {
+        console.log('cart', cart);
+        this.usersService.shoppingCart$.next(cart);
 
-      this.router.navigate([ '/checkout', this.shoppingCart.id ]);
-    })
+        this.router.navigate([ '/checkout', this.shoppingCart.id ]);
+      })
+    } else {
+      this.usersService.createShoppingCart(payload).subscribe((cart) => {
+        console.log('cart', cart);
+        this.usersService.shoppingCart$.next(cart);
+        this.router.navigate([ `/checkout/${cart.id}` ]);
+      })
 
+    }
   }
 }

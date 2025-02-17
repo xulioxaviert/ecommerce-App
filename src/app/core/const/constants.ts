@@ -11,6 +11,7 @@ export const ENDPOINTS = {
   getAllPlatziProducts: 'https://api.escuelajs.co/api/v1/products',
   getAllPlatziCategories: 'https://api.escuelajs.co/api/v1/categories',
   getUsersRandom: 'http://localhost:3000/team',
+  getStockAllProducts: 'http://localhost:3000/stock',
   getTestimonialsMock: '/core/mocks/mock-data.ts',
 };
 

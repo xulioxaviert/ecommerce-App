@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { Subscription, tap } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
-import { Product, ShoppingCart } from '../../core/models/cart.model';
+import { Product, ShoppingCart, Stock } from '../../core/models/cart.model';
 import { Users } from '../../core/models/user.model';
 import { UsersService } from '../../users/users.service';
 import { ShoppingCartService } from './../../core/services/shopping-cart.service';
@@ -33,6 +33,7 @@ export class ProductModal implements OnInit, OnDestroy {
   };
   subscription: Subscription;
   cart: any;
+  stock: Stock = {} as Stock;
 
   constructor(
     private modalService: ModalService,
@@ -53,11 +54,22 @@ export class ProductModal implements OnInit, OnDestroy {
 
   getData() {
     this.modalService.openModal$.subscribe((product) => {
-      if (product && product.properties && product.properties.length > 0) {
-        this.currentProduct = product;
-        this.visible = true;
-      }
+      this.usersService.getStockAllProducts().subscribe((stock) => {
+        this.stock = stock[ 0 ];
+        if (product?.properties?.length > 0) {
+          product.properties.forEach(property => {
+            property.size = property?.size?.filter(size => {
+              const stock = this.stock.stock.find(item => item.size === size.size && item.quantity > 0);
+              return stock && stock.quantity > 0;
+            });
+          });
+          this.currentProduct = product;
+          this.visible = true;
+        }
+      })
     });
+
+
   }
 
   getSubscriptions() {

@@ -43,9 +43,7 @@ import { Users } from '../../models/user.model';
 export class HeaderComponent implements OnInit, OnDestroy {
   categories = signal<string[]>([]);
   isAuthenticated: boolean = false;
-
   items: MenuItem[] | undefined;
-
   formGroup!: FormGroup;
   user: Users | undefined;
   initialsName: string = '';
@@ -62,7 +60,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private confirmationService: ConfirmationService,
     private userService: UsersService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.updateItemLanguage();
@@ -85,7 +83,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     };
 
     this.initialsName =
-      (firstname[0].toUpperCase() || '') + (lastname[0].toUpperCase() || '');
+      (firstname[ 0 ].toUpperCase() || '') + (lastname[ 0 ].toUpperCase() || '');
 
     this.isAuthenticated = true;
     this.isVisible = this.user?.role === 'admin' ? true : false;
@@ -116,9 +114,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   updateItemLanguage() {
     this.items = [
       {
-        //TODO revisar traducciones
-        //TODO Revisar el ícono para la función click
-        //TODO Tooltip para el title del ícono
         label: 'HEADER.HOME',
         icon: 'pi pi-home',
         visible: true,
@@ -190,7 +185,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   toggleAuthentication(event: Event) {
     if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/auth/login']);
+      this.router.navigate([ '/auth/login' ]);
     } else {
       this.confirmationService.confirm({
         target: event.target as EventTarget,
@@ -206,26 +201,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.favoriteProducts = 0;
           this.title = 'HEADER.LOGIN';
           if (this.router.url === '/dashboard') {
-            this.router.navigate(['/']);
+            this.router.navigate([ '/' ]);
           } else if (this.router.url.includes('/carts/')) {
-            this.router.navigate(['/']);
+            this.router.navigate([ '/' ]);
           } else if (this.router.url.includes('/checkout/')) {
-            this.router.navigate(['/']);
+            this.router.navigate([ '/' ]);
           }
           this.updateItemLanguage();
           this.authService.logout();
         },
-        reject: () => {},
+        reject: () => { },
       });
     }
   }
 
   navigateToShoppingCart() {
-    //TODO revisar flujo del carrito de compras y guardar en local storage cuando no está logeado
     if (this.authService.isAuthenticated()) {
-      this.router.navigate([`/carts/${this.cart?.id}`]);
+      this.router.navigate([ `/carts/${this.cart?.id}` ]);
     } else {
-      this.router.navigate(['/carts/0']);
+      this.router.navigate([ '/carts/0' ]);
     }
   }
 
@@ -237,8 +231,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
         .subscribe((cart: any) => {
           console.log('getData / cart:', cart);
           if (cart.length > 0) {
-            this.productsShoppingCart = cart[0].products?.length || 0;
-            this.cart = cart[0];
+            this.productsShoppingCart = cart[ 0 ].products?.length || 0;
+            this.cart = cart[ 0 ];
           }
         });
       this.userService
@@ -248,7 +242,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
             'this.userService.getFavoriteProductById / favorites:',
             favorites
           );
-          this.favoriteProducts = favorites[0]?.products?.length || 0;
+          this.favoriteProducts = favorites[ 0 ]?.products?.length || 0;
         });
     }
   }

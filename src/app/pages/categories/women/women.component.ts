@@ -1,9 +1,8 @@
 import { CommonModule, NgForOf, NgIf } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ConfirmationService } from 'primeng/api';
-import { Subscription } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
 import { ENDPOINTS } from '../../../core/const/constants';
 import { Product, ShoppingCart } from '../../../core/models/cart.model';
@@ -22,11 +21,10 @@ import { UsersService } from '../../../users/users.service';
   styleUrl: './women.component.scss',
   providers: [],
 })
-export class WomenComponent implements OnInit, OnDestroy {
+export class WomenComponent implements OnInit {
   products: Product[] = [];
   currentProduct: Product = {} as Product;
   visible: boolean = false;
-  subscription: Subscription = new Subscription();
   user: Users = {} as Users;
   shoppingCart: ShoppingCart = {} as ShoppingCart;
 
@@ -42,11 +40,8 @@ export class WomenComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getData();
-    this.getSubscriptions();
   }
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
+
 
   getData() {
     this.http.getData(ENDPOINTS.getAllProducts).subscribe((products) => {
@@ -55,18 +50,6 @@ export class WomenComponent implements OnInit, OnDestroy {
         .forEach((product: Product) => this.products.push(product));
     });
 
-  }
-
-
-  getSubscriptions() {
-    this.subscription.add(
-      this.authService.isAuthenticated$.subscribe((isAuthenticated) => {
-
-      })
-    );
-    this.subscription.add(
-
-    );
   }
 
   navigateToProductDetail(product: Product) {

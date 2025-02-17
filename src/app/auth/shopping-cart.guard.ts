@@ -32,7 +32,7 @@ export class ShoppingCartGuard {
         );
     } else {
       const shoppingCart = this.authService.getLocalStorage('shoppingCart');
-      if (shoppingCart.userId === null) {
+      if (shoppingCart) {
 
         return true;
       } else {

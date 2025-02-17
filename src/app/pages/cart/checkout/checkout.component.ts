@@ -40,11 +40,13 @@ export class CheckoutComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.getIdFromUrl()
     this.getData();
     this.initForm();
   }
 
   getData(): void {
+
     this.usersService
       .getShoppingCartById(this.getIdFromUrl())
       .subscribe((shoppingCart: ShoppingCart) => {
@@ -52,16 +54,19 @@ export class CheckoutComponent implements OnInit {
         this.calculateTotal();
       });
     this.user = this.authService.getSessionStorage('user');
+
   }
   getIdFromUrl(): string {
     const url = this.router.url;
     const cartId = url.split('/');
-    return cartId[ cartId.length - 1 ];
+    const id = cartId[ cartId.length - 1 ];
+    return id;
+
   }
 
   initForm(): void {
     this.checkOutForm = this.fb.group({
-      name: [ this.user, [ Validators.required, Validators.minLength(3) ] ],
+      name: [ '', [ Validators.required, Validators.minLength(3) ] ],
       email: [
         '',
         [ Validators.required, Validators.minLength(3), Validators.email ],
@@ -75,17 +80,19 @@ export class CheckoutComponent implements OnInit {
   }
 
   loadData(): void {
-    this.checkOutForm.patchValue({
-      name:
-        this.user.name.firstname.toUpperCase() +
-        ' ' +
-        this.user.name.lastname.toUpperCase(),
-      email: this.user.email,
-      creditCardHoler:
-        this.user.name.firstname.toUpperCase() +
-        ' ' +
-        this.user.name.lastname.toUpperCase(),
-    });
+    if (this.authService.isAuthenticated()) {
+      this.checkOutForm.patchValue({
+        name:
+          this.user.name.firstname.toUpperCase() +
+          ' ' +
+          this.user.name.lastname.toUpperCase(),
+        email: this.user.email,
+        creditCardHoler:
+          this.user.name.firstname.toUpperCase() +
+          ' ' +
+          this.user.name.lastname.toUpperCase(),
+      });
+    }
   }
 
   calculateTotal(): void {
@@ -98,7 +105,6 @@ export class CheckoutComponent implements OnInit {
   }
 
   pay(): void {
-    debugger
     if (this.checkOutForm.valid) {
       const sales: any = {
         shoppingCart: this.shoppingCart,
@@ -122,6 +128,10 @@ export class CheckoutComponent implements OnInit {
         .subscribe(() => {
           this.router.navigate([ '/' ]);
           this.deleteShoppingCart(this.shoppingCart.id);
+          if (!this.authService.isAuthenticated()) {
+            this.authService.removeLocalStorage('shoppingCart');
+            this.usersService.shoppingCart$.next({} as ShoppingCart);
+          }
         });
       this.usersService.shoppingCart$.next({} as ShoppingCart);
     } else {

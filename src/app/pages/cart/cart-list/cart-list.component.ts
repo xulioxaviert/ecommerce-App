@@ -1,10 +1,10 @@
-import { UpperCasePipe } from '@angular/common';
+import { NgFor, NgIf, UpperCasePipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ShoppingCart } from '../../../core/models/cart.model';
 
 @Component({
   selector: 'app-cart-list',
-  imports: [ UpperCasePipe ],
+  imports: [ UpperCasePipe, NgIf, NgFor ],
   standalone: true,
   templateUrl: './cart-list.component.html',
   styleUrl: './cart-list.component.scss'

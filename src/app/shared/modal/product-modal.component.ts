@@ -25,7 +25,6 @@ export class ProductModal implements OnInit, OnDestroy {
   totalProduct: number = 0;
   user: Users;
   shoppingCart: ShoppingCart = {
-
     userId: null,
     date: new Date(),
     products: [],
@@ -33,7 +32,7 @@ export class ProductModal implements OnInit, OnDestroy {
   };
   subscription: Subscription;
   cart: any;
-  stock: Stock = {} as Stock;
+  stock: Stock[] = [];
 
   constructor(
     private modalService: ModalService,
@@ -41,7 +40,6 @@ export class ProductModal implements OnInit, OnDestroy {
     private usersService: UsersService,
     private confirmationService: ConfirmationService,
     private shoppingCartService: ShoppingCartService
-
   ) { }
 
   ngOnInit(): void {
@@ -55,22 +53,23 @@ export class ProductModal implements OnInit, OnDestroy {
   getData() {
     this.modalService.openModal$.subscribe((product) => {
       this.usersService.getStockAllProducts().subscribe((stock) => {
-        this.stock = stock[ 0 ];
-        if (product?.properties?.length > 0) {
-          product.properties.forEach(property => {
-            property.size = property?.size?.filter(size => {
-              const stock = this.stock.stock.find(item => item.size === size.size && item.quantity > 0);
-              return stock && stock.quantity > 0;
-            });
-          });
-          this.currentProduct = product;
-          this.visible = true;
-        }
-      })
+        stock.forEach(productStock => {
+          if (productStock.id === product.id) {
+            console.log(productStock);
+
+            this.usersService.selectedProduct.set(this.currentProduct);
+
+          }
+
+        })
+      });
+
+
+      this.visible = true;
     });
+  };
 
 
-  }
 
   getSubscriptions() {
     this.subscription = this.modalService.openModal$.subscribe((product) => {
@@ -82,7 +81,7 @@ export class ProductModal implements OnInit, OnDestroy {
   addProductToNewCart() {
     this.usersService.selectedProduct.set(this.currentProduct);
     //this.checkUserCartStatus();
-    this.shoppingCartService.checkUserCartStatus()
+    this.shoppingCartService.checkUserCartStatus();
     this.visible = false;
   }
 
@@ -169,112 +168,5 @@ export class ProductModal implements OnInit, OnDestroy {
     }
   }
 
-  checkUserCartStatus(): number {
-    const isAuthenticated = this.authService.isAuthenticated();
-    const localCart = this.authService.getLocalStorage('shoppingCart');
-    let DBCart: any = [];
-    const cart: ShoppingCart = {
-
-      userId: null,
-      date: new Date(),
-      products: [],
-      cartId: 0,
-    };
-    const products = this.usersService.selectedProduct();
-    console.log('checkUserCartStatus / products:', products);
-
-    cart.products.push(products);
-
-    if (isAuthenticated) {
-      const user = this.authService.getSessionStorage('user');
-      this.usersService
-        .getShoppingCartByUserId(user.userId)
-        .pipe(tap((cart) => (this.cart = cart)))
-        .subscribe((shoppingCarts: ShoppingCart[]) => {
-          DBCart = shoppingCarts;
-
-          switch (true) {
-            case isAuthenticated && Object.keys(this.cart).length > 0:
-              console.log('✅ Usuario autenticado y tiene carrito en (BBDD).');
-              return 1;
-            case isAuthenticated && Object.keys(localCart).length > 0:
-              this.loggedUserHasCartLocalStorage(user)
-              console.log(
-                '⚠️ Usuario autenticado y tiene carrito en el LocalStorage.'
-              );
-              return 5;
-            case isAuthenticated && Object.keys(this.cart).length === 0:
-              console.log('⚠️ Usuario autenticado no tiene carrito (BBDD).');
-              return 2;
-            default:
-              console.log('Estado del carrito no identificado.');
-              return 0;
-          }
-        });
-    } else {
-      switch (true) {
-        case !isAuthenticated && Object.keys(localCart).length > 0:
-          console.log(
-            '⚠️ Usuario no autenticado y tiene carrito en el localStorage.'
-          );
-          this.updateLocalStoreCart();
-          return 3;
-        case !isAuthenticated &&
-          (!localCart || Object.keys(localCart).length === 0):
-          console.log(
-            '🚫 Usuario no autenticado y no tiene carrito en el localStorage.'
-          );
-          this.createLocalStoreCart(cart);
-          return 4;
-        default:
-          console.log('Estado del carrito no identificado.');
-          return 0;
-      }
-    }
-    return 0;
-  }
-
-  createLocalStoreCart(cart: ShoppingCart): void {
-    console.log('createLocalStoreCart / cart:', cart);
-    this.authService.setLocalStorage('shoppingCart', JSON.stringify(cart));
-    this.visible = false;
-    this.usersService.shoppingCart$.next(cart);
-  }
-  updateLocalStoreCart(): void {
-    const cart = this.authService.getLocalStorage('shoppingCart');
-    const products = this.usersService.selectedProduct();
-    cart.products.push(products);
-
-    cart.products = cart.products.filter(
-      (product: Product) => product.id !== products.id
-    );
-    cart.products.push(products);
-    this.authService.setLocalStorage('shoppingCart', JSON.stringify(cart));
-    this.usersService.shoppingCart$.next(cart);
-    this.visible = false;
-  }
-  loggedUserHasCartLocalStorage(user: Users) {
-
-    let cartLocalStorage = this.authService.getLocalStorage('shoppingCart');
-    cartLocalStorage.products.push(this.usersService.selectedProduct());
-
-    this.confirmationService.confirm({
-      target: document.body,
-      message: 'Do you want to save the products in the shopping cart?',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        cartLocalStorage = {
-          ...cartLocalStorage,
-          userId: user.userId,
-        }
-        this.authService.removeLocalStorage('shoppingCart')
-        this.usersService.createShoppingCart(cartLocalStorage).subscribe((cart) => {
-          this.usersService.shoppingCart$.next(cart);
-        });
-      },
-      reject: () => { },
-    });
-
-  }
-
+  
 }

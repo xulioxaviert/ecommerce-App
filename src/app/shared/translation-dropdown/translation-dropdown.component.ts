@@ -62,14 +62,7 @@ export class TranslationDropdownComponent implements OnInit {
     }
   }
   //TODO: Revisar con Mario
-  chooseLanguage() {
-    // this.languageForm.get('language')?.valueChanges.subscribe((value) => {
-    //   this.selectedLanguage = value;
-    //   this.translateService.use(value.code);
-    //   this.translateService.setDefaultLang(value.code);
-    //   localStorage.setItem('language', value.code);
-    // });
-  }
+  
 
   changeLanguage(event: DropdownChangeEvent) {
     this.selectedLanguage = event.value;

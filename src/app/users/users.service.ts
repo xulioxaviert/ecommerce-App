@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ENDPOINTS } from '../core/const/constants';
-import { Product, ShoppingCart } from '../core/models/cart.model';
+import { Product, ShoppingCart, Stock } from '../core/models/cart.model';
 import { Favorites } from '../core/models/favorites.model';
 import { Sales } from '../core/models/sales.model';
 import { Users } from '../core/models/user.model';
@@ -75,6 +75,10 @@ export class UsersService {
       ENDPOINTS.getAllShoppingCarts,
       data
     );
+  }
+
+  getStockAllProducts(): Observable<Stock[]> {
+    return this._httpClient.get<Stock[]>(ENDPOINTS.getStockAllProducts);
   }
 
 

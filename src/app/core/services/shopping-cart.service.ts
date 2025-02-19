@@ -54,8 +54,8 @@ export class ShoppingCartService {
                 '⚠️ Usuario autenticado y tiene carrito en el LocalStorage.'
               );
               break;
-            case DBCart &&  DBCart.length > 0:
-              this.updateDBCart(DBCart[0], user.userId);
+            case DBCart && DBCart.length > 0:
+              this.updateDBCart(DBCart[ 0 ], user.userId);
               console.log('✅ Usuario autenticado y tiene carrito en (BBDD).');
               break;
 
@@ -139,21 +139,28 @@ export class ShoppingCartService {
     this.usersService.shoppingCart$.next(cart);
   }
   loggedUserHasCartLocalStorage(user: Users) {
+
     let cartLocalStorage = this.authService.getLocalStorage('shoppingCart');
-    cartLocalStorage.products.push(this.usersService.selectedProduct());
+    const products = this.usersService.selectedProduct();
+    cartLocalStorage.products.push(products);
+
+    cartLocalStorage.products = cartLocalStorage.products.filter(
+      (product: Product) => product.id !== products.id
+    );
+    cartLocalStorage.products.push(products);
 
     this.confirmationService.confirm({
       target: document.body,
-      message: 'Do you want to save the products in the shopping cart?',
+      message: 'Do you have products in your cart, do you want to unify them?',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         cartLocalStorage = {
           ...cartLocalStorage,
           userId: user.userId,
         }
-        this.authService.removeLocalStorage('shoppingCart')
         this.usersService.createShoppingCart(cartLocalStorage).subscribe((cart) => {
           this.usersService.shoppingCart$.next(cart);
+          this.authService.removeLocalStorage('shoppingCart')
         });
       },
       reject: () => { },

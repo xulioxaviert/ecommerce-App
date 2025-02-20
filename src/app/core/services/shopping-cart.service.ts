@@ -174,6 +174,18 @@ export class ShoppingCartService {
     const localCart: ShoppingCart = this.authService.getLocalStorage('shoppingCart');
     let DBCart: ShoppingCart[] = [];
     if (isAuthenticated) {
+      const user = this.authService.getSessionStorage('user');
+      this.usersService.getShoppingCartByUserId(user.userId).subscribe((shoppingCarts: ShoppingCart[]) => {
+        DBCart = shoppingCarts;
+        if (DBCart && DBCart.length > 0) {
+          const cart = DBCart[0];
+          const updatedProducts = cart.products.filter((product: Product) => product.id !== id);
+          cart.products = updatedProducts;
+          this.usersService.putShoppingCart(cart.id, cart).subscribe((updatedCart) => {
+            this.usersService.shoppingCart$.next(updatedCart);
+          });
+        }
+      });
 
     } else {
       const updatedProducts = localCart.products.filter((product: Product) => product.id !== id);

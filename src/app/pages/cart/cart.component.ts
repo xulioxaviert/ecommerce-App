@@ -2,9 +2,11 @@ import { DecimalPipe, NgFor, UpperCasePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { Product, ShoppingCart } from '../../core/models/cart.model';
 import { Users } from '../../core/models/user.model';
+import { ShoppingCartService } from '../../core/services/shopping-cart.service';
 import { UsersService } from '../../users/users.service';
 import { CartListComponent } from "./cart-list/cart-list.component";
 import { OrderSummaryComponent } from "./order-summary/order-summary.component";
@@ -24,17 +26,20 @@ export class CartComponent implements OnInit, OnDestroy {
   subTotal: number = 0;
   cartProductTotal: number = 1;
   user: Users;
+  subscription = new Subscription();
 
   constructor(
     private usersService: UsersService,
     private authService: AuthService,
     private router: Router,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private shoppingCartService: ShoppingCartService
   ) { }
 
   ngOnInit(): void {
     this.getIdFromUrl();
     this.getData();
+    this.getSubscriptions();
   }
 
   getIdFromUrl(): string {
@@ -65,6 +70,15 @@ export class CartComponent implements OnInit, OnDestroy {
       this.router.navigate([ '/login' ]);
     }
   }
+  getSubscriptions(): void {
+    this.subscription.add(
+      this.usersService.shoppingCart$.subscribe((cart) => {
+        console.log('cart', cart);
+        this.shoppingCart = cart;
+        this.shoppingCartCalculation(cart);
+      })
+    );
+  }
 
   shoppingCartCalculation(shoppingCart: any) {
     this.subTotal = shoppingCart.products.reduce(
@@ -76,14 +90,14 @@ export class CartComponent implements OnInit, OnDestroy {
     this.total = this.subTotal + this.tax + this.shipping;
   }
 
-  removeProduct(event: Event): void {
-    console.log('removedProduct', event);
+  removeProduct(id: string): void {
+    console.log('removedProduct', id);
     this.confirmationService.confirm({
-      target: event.target as EventTarget,
+      target: document.body,
       message: '¿Estás seguro que deseas eliminar el producto?',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-
+        this.shoppingCartService.removeProductFromCart(id)
       },
       reject: () => { },
     });
@@ -94,7 +108,9 @@ export class CartComponent implements OnInit, OnDestroy {
     console.log('product', id);
     this.router.navigate([ `/product/detail/${id}` ]);
   }
-  ngOnDestroy(): void { }
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 
   decrementQuantity(event: { id: number, size: any }): void {
     const { id, size } = event;

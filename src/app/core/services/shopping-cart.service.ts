@@ -167,4 +167,19 @@ export class ShoppingCartService {
     });
 
   }
+
+  removeProductFromCart(id: string) {
+
+    const isAuthenticated = this.authService.isAuthenticated();
+    const localCart: ShoppingCart = this.authService.getLocalStorage('shoppingCart');
+    let DBCart: ShoppingCart[] = [];
+    if (isAuthenticated) {
+
+    } else {
+      const updatedProducts = localCart.products.filter((product: Product) => product.id !== id);
+      localCart.products = updatedProducts;
+      this.authService.setLocalStorage('shoppingCart', JSON.stringify(localCart));
+      this.usersService.shoppingCart$.next(localCart);
+    }
+  }
 }

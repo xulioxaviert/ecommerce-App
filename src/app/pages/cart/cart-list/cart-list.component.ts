@@ -11,7 +11,7 @@ import { ShoppingCart } from '../../../core/models/cart.model';
 })
 export class CartListComponent {
   @Input() shoppingCart: ShoppingCart;
-  @Output() removeProduct: EventEmitter<Event> = new EventEmitter<Event>();
+  @Output() removeProduct: EventEmitter<string> = new EventEmitter<string>();
   @Output() decrementQuantity: EventEmitter<{ id: number, size: any }> = new EventEmitter<{ id: number, size: any }>();
   @Output() incrementQuantity: EventEmitter<{ id: number, size: any }> = new EventEmitter<{ id: number, size: any }>();
   @Output() idProductDetail: EventEmitter<string> = new EventEmitter<string>();
@@ -25,6 +25,10 @@ export class CartListComponent {
   }
   incrementQuantityProduct(id: number, size: any): void {
     this.incrementQuantity.emit( {id, size} );
+  }
+
+  removeProductFromCart(id: string): void {
+    this.removeProduct.emit(id);
   }
 
 

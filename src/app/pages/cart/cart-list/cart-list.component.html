@@ -24,10 +24,10 @@
           Color:
           <strong class="ml-2">{{ property.color | uppercase }}</strong>
         </h6>
-        <h6 class="mt-6 flex flex-wrap mr-1">
+        <h6 class="mt-6 flex flex-wrap gap-2">
           @for (size of property.size; track $index) {
           <div
-            class="flex gap-1 items-center border border-gray-300 bg-white px-2 py-2 w-28 mr-2 text-xs justify-between"
+            class="flex gap-1 items-center border border-gray-300 bg-white px-2 py-2 w-32 mr-2 text-xs justify-between"
           >
             {{ size.size | uppercase }} :
             <button
@@ -79,6 +79,7 @@
         <button
           type="button"
           class="font-semibold text-red-500 text-sm flex items-center gap-2 shrink-0"
+          (click)="removeProductFromCart(cart.id)"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

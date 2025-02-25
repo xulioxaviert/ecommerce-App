@@ -1,8 +1,8 @@
 <section class="relative" *ngIf="productDetail">
-  <div class="w-full mx-auto px-4 sm:px-6 lg:px-0">
+  <div class="mt-2 w-full mx-auto px-4 sm:px-6 lg:px-0">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 mx-auto max-md:px-2">
       <div class="img">
-        <div class="img-box h-full max-lg:mx-auto" >
+        <div class="img-box h-full max-lg:mx-auto">
           <img
             [src]="productDetail.image"
             [alt]="productDetail.title"
@@ -11,9 +11,9 @@
         </div>
       </div>
       <div
-        class="data w-full lg:pr-8 pr-0 xl:justify-start justify-center flex items-center max-lg:pb-10 xl:my-2 lg:my-5 my-0"
+        class="data w-full lg:pr-8 pr-0 xl:justify-start justify-center flex max-lg:pb-10 xl:my-2 lg:my-5 my-0"
       >
-        <div class="data w-full max-w-xl">
+        <div class="data w-full">
           <p class="text-lg font-medium leading-8 text-indigo-600 mb-4">
             {{ productDetail.category | uppercase }}
           </p>
@@ -222,104 +222,121 @@
             Size
           </p>
           <div class="w-full pb-8 border-b border-gray-100 flex-wrap">
-            <div
-              class="grid grid-cols-3 min-[400px]:grid-cols-5 gap-3 max-w-md"
-            >
-              @for (size of productDetail.properties[0].size; track $index) {
-              <button
-                class="bg-white text-center py-1.5 px-6 w-full font-semibold text-lg leading-8 text-gray-900 border border-gray-200 flex items-center rounded-full justify-center transition-all duration-300 hover:bg-gray-50 hover:shadow-sm hover:shadow-gray-100 hover:border-gray-300 cursor-pointer"
-                (click)="selectedSize(size.size)"
-                [ngClass]="{ active: selectedSizes.includes(size.size) }"
-              >
-                {{ size.size | uppercase }}
-              </button>
+            <div class="grid grid-cols-3 min-[400px]:grid-cols-5 gap-3">
+              @for (size of productDetail.properties[0].size; track $index){
+              <h6 class="flex flex-wrap mr-1 gap-2">
+                <div
+                  class="flex gap-1 items-center border border-gray-300 bg-white w-[150px] text-sm justify-between rounded-full p-4"
+                >
+                  {{ size.size | uppercase }} :
+                  <button
+                    type="button"
+                    class="border-none outline-none"
+                    (click)="decrementQuantity(productDetail, size)"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="w-2.5 h-2.5"
+                      viewBox="0 0 121.805 121.804"
+                    >
+                      <path
+                        d="M7.308 68.211h107.188a7.309 7.309 0 0 0 7.309-7.31 7.308 7.308 0 0 0-7.309-7.309H7.308a7.31 7.31 0 0 0 0 14.619z"
+                        data-original="#000000"
+                      />
+                    </svg>
+                  </button>
+                  <span class="text-gray-800 text-sm font-semibold px-1">{{
+                    size.quantity
+                  }}</span>
+                  <button
+                    type="button"
+                    class="border-none outline-none"
+                    (click)="incrementQuantity(productDetail, size)"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="w-2.5 h-2.5"
+                      viewBox="0 0 512 512"
+                    >
+                      <path
+                        d="M256 509.892c-19.058 0-34.5-15.442-34.5-34.5V36.608c0-19.058 15.442-34.5 34.5-34.5s34.5 15.442 34.5 34.5v438.784c0 19.058-15.442 34.5-34.5 34.5z"
+                        data-original="#000000"
+                      />
+                      <path
+                        d="M475.392 290.5H36.608c-19.058 0-34.5-15.442-34.5-34.5s15.442-34.5 34.5-34.5h438.784c19.058 0 34.5 15.442 34.5 34.5s-15.442 34.5-34.5 34.5z"
+                        data-original="#000000"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </h6>
               }
             </div>
           </div>
           }
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 py-8">
             <div class="flex sm:items-center sm:justify-center w-full">
-              <button
-                class="group py-4 px-6 border border-gray-400 rounded-l-full bg-white transition-all duration-300 hover:bg-gray-50 hover:shadow-sm hover:shadow-gray-300"
-                (click)="decrement()"
-              >
-                <svg
-                  class="stroke-gray-900 group-hover:stroke-black"
-                  width="22"
-                  height="22"
-                  viewBox="0 0 22 22"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+              <h6 class="flex flex-wrap mr-1 gap-2">
+                <div
+                  class="flex gap-1 items-center border border-gray-300 bg-white w-80 text-sm justify-between rounded-full p-4"
                 >
-                  <path
-                    d="M16.5 11H5.5"
-                    stroke=""
-                    stroke-width="1.6"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M16.5 11H5.5"
-                    stroke=""
-                    stroke-opacity="0.2"
-                    stroke-width="1.6"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M16.5 11H5.5"
-                    stroke=""
-                    stroke-opacity="0.2"
-                    stroke-width="1.6"
-                    stroke-linecap="round"
-                  />
-                </svg>
-              </button>
-              <input
-                type="text"
-                class="font-semibold text-gray-900 cursor-pointer text-lg py-[13px] px-6 w-full sm:max-w-[118px] outline-0 border-y border-gray-400 bg-transparent placeholder:text-gray-900 text-center hover:bg-gray-50"
-                placeholder="1"
-                [value]="quantity"
-              />
-              <button
-                class="group py-4 px-6 border border-gray-400 rounded-r-full bg-white transition-all duration-300 hover:bg-gray-50 hover:shadow-sm hover:shadow-gray-300"
-                (click)="increment()"
-              >
-                <svg
-                  class="stroke-gray-900 group-hover:stroke-black"
-                  width="22"
-                  height="22"
-                  viewBox="0 0 22 22"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M11 5.5V16.5M16.5 11H5.5"
-                    stroke="#9CA3AF"
-                    stroke-width="1.6"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M11 5.5V16.5M16.5 11H5.5"
-                    stroke="black"
-                    stroke-opacity="0.2"
-                    stroke-width="1.6"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M11 5.5V16.5M16.5 11H5.5"
-                    stroke="black"
-                    stroke-opacity="0.2"
-                    stroke-width="1.6"
-                    stroke-linecap="round"
-                  />
-                </svg>
-              </button>
+                  @if(productDetail.type==='simple'){
+                  <button
+                    type="button"
+                    class="border-none outline-none"
+                    (click)="decrementQuantity(productDetail)"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="w-2.5 h-2.5"
+                      viewBox="0 0 121.805 121.804"
+                    >
+                      <path
+                        d="M7.308 68.211h107.188a7.309 7.309 0 0 0 7.309-7.31 7.308 7.308 0 0 0-7.309-7.309H7.308a7.31 7.31 0 0 0 0 14.619z"
+                        data-original="#000000"
+                      />
+                    </svg>
+                  </button>
+                  <span class="text-gray-800 text-sm font-semibold px-1">{{
+                    productDetail.properties[0].quantity
+                  }}</span>
+                  <button
+                    type="button"
+                    class="border-none outline-none"
+                    (click)="incrementQuantity(productDetail)"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="w-2.5 h-2.5"
+                      viewBox="0 0 512 512"
+                    >
+                      <path
+                        d="M256 509.892c-19.058 0-34.5-15.442-34.5-34.5V36.608c0-19.058 15.442-34.5 34.5-34.5s34.5 15.442 34.5 34.5v438.784c0 19.058-15.442 34.5-34.5 34.5z"
+                        data-original="#000000"
+                      />
+                      <path
+                        d="M475.392 290.5H36.608c-19.058 0-34.5-15.442-34.5-34.5s15.442-34.5 34.5-34.5h438.784c19.058 0 34.5 15.442 34.5 34.5s-15.442 34.5-34.5 34.5z"
+                        data-original="#000000"
+                      />
+                    </svg>
+                  </button>
+                  } @else {
+
+                  <span
+                    class="text-gray-800 text-sm font-semibold px-1 m-auto"
+                    >{{ productDetail.properties[0].quantity }}</span
+                  >
+
+                  }
+                </div>
+              </h6>
             </div>
             <button
-              class="group py-4 px-5 rounded-full bg-indigo-50 text-indigo-600 font-semibold text-lg w-full flex items-center justify-center gap-2 transition-all duration-500 hover:bg-indigo-100"
+              class="group py-4 px-5 rounded-full bg-[#F3F4F6] text-black font-semibold text-lg w-full flex items-center justify-center gap-2 transition-all duration-500 hover:bg-[#f59f0b9f]"
               (click)="addToCart()"
             >
               <svg
-                class="stroke-indigo-600"
+                class="stroke-orange-200"
                 width="22"
                 height="22"
                 viewBox="0 0 22 22"
@@ -358,7 +375,7 @@
               </svg>
             </button>
             <button
-              class="text-center w-full px-5 py-4 rounded-[100px] bg-indigo-600 flex items-center justify-center font-semibold text-lg text-white shadow-sm transition-all duration-500 hover:bg-indigo-700 hover:shadow-indigo-400"
+              class="text-center w-full px-5 py-4 rounded-[100px] bg-[#F59E0B] flex items-center justify-center font-semibold text-lg text-white shadow-sm transition-all duration-500 hover:bg-[#f9ba4e] hover:shadow-indigo-400"
             >
               Buy Now
             </button>

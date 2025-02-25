@@ -21,6 +21,8 @@ export class ProductsDetailComponent implements OnInit {
   hasShoppingCart: boolean = false;
   user: Users;
   cart: ShoppingCart[] = [];
+  totalProduct: number = 0;
+
 
   quantity: number = 1;
   constructor(
@@ -55,31 +57,88 @@ export class ProductsDetailComponent implements OnInit {
       );
     });
   }
+  decrementQuantity(currentProduct: Product, size?: any): void {
+    console.log('decrementQuantity / currentProduct:', currentProduct);
+    if (currentProduct.type === 'composite') {
+      currentProduct.properties.forEach((property) => {
+        property?.size?.forEach((s: any) => {
+          if (s.quantity <= 0) return;
+          if (s.size === size.size) {
+            s.quantity -= 1;
+            property.quantity -= 1;
+          }
+        });
+      });
 
-  selectedSize(size: string): void {
-    console.log('size', size);
-    if (!this.selectedSizes) {
-      this.selectedSizes = [];
-    }
-
-    const index = this.selectedSizes.indexOf(size);
-    if (index === -1) {
-      this.selectedSizes.push(size);
+      this.totalProduct = currentProduct.properties.reduce(
+        (total, property) => {
+          return (
+            total +
+            (property?.size
+              ? property.size.reduce(
+                (sizeTotal, s) => sizeTotal + s.quantity,
+                0
+              )
+              : 0)
+          );
+        },
+        0
+      );
+      this.usersService.selectedProduct.set(currentProduct);
     } else {
-      this.selectedSizes.splice(index, 1);
+      currentProduct.properties.forEach((property) => {
+        if (property.quantity <= 0) return;
+        property.quantity -= 1;
+      });
+      this.totalProduct = currentProduct.properties.reduce(
+        (total, property) => {
+          return total + property.quantity;
+        },
+        0
+      );
+      this.usersService.selectedProduct.set(currentProduct);
     }
-    console.log('this.selectedSizes', this.selectedSizes);
   }
+  incrementQuantity(currentProduct: Product, size?: any) {
+    if (currentProduct.type === 'composite') {
+      currentProduct.properties.forEach((property) => {
+        property?.size?.forEach((s: any) => {
+          if (s.size === size.size) {
+            s.quantity += 1;
+            property.quantity += 1;
+          }
+        });
+      });
 
-  increment(): void {
-    this.quantity++;
-  }
-  decrement(): void {
-    if (this.quantity > 1) {
-      this.quantity--;
+      this.totalProduct = currentProduct.properties.reduce(
+        (total, property) => {
+          return (
+            total +
+            (property?.size
+              ? property.size.reduce(
+                (sizeTotal, s) => sizeTotal + s.quantity,
+                0
+              )
+              : 0)
+          );
+        },
+        0
+      );
+      this.usersService.selectedProduct.set(currentProduct);
+    } else {
+      currentProduct.properties.forEach((property) => {
+       
+        property.quantity += 1;
+      });
+      this.totalProduct = currentProduct.properties.reduce(
+        (total, property) => {
+          return total + property.quantity;
+        },
+        0
+      );
+      this.usersService.selectedProduct.set(currentProduct);
     }
   }
-
   addToCart(): void {
 
     // this.size = [];

@@ -8,13 +8,12 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { ConfirmationService } from 'primeng/api';
 import { AuthService } from '../../../auth/auth.service';
 import { ShoppingCart } from '../../../core/models/cart.model';
 import { Sales } from '../../../core/models/sales.model';
 import { Users } from '../../../core/models/user.model';
-import { UsersService } from '../../../users/users.service';
 import { EmailService } from '../../../core/services/email.service';
+import { UsersService } from '../../../users/users.service';
 
 @Component({
   selector: 'app-checkout',
@@ -114,7 +113,10 @@ export class CheckoutComponent implements OnInit {
       const email = {
         to: 'pruebas_envio_correo@yopmail.com',
         subject: 'Pedido realizado correctamente',
-        text: 'Pedido realizado correctamente con el id: ' + this.shoppingCart.id
+        id: this.shoppingCart.id?.toLocaleUpperCase(),
+        products: this.shoppingCart.products,
+        date: new Date().toUTCString(),
+        name: this.checkOutForm.value.name
       };
       const paymentData: Sales = {
         name: this.checkOutForm.value.name,

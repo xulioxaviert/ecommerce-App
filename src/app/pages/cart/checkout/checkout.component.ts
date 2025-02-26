@@ -14,6 +14,7 @@ import { ShoppingCart } from '../../../core/models/cart.model';
 import { Sales } from '../../../core/models/sales.model';
 import { Users } from '../../../core/models/user.model';
 import { UsersService } from '../../../users/users.service';
+import { EmailService } from '../../../core/services/email.service';
 
 @Component({
   selector: 'app-checkout',
@@ -36,7 +37,7 @@ export class CheckoutComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private fb: FormBuilder,
-    private confirmationService: ConfirmationService
+    private emailService: EmailService
   ) { }
 
   ngOnInit(): void {
@@ -110,7 +111,11 @@ export class CheckoutComponent implements OnInit {
         shoppingCart: this.shoppingCart,
         userId: this.shoppingCart.userId
       }
-
+      const email = {
+        to: 'pruebas_envio_correo@yopmail.com',
+        subject: 'Pedido realizado correctamente',
+        text: 'Pedido realizado correctamente con el id: ' + this.shoppingCart.id
+      };
       const paymentData: Sales = {
         name: this.checkOutForm.value.name,
         email: this.checkOutForm.value.email,
@@ -132,6 +137,11 @@ export class CheckoutComponent implements OnInit {
             this.authService.removeLocalStorage('shoppingCart');
             this.usersService.shoppingCart$.next({} as ShoppingCart);
           }
+
+          this.emailService.sendEMail(email).subscribe(() => {
+            console.log('Email enviado correctamente');
+          });
+
         });
       this.usersService.shoppingCart$.next({} as ShoppingCart);
     } else {

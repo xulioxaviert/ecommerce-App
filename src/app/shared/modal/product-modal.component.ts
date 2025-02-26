@@ -3,7 +3,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
-import { Subscription, tap } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { Product, ShoppingCart, Stock } from '../../core/models/cart.model';
 import { Users } from '../../core/models/user.model';
@@ -52,19 +52,7 @@ export class ProductModal implements OnInit, OnDestroy {
 
   getData() {
     this.modalService.openModal$.subscribe((product) => {
-      this.usersService.getStockAllProducts().subscribe((stock) => {
-        stock.forEach(productStock => {
-          if (productStock.id === product.id) {
-            console.log(productStock);
-
-            this.usersService.selectedProduct.set(this.currentProduct);
-
-          }
-
-        })
-      });
-
-
+      this.usersService.selectedProduct.set(product);
       this.visible = true;
     });
   };
@@ -155,7 +143,6 @@ export class ProductModal implements OnInit, OnDestroy {
       this.usersService.selectedProduct.set(currentProduct);
     } else {
       currentProduct.properties.forEach((property) => {
-        if (property.quantity <= 0) return;
         property.quantity += 1;
       });
       this.totalProduct = currentProduct.properties.reduce(
@@ -168,5 +155,5 @@ export class ProductModal implements OnInit, OnDestroy {
     }
   }
 
-  
+
 }

@@ -29,6 +29,11 @@ export const routes: Routes = [
     canActivate: [ AuthGuard ]
   },
   {
+    path: 'manage-products',
+    loadComponent: () => import('./admin/manage-products/manage-products.component').then(m => m.ManageProductsComponent),
+    //canActivate: [ AuthGuard ]//
+  },
+  {
     path: 'carts/:id',
     loadComponent: () => import('./pages/cart/cart.component').then(m => m.CartComponent),
     canActivate: [ ShoppingCartGuard ]

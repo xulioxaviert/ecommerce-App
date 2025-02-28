@@ -176,7 +176,9 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   makePayment(shoppingCart: ShoppingCart): void {
+    console.log(" makePayment / shoppingCart:", shoppingCart);
     const payload = JSON.parse(JSON.stringify(shoppingCart));
+    if (payload.products.length === 0) return;
     payload.products.forEach((product: Product) => {
       if (product.type === 'composite') {
         product.properties.forEach((property) => {

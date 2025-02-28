@@ -111,7 +111,7 @@ export class CheckoutComponent implements OnInit {
         userId: this.shoppingCart.userId
       }
       const email = {
-        to: 'pruebas_envio_correo@yopmail.com',
+        to: this.checkOutForm.value.email,
         subject: 'Pedido realizado correctamente',
         id: this.shoppingCart.id?.toLocaleUpperCase(),
         products: this.shoppingCart.products,
@@ -139,9 +139,9 @@ export class CheckoutComponent implements OnInit {
             this.authService.removeLocalStorage('shoppingCart');
             this.usersService.shoppingCart$.next({} as ShoppingCart);
           }
-          // this.emailService.sendEMail(email).subscribe(() => {
-          //   console.log('Email enviado correctamente');
-          // });
+          this.emailService.sendEMail(email).subscribe(() => {
+            console.log('Email enviado correctamente');
+          });
           this.usersService.shoppingCart$.next({} as ShoppingCart);
         });
     } else {

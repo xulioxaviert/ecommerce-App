@@ -139,15 +139,15 @@ export class CheckoutComponent implements OnInit {
             this.authService.removeLocalStorage('shoppingCart');
             this.usersService.shoppingCart$.next({} as ShoppingCart);
           }
-          this.emailService.sendEMail(email).subscribe(() => {
-            console.log('Email enviado correctamente');
-          });
-          this.usersService.shoppingCart$.next({} as ShoppingCart);
+          // this.emailService.sendEMail(email).subscribe(() => {
+          //   console.log('Email enviado correctamente');
+          // });
         });
-    } else {
-      this.checkOutForm.markAllAsTouched();
-      this.checkOutForm.setErrors({ valid: false });
-    }
+      } else {
+        this.checkOutForm.markAllAsTouched();
+        this.checkOutForm.setErrors({ valid: false });
+      }
+      this.usersService.shoppingCart$.next({} as ShoppingCart);
 
   }
 

@@ -113,7 +113,7 @@ export class CheckoutComponent implements OnInit {
       const email = {
         to: this.checkOutForm.value.email,
         subject: 'Pedido realizado correctamente',
-        id: this.shoppingCart.id?.toLocaleUpperCase(),
+        id: this.shoppingCart._id?.toLocaleUpperCase(),
         products: this.shoppingCart.products,
         date: new Date().toUTCString(),
         name: this.checkOutForm.value.name
@@ -129,32 +129,31 @@ export class CheckoutComponent implements OnInit {
           sales
         ]
       }
-      console.log("pay / paymentData:", paymentData);
       this.usersService
         .createSale(paymentData)
         .subscribe(() => {
           this.router.navigate([ '/' ]);
-          this.deleteShoppingCart(this.shoppingCart.id);
+          this.deleteShoppingCart(this.shoppingCart._id);
           if (!this.authService.isAuthenticated()) {
             this.authService.removeLocalStorage('shoppingCart');
             this.usersService.shoppingCart$.next({} as ShoppingCart);
           }
-          // this.emailService.sendEMail(email).subscribe(() => {
-          //   console.log('Email enviado correctamente');
-          // });
+          this.emailService.sendEMail(email).subscribe(() => {
+            console.log('Email enviado correctamente');
+          });
         });
-      } else {
-        this.checkOutForm.markAllAsTouched();
-        this.checkOutForm.setErrors({ valid: false });
-      }
-      this.usersService.shoppingCart$.next({} as ShoppingCart);
+    } else {
+      this.checkOutForm.markAllAsTouched();
+      this.checkOutForm.setErrors({ valid: false });
+    }
+    this.usersService.shoppingCart$.next({} as ShoppingCart);
 
   }
 
   deleteShoppingCart(id?: string): void {
     if (id) {
       this.usersService.deleteShoppingCart(id).subscribe(response => {
-        console.log(`se ha eliminado exitosamente el carrito${response.id}`, response);
+        console.log(`se ha eliminado exitosamente el carrito${response._id}`, response);
       });
     } else {
       console.error('No se pudo eliminar el carrito: id no proporcionado');

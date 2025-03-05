@@ -37,8 +37,8 @@ export class CartComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.getIdFromUrl();
     this.getData();
+    this.getIdFromUrl();
     this.getSubscriptions();
   }
 
@@ -64,7 +64,6 @@ export class CartComponent implements OnInit, OnDestroy {
       this.usersService
         .getShoppingCartById(this.getIdFromUrl())
         .subscribe((shoppingCart: ShoppingCart) => {
-          console.log('.subscribe / shoppingCart:', shoppingCart);
           this.shoppingCart = shoppingCart;
           this.shoppingCartCalculation(shoppingCart);
         });
@@ -76,7 +75,6 @@ export class CartComponent implements OnInit, OnDestroy {
   getSubscriptions(): void {
     this.subscription.add(
       this.usersService.shoppingCart$.subscribe((cart) => {
-        console.log('cart', cart);
         this.shoppingCart = cart;
         this.shoppingCartCalculation(cart);
       })
@@ -108,7 +106,6 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   navigateToProductDetail(id: string): void {
-    console.log('product', id);
     this.router.navigate([ `/product/detail/${id}` ]);
   }
   ngOnDestroy(): void {
@@ -197,23 +194,12 @@ export class CartComponent implements OnInit, OnDestroy {
         }
       }
     });
-    console.log('payload', payload);
-    if(this.shoppingCart.id) {
-      this.router.navigate([ '/checkout', this.shoppingCart.id ]);
+    if (this.shoppingCart._id) {
+      this.router.navigate([ '/checkout', this.shoppingCart._id ]);
     } else {
       this.usersService.createShoppingCart(payload).subscribe((cart) => {
-        console.log('cart', cart);
-        this.router.navigate([ `/checkout/${cart.id}` ]);
+        this.router.navigate([ `/checkout/${cart._id}` ]);
       })
     }
-    // if (this.authService.isAuthenticated()) {
-    //   this.router.navigate([ '/checkout', this.shoppingCart.id ]);
-    // } else {
-    //   this.usersService.createShoppingCart(payload).subscribe((cart) => {
-    //     console.log('cart', cart);
-    //     this.router.navigate([ `/checkout/${cart.id}` ]);
-    //   })
-
-    // }
   }
 }

@@ -54,7 +54,7 @@ export class WomenComponent implements OnInit {
 
   navigateToProductDetail(product: Product) {
     console.log('product', product);
-    this.router.navigate([ `/product/detail/${product.id}` ]);
+    this.router.navigate([ `/product/detail/${product._id}` ]);
   }
   openModalSize(product: Product) {
     this.visible = true;

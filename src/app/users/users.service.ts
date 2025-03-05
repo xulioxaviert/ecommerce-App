@@ -41,12 +41,12 @@ export class UsersService {
 
   getShoppingCartByUserId(id: number): Observable<ShoppingCart[]> {
     return this._httpClient.get<ShoppingCart[]>(
-      `${ENDPOINTS.getAllShoppingCarts}?userId=${id}`
+      `${ENDPOINTS.getAllShoppingCarts}/userId/${id}`
     );
   }
   getShoppingCartById(id: string): Observable<ShoppingCart> {
     return this._httpClient.get<ShoppingCart>(
-      `${ENDPOINTS.getAllShoppingCarts}/${id}`
+      `${ENDPOINTS.getAllShoppingCarts}/id/${id}`
     );
   }
   getAllFavoriteProducts(): Observable<Favorites[]> {

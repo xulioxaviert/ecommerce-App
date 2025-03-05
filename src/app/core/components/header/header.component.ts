@@ -102,7 +102,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.subscription.add(
       this.userService.shoppingCart$.subscribe((cart: any) => {
-        console.log('getSubscriptions', cart);
         if (cart) {
           this.productsShoppingCart = cart.products?.length || 0;
           this.cart = cart;
@@ -217,9 +216,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   navigateToShoppingCart() {
     if (this.authService.isAuthenticated()) {
-      this.router.navigate([ `/carts/${this.cart?.id}` ]);
-    } else {
-      this.router.navigate([ '/carts/0' ]);
+      const cartId = this.cart?._id;
+      if (cartId) {
+        this.router.navigate([ `/carts/id/${cartId}` ]);
+
+      }
+
+      else {
+        this.router.navigate([ '/carts/0' ]);
+      }
     }
   }
 
@@ -229,20 +234,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.userService
         .getShoppingCartByUserId(userId)
         .subscribe((cart: any) => {
-          console.log('getData / cart:', cart);
-          if (cart.length > 0) {
-            this.productsShoppingCart = cart[ 0 ].products?.length || 0;
-            this.cart = cart[ 0 ];
+          if (cart) {
+            this.productsShoppingCart = cart.products?.length || 0;
+            this.cart = cart;
           }
         });
       this.userService
         .getFavoriteProductById(userId)
         .subscribe((favorites: any) => {
-          console.log(
-            'this.userService.getFavoriteProductById / favorites:',
-            favorites
-          );
-          this.favoriteProducts = favorites[ 0 ]?.products?.length || 0;
+          this.favoriteProducts = favorites?.products?.length || 0;
         });
     }
   }

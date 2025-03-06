@@ -5,7 +5,7 @@
     <img
       src="{{ cart.image }}"
       class="w-full aspect-[112/149] object-contain cursor-pointer"
-      (click)="navigateToProductDetail(cart.id)"
+      (click)="navigateToProductDetail(cart._id)"
     />
   </div>
 
@@ -13,7 +13,7 @@
     <div>
       <h3
         class="text-base font-bold text-gray-800 mb-1 cursor-pointer"
-        (click)="navigateToProductDetail(cart.id)"
+        (click)="navigateToProductDetail(cart._id)"
       >
         {{ cart.title }}
       </h3>
@@ -79,7 +79,7 @@
         <button
           type="button"
           class="font-semibold text-red-500 text-sm flex items-center gap-2 shrink-0"
-          (click)="removeProductFromCart(cart.id)"
+          (click)="removeProductFromCart(cart._id)"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

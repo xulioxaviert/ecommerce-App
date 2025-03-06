@@ -128,7 +128,6 @@ export class DashboardComponent implements OnInit {
     if (this.authService.isAuthenticated()) {
       this.isAuthenticated = true;
       this.user = this.authService.getSessionStorage('user');
-      console.log('checkAuthenticated / this.user:', this.user);
       this.initialsName =
         (this.user?.name?.firstname.toUpperCase().toString().charAt(0) || '') +
         (this.user?.name?.lastname.toUpperCase().toString().charAt(0) || '');

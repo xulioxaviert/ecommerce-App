@@ -52,7 +52,6 @@ export class HeroComponent implements OnInit, OnDestroy {
   }
 
   getAndFillCategories() {
-    console.log('updateLanguageCategories', this.categories);
     this.categories = [];
     this.heroCategories.forEach(category => {
       switch (category.title) {

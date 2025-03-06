@@ -22,7 +22,7 @@ export class ShoppingCartGuard {
         )
         .pipe(
           map((shoppingCart) => {
-            if (shoppingCart.length > 0) {
+            if (shoppingCart) {
               return true;
             } else {
               this.router.navigate([ '/' ]);

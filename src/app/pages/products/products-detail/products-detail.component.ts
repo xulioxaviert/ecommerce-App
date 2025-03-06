@@ -20,7 +20,7 @@ export class ProductsDetailComponent implements OnInit {
   selectedSizes: any[] = [];
   hasShoppingCart: boolean = false;
   user: Users;
-  cart: ShoppingCart[] = [];
+  cart: ShoppingCart = {} as ShoppingCart;
   totalProduct: number = 0;
 
 
@@ -127,7 +127,7 @@ export class ProductsDetailComponent implements OnInit {
       this.usersService.selectedProduct.set(currentProduct);
     } else {
       currentProduct.properties.forEach((property) => {
-       
+
         property.quantity += 1;
       });
       this.totalProduct = currentProduct.properties.reduce(

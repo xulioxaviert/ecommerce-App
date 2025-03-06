@@ -26,7 +26,7 @@ export class ShoppingCartService {
   checkUserCartStatus() {
     const isAuthenticated = this.authService.isAuthenticated();
     const localCart: ShoppingCart = this.authService.getLocalStorage('shoppingCart');
-    let DBCart: ShoppingCart[] = [];
+    let DBCart: ShoppingCart = {} as ShoppingCart;
     const cart: ShoppingCart = {
 
       userId: null,
@@ -43,7 +43,7 @@ export class ShoppingCartService {
       const user = this.authService.getSessionStorage('user');
       this.usersService
         .getShoppingCartByUserId(user.userId)
-        .subscribe((shoppingCarts: ShoppingCart[]) => {
+        .subscribe((shoppingCarts: ShoppingCart) => {
           DBCart = shoppingCarts;
           console.log(".subscribe / shoppingCarts:", shoppingCarts);
 
@@ -54,12 +54,12 @@ export class ShoppingCartService {
                 '⚠️ Usuario autenticado y tiene carrito en el LocalStorage.'
               );
               break;
-            case DBCart && DBCart.length > 0:
-              this.updateDBCart(DBCart[ 0 ], user.userId);
+            case DBCart && Object.keys(DBCart).length > 0:
+              this.updateDBCart(DBCart, user.userId);
               console.log('✅ Usuario autenticado y tiene carrito en (BBDD).');
               break;
 
-            case DBCart && DBCart.length === 0:
+            case DBCart && Object.keys(DBCart).length  === 0:
               this.createDBCart(cart, user.userId);
               console.log('⚠️ Usuario autenticado no tiene carrito (BBDD).');
               break;
@@ -112,7 +112,7 @@ export class ShoppingCartService {
     cart.products.push(products);
 
     cart.products = cart.products.filter(
-      (product: Product) => product.id !== products.id
+      (product: Product) => product._id !== products._id
     );
     cart.products.push(products);
     this.authService.setLocalStorage('shoppingCart', JSON.stringify(cart));
@@ -124,7 +124,7 @@ export class ShoppingCartService {
     const products = this.usersService.selectedProduct();
 
     cart.products = cart.products.filter(
-      (product: Product) => product.id !== products.id
+      (product: Product) => product._id !== products._id
     );
     cart.products.push(products);
     const payload: ShoppingCart = {
@@ -133,7 +133,7 @@ export class ShoppingCartService {
       products: cart.products,
       cartId: 0
     }
-    this.usersService.putShoppingCart(cart.id, payload).subscribe((updatedCart) => {
+    this.usersService.putShoppingCart(cart._id, payload).subscribe((updatedCart) => {
       this.usersService.shoppingCart$.next(updatedCart);
     });
     this.usersService.shoppingCart$.next(cart);
@@ -145,7 +145,7 @@ export class ShoppingCartService {
     cartLocalStorage.products.push(products);
 
     cartLocalStorage.products = cartLocalStorage.products.filter(
-      (product: Product) => product.id !== products.id
+      (product: Product) => product._id !== products._id
     );
     cartLocalStorage.products.push(products);
 
@@ -172,23 +172,23 @@ export class ShoppingCartService {
 
     const isAuthenticated = this.authService.isAuthenticated();
     const localCart: ShoppingCart = this.authService.getLocalStorage('shoppingCart');
-    let DBCart: ShoppingCart[] = [];
+    let DBCart: ShoppingCart = {} as ShoppingCart;
     if (isAuthenticated) {
       const user = this.authService.getSessionStorage('user');
-      this.usersService.getShoppingCartByUserId(user.userId).subscribe((shoppingCarts: ShoppingCart[]) => {
+      this.usersService.getShoppingCartByUserId(user.userId).subscribe((shoppingCarts: ShoppingCart) => {
         DBCart = shoppingCarts;
-        if (DBCart && DBCart.length > 0) {
-          const cart = DBCart[0];
-          const updatedProducts = cart.products.filter((product: Product) => product.id !== id);
+        if (DBCart && Object.keys(DBCart).length > 0) {
+          const cart = DBCart;
+          const updatedProducts = cart.products.filter((product: Product) => product._id !== id);
           cart.products = updatedProducts;
-          this.usersService.putShoppingCart(cart.id, cart).subscribe((updatedCart) => {
+          this.usersService.putShoppingCart(cart._id, cart).subscribe((updatedCart) => {
             this.usersService.shoppingCart$.next(updatedCart);
           });
         }
       });
 
     } else {
-      const updatedProducts = localCart.products.filter((product: Product) => product.id !== id);
+      const updatedProducts = localCart.products.filter((product: Product) => product._id !== id);
       localCart.products = updatedProducts;
       this.authService.setLocalStorage('shoppingCart', JSON.stringify(localCart));
       this.usersService.shoppingCart$.next(localCart);

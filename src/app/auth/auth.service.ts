@@ -18,17 +18,17 @@ export class AuthService {
 
   constructor(private _httpClient: HttpClient, private router: Router) { }
 
-  login(username: string, password: string): Observable<string> {
+  login(email: string, password: string): Observable<string> {
 
     const url = ENDPOINTS.login; //
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': 'Basic ' + btoa(`${username}:${password}`)
+      'Authorization': 'Basic ' + btoa(`${email}:${password}`)
     });
 
     const payload = {
-      username: username,
-      password: password
+      email,
+      password
     };
 
     return this._httpClient.post<string>(url, payload, { headers });

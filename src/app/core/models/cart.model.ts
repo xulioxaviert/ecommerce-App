@@ -1,5 +1,5 @@
 export interface ShoppingCart {
-  id?: string;
+  _id?: string;
   cartId: number;
   userId: number | null;
   date: Date;
@@ -15,7 +15,7 @@ export interface Product {
   category?: Category;
   image: string;
   rating: Rating;
-  id: string;
+  _id: string;
 }
 
 export enum Category {
@@ -68,13 +68,13 @@ export enum CartStatus {
 }
 
 export interface Stock {
-  id:         string;
-  productId:  number;
-  stock:      StockElement[];
+  id: string;
+  productId: number;
+  stock: StockElement[];
   totalStock: number;
 }
 
 export interface StockElement {
-  size:     string;
+  size: string;
   quantity: number;
 }

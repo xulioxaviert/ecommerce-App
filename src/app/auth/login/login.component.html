@@ -160,7 +160,7 @@
             <input
               name="email"
               type="text"
-              formControlName="username"
+              formControlName="email"
               required
               class="bg-transparent w-full text-sm text-gray-800 border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none"
               [placeholder]="'LOGIN.EMAIL' | translate"
@@ -198,15 +198,15 @@
           <div class="error-text">
             <span
               *ngIf="
-                loginForm.get('username')?.hasError('required') &&
-                loginForm.get('username')?.touched
+                loginForm.get('email')?.hasError('required') &&
+                loginForm.get('email')?.touched
               "
             >
               {{ "LOGIN.USERNAME_REQUIRED" | translate }}
             </span>
           </div>
           <div class="error-text">
-            <span *ngIf="loginForm.get('username')?.hasError('minlength')">
+            <span *ngIf="loginForm.get('email')?.hasError('minlength')">
               {{ "LOGIN.USERNAME_MIN_LENGTH" | translate }}
             </span>
           </div>

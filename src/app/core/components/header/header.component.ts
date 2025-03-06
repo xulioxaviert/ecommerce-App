@@ -1,18 +1,18 @@
 import { CommonModule, NgClass, NgIf } from '@angular/common';
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ConfirmationService, MenuItem } from 'primeng/api';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { Subscription } from 'rxjs';
+
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenubarModule } from 'primeng/menubar';
 import { RippleModule } from 'primeng/ripple';
 
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ConfirmationService, MenuItem } from 'primeng/api';
-// Removed duplicate and incorrect import
-import { ConfirmPopupModule } from 'primeng/confirmpopup';
-import { Subscription } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
 import { TranslationDropdownComponent } from '../../../shared/translation-dropdown/translation-dropdown.component';
 import { UsersService } from '../../../users/users.service';
@@ -38,22 +38,31 @@ import { Users } from '../../models/user.model';
     ConfirmPopupModule,
   ],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss',
+  styleUrls: [ './header.component.scss' ], // se corrige 'styleUrl' a 'styleUrls'
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  categories = signal<string[]>([]);
-  isAuthenticated: boolean = false;
-  items: MenuItem[] | undefined;
-  formGroup!: FormGroup;
-  user: Users | undefined;
-  initialsName: string = '';
-  title = 'HEADER.LOGIN';
-  isVisible: boolean = false;
-  subscription = new Subscription();
-  productsShoppingCart: number = 0;
-  favoriteProducts: number = 0;
-  cart: ShoppingCart | undefined;
 
+  // ==========================
+  // Signals y propiedades
+  // ==========================
+  categories = signal<string[]>([]);
+  isAuthenticated = false;
+  items: MenuItem[] = [];
+  formGroup!: FormGroup;
+  user?: Users;
+  initialsName = '';
+  title = 'HEADER.LOGIN';
+  isVisible = false;
+
+  productsShoppingCart = 0;
+  favoriteProducts = 0;
+  cart?: ShoppingCart;
+
+  private subscriptions = new Subscription();
+
+  // ==========================
+  // Constructor
+  // ==========================
   constructor(
     private translateService: TranslateService,
     private router: Router,
@@ -62,55 +71,221 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private userService: UsersService
   ) { }
 
-  ngOnInit() {
-    this.updateItemLanguage();
-    this.checkAuthenticated();
-    this.getSubscriptions();
+  // ==========================
+  // Ciclo de vida
+  // ==========================
+  ngOnInit(): void {
+    this.initializeComponent();
+    this.initSubscriptions();
   }
 
-  checkAuthenticated() {
-    const cartLocalStorage =
-      this.authService.getLocalStorage('shoppingCart') || undefined;
+  ngOnDestroy(): void {
+    // Anula todas las suscripciones almacenadas
+    this.subscriptions.unsubscribe();
+    // Opcional, si no se están usando suscripciones directas a shoppingCart$ o favoriteProducts$
+    // entonces no hace falta llamar a .unsubscribe() sobre estos Subjects
+    // this.userService.shoppingCart$.unsubscribe();
+    // this.userService.favoriteProducts$.unsubscribe();
+
+    // Limpia otros estados si es necesario
+    this.userService.selectedProduct.set({} as Product);
+  }
+
+  // ==========================
+  // Métodos de Inicialización
+  // ==========================
+  private initializeComponent(): void {
+    // Recupera carrito del LocalStorage (si existe) y notifica a shoppingCart$
+    this.initializeLocalCart();
+    // Verifica si existe sesión de usuario
+    this.checkUserAuthentication();
+    // Construye ítems de menú con el estado inicial
+    this.buildMenuItems();
+  }
+
+  private initSubscriptions(): void {
+    // Suscripción a cambios en la autenticación
+    const authSub = this.authService.isAuthenticated$.subscribe(() => {
+      this.checkUserAuthentication();
+    });
+    this.subscriptions.add(authSub);
+
+    // Suscripción a cambios en el carrito
+    const cartSub = this.userService.shoppingCart$.subscribe((cart) => {
+      if (cart) {
+        this.productsShoppingCart = cart.products?.length || 0;
+        this.cart = cart;
+      }
+    });
+    this.subscriptions.add(cartSub);
+  }
+
+  // ==========================
+  // Métodos de Autenticación
+  // ==========================
+  /**
+   * Verifica si el usuario está autenticado y obtiene datos asociados
+   */
+  private checkUserAuthentication(): void {
+    if (!this.authService.isAuthenticated()) {
+      this.resetUserState();
+      return;
+    }
+
+    // El usuario está autenticado, recupera datos
+    this.user = this.authService.getSessionStorage('user');
+    this.isAuthenticated = true;
+
+    this.setUserInitials();
+    this.setUserRoleVisibility();
+    this.title = 'HEADER.LOGOUT';
+
+    // Carga información extra (carrito, favoritos, etc.)
+    this.loadUserRelatedData();
+  }
+
+  /**
+   * Establece las iniciales del usuario (firstname y lastname)
+   */
+  private setUserInitials(): void {
+    if (!this.user?.name) return;
+    const { firstname = '', lastname = '' } = this.user.name;
+    this.initialsName =
+      (firstname[ 0 ]?.toUpperCase() || '') + (lastname[ 0 ]?.toUpperCase() || '');
+  }
+
+  /**
+   * Define si se muestra cierta parte del menú u opciones de admin
+   */
+  private setUserRoleVisibility(): void {
+    this.isVisible = this.user?.role === 'admin';
+  }
+
+  /**
+   * Reinicia el estado del usuario cuando no está autenticado
+   */
+  private resetUserState(): void {
+    this.user = undefined;
+    this.isAuthenticated = false;
+    this.isVisible = false;
+    this.initialsName = '';
+    this.title = 'HEADER.LOGIN';
+    this.productsShoppingCart = 0;
+    this.favoriteProducts = 0;
+    this.cart = undefined;
+    // Reconstruye menú con estado no autenticado
+    this.buildMenuItems();
+  }
+
+  /**
+   * Lógica que maneja el click en el botón de Login/Logout
+   */
+  toggleAuthentication(event: Event): void {
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate([ '/auth/login' ]);
+      return;
+    }
+
+    // Si está autenticado, mostrar confirmación de logout
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: this.translateService.instant(
+        'LOGIN.ARE_YOU_SURE_YOU_WANT_TO_LOG_OUT'
+      ),
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        // Al aceptar
+        this.handleLogout();
+      },
+      reject: () => {
+        // Al cancelar, no se hace nada
+      },
+    });
+  }
+
+  /**
+   * Procesa el cierre de sesión
+   */
+  private handleLogout(): void {
+    this.resetUserState();
+    // Redirecciones deseadas
+    this.redirectAfterLogout();
+    // Lógica final de logout
+    this.authService.logout();
+  }
+
+  /**
+   * Reubica al usuario si estaba en ciertas rutas cuando hace logout
+   */
+  private redirectAfterLogout(): void {
+    if (
+      this.router.url === '/dashboard' ||
+      this.router.url.includes('/carts/') ||
+      this.router.url.includes('/checkout/')
+    ) {
+      this.router.navigate([ '/' ]);
+    }
+  }
+
+  // ==========================
+  // Métodos de Carga de Datos
+  // ==========================
+  /**
+   * Verifica si existe un carrito en localStorage y lo inicializa en shoppingCart$
+   */
+  private initializeLocalCart(): void {
+    const cartLocalStorage = this.authService.getLocalStorage('shoppingCart') || [];
     if (cartLocalStorage) {
       this.userService.shoppingCart$.next(cartLocalStorage);
     }
-    if (!this.authService.isAuthenticated()) return;
-
-    this.user = this.authService.getSessionStorage('user');
-    const { firstname, lastname } = this.user?.name || {
-      firstname: '',
-      lastname: '',
-    };
-
-    this.initialsName =
-      (firstname[ 0 ].toUpperCase() || '') + (lastname[ 0 ].toUpperCase() || '');
-
-    this.isAuthenticated = true;
-    this.isVisible = this.user?.role === 'admin' ? true : false;
-    this.title = 'HEADER.LOGOUT';
-
-    this.updateItemLanguage();
-    this.getData();
   }
 
-  getSubscriptions() {
-    this.subscription.add(
-      this.authService.isAuthenticated$.subscribe((response) => {
-        this.checkAuthenticated();
-      })
-    );
+  /**
+   * Carga datos asociados al usuario autenticado
+   */
+  private loadUserRelatedData(): void {
+    const userId = this.user?.userId;
+    if (!userId) return;
 
-    this.subscription.add(
-      this.userService.shoppingCart$.subscribe((cart: any) => {
+    // Obtener carrito
+    const cartSub = this.userService
+      .getShoppingCartByUserId(userId)
+      .subscribe((cart) => {
         if (cart) {
           this.productsShoppingCart = cart.products?.length || 0;
           this.cart = cart;
         }
-      })
-    );
+      });
+    this.subscriptions.add(cartSub);
+
+    // Obtener favoritos
+    const favSub = this.userService
+      .getFavoriteProductById(userId)
+      .subscribe((favorites) => {
+        this.favoriteProducts = favorites?.products?.length || 0;
+      });
+    this.subscriptions.add(favSub);
   }
 
-  updateItemLanguage() {
+  // ==========================
+  // Métodos de Navegación
+  // ==========================
+  navigateToShoppingCart(): void {
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate([ '/carts/id/0' ]);
+      return;
+    }
+    // Si hay un carrito, ir a él
+    const cartId = this.cart?._id;
+    if (cartId) {
+      this.router.navigate([ `/carts/id/${cartId}` ]);
+    }
+  }
+
+  // ==========================
+  // Construcción de Menú
+  // ==========================
+  private buildMenuItems(): void {
     this.items = [
       {
         label: 'HEADER.HOME',
@@ -172,6 +347,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         label: 'HEADER.FAVORITES',
         icon: 'pi pi-shop',
         visible: true,
+        // Podríamos agregarle route si se desea
       },
       {
         label: 'HEADER.DASHBOARD',
@@ -180,77 +356,5 @@ export class HeaderComponent implements OnInit, OnDestroy {
         route: '/dashboard',
       },
     ];
-  }
-
-  toggleAuthentication(event: Event) {
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate([ '/auth/login' ]);
-    } else {
-      this.confirmationService.confirm({
-        target: event.target as EventTarget,
-        message: this.translateService.instant(
-          'LOGIN.ARE_YOU_SURE_YOU_WANT_TO_LOG_OUT'
-        ),
-        icon: 'pi pi-exclamation-triangle',
-        accept: () => {
-          this.initialsName = '';
-          this.isVisible = false;
-          this.isAuthenticated = false;
-          this.productsShoppingCart = 0;
-          this.favoriteProducts = 0;
-          this.title = 'HEADER.LOGIN';
-          if (this.router.url === '/dashboard') {
-            this.router.navigate([ '/' ]);
-          } else if (this.router.url.includes('/carts/')) {
-            this.router.navigate([ '/' ]);
-          } else if (this.router.url.includes('/checkout/')) {
-            this.router.navigate([ '/' ]);
-          }
-          this.updateItemLanguage();
-          this.authService.logout();
-        },
-        reject: () => { },
-      });
-    }
-  }
-
-  navigateToShoppingCart() {
-    if (this.authService.isAuthenticated()) {
-      const cartId = this.cart?._id;
-      if (cartId) {
-        this.router.navigate([ `/carts/id/${cartId}` ]);
-
-      }
-
-      else {
-        this.router.navigate([ '/carts/0' ]);
-      }
-    }
-  }
-
-  getData() {
-    const userId = this.user?.userId;
-    if (userId) {
-      this.userService
-        .getShoppingCartByUserId(userId)
-        .subscribe((cart: any) => {
-          if (cart) {
-            this.productsShoppingCart = cart.products?.length || 0;
-            this.cart = cart;
-          }
-        });
-      this.userService
-        .getFavoriteProductById(userId)
-        .subscribe((favorites: any) => {
-          this.favoriteProducts = favorites?.products?.length || 0;
-        });
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-    this.userService.shoppingCart$.unsubscribe();
-    this.userService.favoriteProducts$.unsubscribe();
-    this.userService.selectedProduct.set({} as Product);
   }
 }

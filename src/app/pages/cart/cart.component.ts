@@ -68,7 +68,7 @@ export class CartComponent implements OnInit, OnDestroy {
           this.shoppingCartCalculation(shoppingCart);
         });
     } else {
-      this.router.navigate([ '/login' ]);
+      this.router.navigate([ '/auth/login' ]);
     }
 
   }

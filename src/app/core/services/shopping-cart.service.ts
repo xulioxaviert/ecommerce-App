@@ -59,7 +59,7 @@ export class ShoppingCartService {
               console.log('✅ Usuario autenticado y tiene carrito en (BBDD).');
               break;
 
-            case DBCart && Object.keys(DBCart).length  === 0:
+            case DBCart && Object.keys(DBCart).length === 0:
               this.createDBCart(cart, user.userId);
               console.log('⚠️ Usuario autenticado no tiene carrito (BBDD).');
               break;
@@ -117,6 +117,14 @@ export class ShoppingCartService {
     cart.products.push(products);
     this.authService.setLocalStorage('shoppingCart', JSON.stringify(cart));
     this.usersService.shoppingCart$.next(cart);
+
+    // Si el carrito tiene un ID, significa que ya existe en la BBDD y debe actualizarse
+    if (cart._id) {
+      console.log('Carrito con ID existente, actualizando en BBDD:', cart._id);
+      this.usersService.putShoppingCart(cart._id, cart).subscribe((updatedCartFromServer: ShoppingCart) => {
+        this.usersService.shoppingCart$.next(updatedCartFromServer);
+      });
+    }
 
   }
   updateDBCart(cart: ShoppingCart, userId: number): void {

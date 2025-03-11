@@ -99,13 +99,16 @@ export class CartComponent implements OnInit, OnDestroy {
    */
   getData(): void {
     if (this.authService.isAuthenticated()) {
-      this.user = this.authService.getSessionStorage('user');
-      this.usersService
-        .getShoppingCartById(this.getIdFromUrl())
-        .subscribe((shoppingCart: ShoppingCart) => {
-          this.shoppingCart = shoppingCart;
-          this.updateCartTotals(shoppingCart);
-        });
+      if (this.getIdFromUrl() !== '0') {
+
+        this.user = this.authService.getSessionStorage('user');
+        this.usersService
+          .getShoppingCartById(this.getIdFromUrl())
+          .subscribe((shoppingCart: ShoppingCart) => {
+            this.shoppingCart = shoppingCart;
+            this.updateCartTotals(shoppingCart);
+          });
+      }
     }
   }
 
@@ -238,19 +241,26 @@ export class CartComponent implements OnInit, OnDestroy {
     // this.shoppingCartService.checkUserCartStatus();
 
     // Navegar a la página de checkout
-    if (shoppingCart._id) {
-      this.authService.setLocalStorage('shoppingCart', JSON.stringify(shoppingCart));
-      this.usersService.shoppingCart$.next(shoppingCart);
-      this.usersService.selectedProduct.set(shoppingCart.products[ 0 ]);
+    if (this.authService.isAuthenticated()) {
+      this.usersService.shoppingCart$.next(payload);
+      // this.usersService.selectedProduct.set(shoppingCart.products[ 0 ]);
       this.shoppingCartService.checkUserCartStatus()
       this.router.navigate([ '/checkout', shoppingCart._id ]);
     } else {
-      // Si no existe un carrito, crear uno nuevo
-      this.usersService.createShoppingCart(payload).subscribe((cart) => {
-        this.usersService.shoppingCart$.next(cart);
-        this.authService.setLocalStorage('shoppingCart', JSON.stringify(cart));
-        this.router.navigate([ `/checkout/${cart._id}` ]);
-      });
+      if (shoppingCart._id) {
+        this.authService.setLocalStorage('shoppingCart', JSON.stringify(shoppingCart));
+        this.usersService.shoppingCart$.next(shoppingCart);
+        this.usersService.selectedProduct.set(shoppingCart.products[ 0 ]);
+        this.shoppingCartService.checkUserCartStatus()
+        this.router.navigate([ '/checkout', shoppingCart._id ]);
+      } else {
+        // Si no existe un carrito, crear uno nuevo
+        this.usersService.createShoppingCart(payload).subscribe((cart) => {
+          this.usersService.shoppingCart$.next(cart);
+          this.authService.setLocalStorage('shoppingCart', JSON.stringify(cart));
+          this.router.navigate([ `/checkout/${cart._id}` ]);
+        });
+      }
     }
   }
 

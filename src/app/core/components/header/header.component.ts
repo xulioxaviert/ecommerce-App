@@ -134,6 +134,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     // El usuario está autenticado, recupera datos
     this.user = this.authService.getSessionStorage('user');
+    //Recuperar carrito del usuario
+    if (this.user?.userId) {
+      this.userService.getShoppingCartByUserId(this.user.userId).subscribe((cart) => {
+        this.userService.shoppingCart$.next(cart);
+      });
+    }
     this.isAuthenticated = true;
 
     this.setUserInitials();
@@ -290,7 +296,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.router.navigate([ '/carts/id/0' ]);
       return;
     }
-    
+
   }
 
   // ==========================

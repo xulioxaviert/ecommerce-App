@@ -233,12 +233,9 @@ export class CartComponent implements OnInit, OnDestroy {
    * @param shoppingCart Carrito de compras a procesar
    */
   makePayment(shoppingCart: ShoppingCart): void {
-    debugger;
     // Crear copia profunda para no modificar el original
     const payload = this.preparePayloadForCheckout(shoppingCart);
-
-    // // Verificar estado del carrito
-    // this.shoppingCartService.checkUserCartStatus();
+    this.usersService.shoppingCart$.next(payload);
 
     // Navegar a la página de checkout
     if (this.authService.isAuthenticated()) {

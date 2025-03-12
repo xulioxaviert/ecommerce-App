@@ -134,6 +134,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     // El usuario está autenticado, recupera datos
     this.user = this.authService.getSessionStorage('user');
+    //Recuperar carrito del usuario
+    if (this.user?.userId) {
+      this.userService.getShoppingCartByUserId(this.user.userId).subscribe((cart) => {
+        this.userService.shoppingCart$.next(cart);
+      });
+    }
     this.isAuthenticated = true;
 
     this.setUserInitials();
@@ -248,15 +254,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (!userId) return;
 
     // Obtener carrito
-    const cartSub = this.userService
-      .getShoppingCartByUserId(userId)
-      .subscribe((cart) => {
-        if (cart) {
-          this.productsShoppingCart = cart.products?.length || 0;
-          this.cart = cart;
-        }
-      });
-    this.subscriptions.add(cartSub);
+    const localCart = this.authService.getLocalStorage('shoppingCart');
+    if (localCart) {
+      this.userService.shoppingCart$.next(localCart);
+      this.subscriptions.add(localCart);
+    } else {
+      const cartSub = this.userService
+        .getShoppingCartByUserId(userId)
+        .subscribe((cart) => {
+          if (cart) {
+            this.productsShoppingCart = cart.products?.length || 0;
+            this.cart = cart;
+          }
+        });
+      this.subscriptions.add(cartSub);
+    }
 
     // Obtener favoritos
     const favSub = this.userService
@@ -276,10 +288,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
       return;
     }
     // Si hay un carrito, ir a él
-    const cartId = this.cart?._id;
-    if (cartId) {
-      this.router.navigate([ `/carts/id/${cartId}` ]);
+    const shoppingCart = this.userService.shoppingCart$.value;
+    if (shoppingCart._id) {
+      this.router.navigate([ `/carts/id/${shoppingCart._id}` ]);
+      return;
+    } else {
+      this.router.navigate([ '/carts/id/0' ]);
+      return;
     }
+
   }
 
   // ==========================

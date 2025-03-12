@@ -214,11 +214,13 @@ export class CartComponent implements OnInit, OnDestroy {
               }
               return s;
             });
+            this.usersService.selectedProduct.set(product);
           });
         } else if (product.type === 'simple') {
           // Para productos simples
           if (change < 0 && product.properties[ 0 ].quantity <= 0) return product;
           product.properties[ 0 ].quantity += change;
+          this.usersService.selectedProduct.set(product);
         }
       }
       return product;
@@ -239,21 +241,17 @@ export class CartComponent implements OnInit, OnDestroy {
 
     // Navegar a la página de checkout
     if (this.authService.isAuthenticated()) {
-      this.usersService.shoppingCart$.next(payload);
-      // this.usersService.selectedProduct.set(shoppingCart.products[ 0 ]);
+
       this.shoppingCartService.checkUserCartStatus()
       this.router.navigate([ '/checkout', shoppingCart._id ]);
     } else {
       if (shoppingCart._id) {
         this.authService.setLocalStorage('shoppingCart', JSON.stringify(shoppingCart));
-        this.usersService.shoppingCart$.next(shoppingCart);
-        this.usersService.selectedProduct.set(shoppingCart.products[ 0 ]);
         this.shoppingCartService.checkUserCartStatus()
         this.router.navigate([ '/checkout', shoppingCart._id ]);
       } else {
         // Si no existe un carrito, crear uno nuevo
         this.usersService.createShoppingCart(payload).subscribe((cart) => {
-          this.usersService.shoppingCart$.next(cart);
           this.authService.setLocalStorage('shoppingCart', JSON.stringify(cart));
           this.router.navigate([ `/checkout/${cart._id}` ]);
         });

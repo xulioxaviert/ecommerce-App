@@ -54,13 +54,13 @@ export class ShoppingCartService {
                 '⚠️ Usuario autenticado y tiene carrito en el LocalStorage.'
               );
               break;
-            case DBCart && Object.keys(DBCart).length > 0:
-              this.updateDBCart(DBCart, user.userId);
+            case DBCart._id && Object.keys(DBCart).length > 0:
+              this.updateDBCart(user.userId);
               console.log('✅ Usuario autenticado y tiene carrito en (BBDD).');
               break;
 
-            case DBCart && Object.keys(DBCart).length === 0:
-              this.createDBCart(cart, user.userId);
+            case !DBCart._id && Object.keys(DBCart).length === 0:
+              this.createDBCart(user.userId);
               console.log('⚠️ Usuario autenticado no tiene carrito (BBDD).');
               break;
             default:
@@ -95,15 +95,16 @@ export class ShoppingCartService {
 
     this.usersService.shoppingCart$.next(cart);
   }
-  createDBCart(cart: ShoppingCart, userId: number): void {
-    console.log('createLocalStoreCart / cart:', cart);
+  createDBCart(userId: number): void {
+
     const payload = {
       userId,
       date: new Date(),
-      products: cart.products,
+      products: Object.keys(this.usersService.selectedProduct()).length > 0 ? [ this.usersService.selectedProduct() ] : [],
     }
     this.usersService.createShoppingCart(payload).subscribe((cart) => {
       this.usersService.shoppingCart$.next(cart);
+      this.usersService.selectedProduct.set({} as Product);
     });
   }
   updateLocalStoreCart(): void {
@@ -127,14 +128,16 @@ export class ShoppingCartService {
     }
 
   }
-  updateDBCart(cart: ShoppingCart, userId: number): void {
-    console.log("updateDBCart / cart:", cart);
+  updateDBCart(userId: number): void {
     const products = this.usersService.selectedProduct();
+    const cart = this.usersService.shoppingCart$.getValue();
 
-    cart.products = cart.products.filter(
-      (product: Product) => product._id !== products._id
-    );
-    cart.products.push(products);
+    if (Object.keys(products).length > 0) {
+      cart.products = cart.products.filter(
+        (product: Product) => product._id !== products._id
+      );
+      cart.products.push(products);
+    }
     const payload: ShoppingCart = {
       userId,
       date: new Date(),
@@ -143,8 +146,8 @@ export class ShoppingCartService {
     }
     this.usersService.putShoppingCart(cart._id, payload).subscribe((updatedCart) => {
       this.usersService.shoppingCart$.next(updatedCart);
+      this.usersService.selectedProduct.set({} as Product);
     });
-    this.usersService.shoppingCart$.next(cart);
   }
   loggedUserHasCartLocalStorage(user: Users) {
 

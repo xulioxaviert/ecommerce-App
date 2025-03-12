@@ -1,18 +1,22 @@
 import { CommonModule, NgClass, NgIf } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ConfirmationService, MenuItem } from 'primeng/api';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { Subscription } from 'rxjs';
+
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenubarModule } from 'primeng/menubar';
 import { RippleModule } from 'primeng/ripple';
 
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { MenuItem } from 'primeng/api';
-import { Observable } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
 import { TranslationDropdownComponent } from '../../../shared/translation-dropdown/translation-dropdown.component';
+import { UsersService } from '../../../users/users.service';
+import { Product, ShoppingCart } from '../../models/cart.model';
 import { Users } from '../../models/user.model';
 
 @Component({
@@ -31,168 +35,343 @@ import { Users } from '../../models/user.model';
     RouterModule,
     NgClass,
     NgIf,
+    ConfirmPopupModule,
   ],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss',
+  styleUrls: [ './header.component.scss' ], // se corrige 'styleUrl' a 'styleUrls'
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
+
+  // ==========================
+  // Signals y propiedades
+  // ==========================
   categories = signal<string[]>([]);
-  isAuthenticated: boolean = false;
-  isAuthenticated$: Observable<boolean> = new Observable<boolean>();
-
-  items: MenuItem[] | undefined;
-
+  isAuthenticated = false;
+  items: MenuItem[] = [];
   formGroup!: FormGroup;
-  user: Users | undefined;
-  initialsName: string = '';
-  title: string = '';
-  isVisible: boolean = true;
+  user?: Users;
+  initialsName = '';
+  title = 'HEADER.LOGIN';
+  isVisible = false;
 
+  productsShoppingCart = 0;
+  favoriteProducts = 0;
+  cart?: ShoppingCart;
+
+  private subscriptions = new Subscription();
+
+  // ==========================
+  // Constructor
+  // ==========================
   constructor(
     private translateService: TranslateService,
     private router: Router,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private confirmationService: ConfirmationService,
+    private userService: UsersService
+  ) { }
 
-  ngOnInit() {
-    this.checkAuthenticated();
-    this.translateService.onLangChange.subscribe((event) => {
-      this.updateItemLanguage();
+  // ==========================
+  // Ciclo de vida
+  // ==========================
+  ngOnInit(): void {
+    this.initializeComponent();
+    this.initSubscriptions();
+  }
+
+  ngOnDestroy(): void {
+    // Anula todas las suscripciones almacenadas
+    this.subscriptions.unsubscribe();
+    // Opcional, si no se están usando suscripciones directas a shoppingCart$ o favoriteProducts$
+    // entonces no hace falta llamar a .unsubscribe() sobre estos Subjects
+    // this.userService.shoppingCart$.unsubscribe();
+    // this.userService.favoriteProducts$.unsubscribe();
+
+    // Limpia otros estados si es necesario
+    this.userService.selectedProduct.set({} as Product);
+  }
+
+  // ==========================
+  // Métodos de Inicialización
+  // ==========================
+  private initializeComponent(): void {
+    // Recupera carrito del LocalStorage (si existe) y notifica a shoppingCart$
+    this.initializeLocalCart();
+    // Verifica si existe sesión de usuario
+    this.checkUserAuthentication();
+    // Construye ítems de menú con el estado inicial
+    this.buildMenuItems();
+  }
+
+  private initSubscriptions(): void {
+    // Suscripción a cambios en la autenticación
+    const authSub = this.authService.isAuthenticated$.subscribe(() => {
+      this.checkUserAuthentication();
+    });
+    this.subscriptions.add(authSub);
+
+    // Suscripción a cambios en el carrito
+    const cartSub = this.userService.shoppingCart$.subscribe((cart) => {
+      if (cart) {
+        this.productsShoppingCart = cart.products?.length || 0;
+        this.cart = cart;
+      }
+    });
+    this.subscriptions.add(cartSub);
+  }
+
+  // ==========================
+  // Métodos de Autenticación
+  // ==========================
+  /**
+   * Verifica si el usuario está autenticado y obtiene datos asociados
+   */
+  private checkUserAuthentication(): void {
+    if (!this.authService.isAuthenticated()) {
+      this.resetUserState();
+      return;
+    }
+
+    // El usuario está autenticado, recupera datos
+    this.user = this.authService.getSessionStorage('user');
+    //Recuperar carrito del usuario
+    if (this.user?.userId) {
+      this.userService.getShoppingCartByUserId(this.user.userId).subscribe((cart) => {
+        this.userService.shoppingCart$.next(cart);
+      });
+    }
+    this.isAuthenticated = true;
+
+    this.setUserInitials();
+    this.setUserRoleVisibility();
+    this.title = 'HEADER.LOGOUT';
+
+    // Carga información extra (carrito, favoritos, etc.)
+    this.loadUserRelatedData();
+  }
+
+  /**
+   * Establece las iniciales del usuario (firstname y lastname)
+   */
+  private setUserInitials(): void {
+    if (!this.user?.name) return;
+    const { firstname = '', lastname = '' } = this.user.name;
+    this.initialsName =
+      (firstname[ 0 ]?.toUpperCase() || '') + (lastname[ 0 ]?.toUpperCase() || '');
+  }
+
+  /**
+   * Define si se muestra cierta parte del menú u opciones de admin
+   */
+  private setUserRoleVisibility(): void {
+    this.isVisible = this.user?.role === 'admin';
+  }
+
+  /**
+   * Reinicia el estado del usuario cuando no está autenticado
+   */
+  private resetUserState(): void {
+    this.user = undefined;
+    this.isAuthenticated = false;
+    this.isVisible = false;
+    this.initialsName = '';
+    this.title = 'HEADER.LOGIN';
+    this.productsShoppingCart = 0;
+    this.favoriteProducts = 0;
+    this.cart = undefined;
+    // Reconstruye menú con estado no autenticado
+    this.buildMenuItems();
+  }
+
+  /**
+   * Lógica que maneja el click en el botón de Login/Logout
+   */
+  toggleAuthentication(event: Event): void {
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate([ '/auth/login' ]);
+      return;
+    }
+
+    // Si está autenticado, mostrar confirmación de logout
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: this.translateService.instant(
+        'LOGIN.ARE_YOU_SURE_YOU_WANT_TO_LOG_OUT'
+      ),
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        // Al aceptar
+        this.handleLogout();
+      },
+      reject: () => {
+        // Al cancelar, no se hace nada
+      },
     });
   }
 
-  checkAuthenticated() {
-    if (this.authService.isAuthenticated()) {
-      this.isAuthenticated = true;
-      this.user = this.authService.getSessionStorage('user');
-      if (this.user) {
-        switch (this.user.role) {
-          case 'admin':
-            this.isVisible = true;
-            break;
-          case 'costumer':
-            this.isVisible = false;
-            break;
-        }
-      }
-      this.initialsName =
-        (this.user?.name?.firstname.toUpperCase().toString().charAt(0) || '') +
-        (this.user?.name?.lastname.toUpperCase().toString().charAt(0) || '');
-      this.title = this.translateService.instant('HEADER.LOGOUT');
-    } else {
-      this.title = this.translateService.instant('HEADER.LOGIN');
-      this.isAuthenticated = false;
-      this.isVisible = false;
-    }
-    this.updateItemLanguage();
+  /**
+   * Procesa el cierre de sesión
+   */
+  private handleLogout(): void {
+    this.resetUserState();
+    // Redirecciones deseadas
+    this.redirectAfterLogout();
+    // Lógica final de logout
+    this.authService.logout();
   }
 
-  updateItemLanguage() {
-    if (this.isAuthenticated) {
-      this.title = this.translateService.instant('HEADER.LOGOUT');
-    } else {
-      this.title = this.translateService.instant('HEADER.LOGIN');
+  /**
+   * Reubica al usuario si estaba en ciertas rutas cuando hace logout
+   */
+  private redirectAfterLogout(): void {
+    if (
+      this.router.url === '/dashboard' ||
+      this.router.url.includes('/carts/') ||
+      this.router.url.includes('/checkout/')
+    ) {
+      this.router.navigate([ '/' ]);
     }
-    // if (this.user?.role === 'admin') {
-    //   this.isVisible = true;
-    // } else {
-    //   this.isVisible = false;
-    // }
+  }
 
+  // ==========================
+  // Métodos de Carga de Datos
+  // ==========================
+  /**
+   * Verifica si existe un carrito en localStorage y lo inicializa en shoppingCart$
+   */
+  private initializeLocalCart(): void {
+    const cartLocalStorage = this.authService.getLocalStorage('shoppingCart') || [];
+    if (cartLocalStorage) {
+      this.userService.shoppingCart$.next(cartLocalStorage);
+    }
+  }
+
+  /**
+   * Carga datos asociados al usuario autenticado
+   */
+  private loadUserRelatedData(): void {
+    const userId = this.user?.userId;
+    if (!userId) return;
+
+    // Obtener carrito
+    const localCart = this.authService.getLocalStorage('shoppingCart');
+    if (localCart) {
+      this.userService.shoppingCart$.next(localCart);
+      this.subscriptions.add(localCart);
+    } else {
+      const cartSub = this.userService
+        .getShoppingCartByUserId(userId)
+        .subscribe((cart) => {
+          if (cart) {
+            this.productsShoppingCart = cart.products?.length || 0;
+            this.cart = cart;
+          }
+        });
+      this.subscriptions.add(cartSub);
+    }
+
+    // Obtener favoritos
+    const favSub = this.userService
+      .getFavoriteProductById(userId)
+      .subscribe((favorites) => {
+        this.favoriteProducts = favorites?.products?.length || 0;
+      });
+    this.subscriptions.add(favSub);
+  }
+
+  // ==========================
+  // Métodos de Navegación
+  // ==========================
+  navigateToShoppingCart(): void {
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate([ '/carts/id/0' ]);
+      return;
+    }
+    // Si hay un carrito, ir a él
+    const shoppingCart = this.userService.shoppingCart$.value;
+    if (shoppingCart._id) {
+      this.router.navigate([ `/carts/id/${shoppingCart._id}` ]);
+      return;
+    } else {
+      this.router.navigate([ '/carts/id/0' ]);
+      return;
+    }
+
+  }
+
+  // ==========================
+  // Construcción de Menú
+  // ==========================
+  private buildMenuItems(): void {
     this.items = [
       {
-        label: this.translateService.instant('HEADER.HOME'),
+        label: 'HEADER.HOME',
         icon: 'pi pi-home',
         visible: true,
-        // route: '/',
-        command: () => {
-          this.router.navigate(['/']);
-        }
+        route: '/',
       },
       {
-        label: this.translateService.instant('HEADER.WOMEN'),
+        label: 'HEADER.NEW_ARRIVALS',
         icon: 'pi pi-shop',
         visible: true,
-         route: '/categories/women',
-         //Quiero una ruta que me lleve al apartado de testimonio
-
-        // command: () => {
-        //   this.router.navigate(['/categories/women']);
-        // }
+        route: '/categories/feature',
       },
       {
-        label: this.translateService.instant('HEADER.MEN'),
+        label: 'HEADER.FEATURED',
         icon: 'pi pi-shop',
         visible: true,
-        command: () => {
-          const element = document.getElementById('heroCategories')
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-          }
-        }
-
+        route: '/category/featured',
       },
       {
-        label: this.translateService.instant('HEADER.CATEGORY'),
+        label: 'HEADER.OUTLET',
+        icon: 'pi pi-shop',
+        visible: true,
+        route: '/categories/outlet',
+      },
+      {
+        label: 'HEADER.CATEGORY',
         icon: 'pi pi-shopping-bag',
         visible: true,
         route: '/categories',
         items: [
           {
-            label: this.translateService.instant('HEADER.ELECTRONICS'),
-            icon: 'pi pi-bolt',
-            visible: true,
-            route: '/categories/electronics',
-
-          },
-          {
-            label: this.translateService.instant('HEADER.JEWELRY'),
-            icon: 'pi pi-server',
-            visible: true,
-            route: '/categories/jewelry',
-          },
-          {
-            label: this.translateService.instant('HEADER.MEN_CLOTHING'),
+            label: 'HEADER.MEN_CLOTHING',
             icon: 'pi pi-pencil',
             visible: true,
-            route: '/categories/mens',
+            route: '/categories/men',
           },
           {
-            label: this.translateService.instant('HEADER.WOMEN_CLOTHING'),
+            label: 'HEADER.WOMEN_CLOTHING',
             icon: 'pi pi-palette',
             visible: true,
             route: '/categories/women',
           },
+          {
+            label: 'HEADER.ELECTRONICS',
+            icon: 'pi pi-bolt',
+            visible: true,
+            route: '/categories/electronics',
+          },
+          {
+            label: 'HEADER.JEWELRY',
+            icon: 'pi pi-server',
+            visible: true,
+            route: '/categories/jewelry',
+          },
         ],
       },
       {
-        label: this.translateService.instant('HEADER.PRODUCTS'),
+        label: 'HEADER.FAVORITES',
         icon: 'pi pi-shop',
         visible: true,
+        // Podríamos agregarle route si se desea
       },
       {
-        label: this.translateService.instant('HEADER.CONTACT'),
-        icon: 'pi pi-envelope',
-        visible: true,
-      },
-      {
-        label: this.translateService.instant('HEADER.DASHBOARD'),
+        label: 'HEADER.DASHBOARD',
         icon: 'pi pi-shop',
         visible: this.isVisible,
         route: '/dashboard',
       },
     ];
-  }
-
-  toggleAuthentication() {
-    if (this.isAuthenticated === false) {
-      this.router.navigate(['/auth/login']);
-    } else {
-      this.authService.logout();
-      this.isAuthenticated = false;
-      this.title = this.translateService.instant('HEADER.LOGIN');
-      this.isVisible = false;
-      this.updateItemLanguage();
-    }
   }
 }

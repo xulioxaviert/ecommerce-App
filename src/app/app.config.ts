@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { provideAnimations } from '@angular/platform-browser/animations';
 
 import {
   HTTP_INTERCEPTORS,
@@ -11,11 +11,12 @@ import {
   withFetch,
   withInterceptorsFromDi,
 } from '@angular/common/http';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { CarouselModule } from 'primeng/carousel';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { routes } from './app.routes';
 import { HttpInterceptorService } from './core/interceptors/http-interceptor.service';
-import { MessageService } from 'primeng/api';
-import { CarouselModule } from 'primeng/carousel';
-import { ButtonModule } from 'primeng/button';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -34,6 +35,8 @@ export const appConfig: ApplicationConfig = {
     MessageService,
     CarouselModule,
     ButtonModule,
+    ConfirmPopupModule,
+    ConfirmationService,
     provideHttpClient(withFetch()),
     {
       provide: TranslateLoader,

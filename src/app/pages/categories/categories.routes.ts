@@ -1,39 +1,38 @@
 import { Routes } from '@angular/router';
 import { CategoriesComponent } from './categories.component';
-import { ElectronicsComponent } from './electronics/electronics.component';
-import { JewelryComponent } from './jewelry/jewelry.component';
-import { MensComponent } from './mens/mens.component';
-import { WomenComponent } from './women/women.component';
 
 
 export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'electronics',
+    redirectTo: 'men',
   },
   {
     path: '',
     component: CategoriesComponent,
     children: [
-      {
-        //TODO actualizar loadChildren
-        path: 'electronics',
-        component: ElectronicsComponent
 
+      {
+        path: 'electronics',
+        loadComponent: () => import('./electronics/electronics.component').then(m => m.ElectronicsComponent),
       },
       {
         path: 'jewelry',
-        component: JewelryComponent
+        loadComponent: () => import('./jewelry/jewelry.component').then(m => m.JewelryComponent)
       },
       {
-        path: 'mens',
-        component: MensComponent
+        path: 'men',
+        loadComponent: () => import('./men/men.component').then(m => m.MenComponent)
       },
       {
         path: 'women',
-        component: WomenComponent
+        loadComponent: () => import('./women/women.component').then(m => m.WomenComponent)
       },
+      {
+        path: 'feature',
+        loadComponent: () => import('./feature/feature.component').then(m => m.FeatureComponent)
+      }
     ],
   }
 

@@ -1,9 +1,9 @@
+@layer tailwindcss, primeng;
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 
-@layer tailwindcss, primeng;
 
 @import "../node_modules/tailwindcss/base.css" layer(tailwindcss);
 @import "../node_modules/tailwindcss/components.css" layer(tailwindcss);
@@ -12,6 +12,7 @@
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
+@import "./styles/_variables.scss";
 
 
 .container__form {
@@ -26,8 +27,7 @@
   }
 }
 
-.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight.p-focus
-{
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight.p-focus {
   width: 110px;
 }
 
@@ -35,4 +35,94 @@
 .p-button-label.ng-star-inserted {
   font-size: 14px;
   padding: 0.6rem;
+}
+
+
+.p-confirm-popup {
+  background-color: $background3;
+
+}
+.p-confirm-popup-content.ng-star-inserted{
+  margin: 0.5rem;
+  color: white;
+
+}
+.p-confirm-popup .p-button.p-confirm-popup-accept {
+  margin: 0.5rem;
+  padding: 0 1rem;
+  color: white;
+  background-color: #ff0000;
+}
+
+.p-confirm-popup .p-button.p-confirm-popup-reject {
+  margin: 0.5rem;
+  padding: 0 1rem;
+  color: white;
+  background-color: #ffa500;
+
+}
+
+/* Personaliza el icono */
+.p-confirm-popup .p-confirm-popup-icon {
+  color: #ffa500;
+  /* Naranja */
+}
+
+.p-confirm-popup-footer.ng-star-inserted{
+  margin: 0;
+  padding: 0;
+}
+
+
+/// Products pages ////
+.work-sans {
+  font-family: 'Work Sans', sans-serif;
+}
+
+#menu-toggle:checked+#menu {
+  display: block;
+}
+
+.hover\:grow {
+  transition: all 0.3s;
+  transform: scale(1);
+}
+
+.hover\:grow:hover {
+  transform: scale(1.02);
+}
+
+.carousel-open:checked+.carousel-item {
+  position: static;
+  opacity: 100;
+}
+
+.carousel-item {
+  -webkit-transition: opacity 0.6s ease-out;
+  transition: opacity 0.6s ease-out;
+}
+
+#carousel-1:checked~.control-1,
+#carousel-2:checked~.control-2,
+#carousel-3:checked~.control-3 {
+  display: block;
+}
+
+.carousel-indicators {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  bottom: 2%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 10;
+}
+
+#carousel-1:checked~.control-1~.carousel-indicators li:nth-child(1) .carousel-bullet,
+#carousel-2:checked~.control-2~.carousel-indicators li:nth-child(2) .carousel-bullet,
+#carousel-3:checked~.control-3~.carousel-indicators li:nth-child(3) .carousel-bullet {
+  color: #000;
+  /*Set to match the Tailwind colour you want the active one to be */
 }

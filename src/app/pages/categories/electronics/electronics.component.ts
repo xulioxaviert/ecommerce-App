@@ -1,33 +1,56 @@
-import { NgForOf } from '@angular/common';
+import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { ENDPOINTS } from '../../../core/const/constants';
+import { Product, ShoppingCart } from '../../../core/models/cart.model';
+import { Users } from '../../../core/models/user.model';
+import { HttpService } from '../../../core/services/http.service';
+import { ModalService } from '../../../shared/modal/product-modal-service.service';
+import { ProductModal } from '../../../shared/modal/product-modal.component';
 
 @Component({
-  selector: 'app-electronics',
+  selector: 'app-mens',
   standalone: true,
-  imports: [ NgForOf, TranslateModule, RouterOutlet ],
+  imports: [ CommonModule, NgForOf, TranslateModule, ProductModal, NgIf ],
   templateUrl: './electronics.component.html',
   styleUrl: './electronics.component.scss',
+  providers: [],
 })
 export class ElectronicsComponent implements OnInit {
+  products: Product[] = [];
+  currentProduct: Product = {} as Product;
+  visible: boolean = false;
+  user: Users = {} as Users;
+  shoppingCart: ShoppingCart = {} as ShoppingCart;
 
   constructor(
-    private translateService: TranslateService,
+    private http: HttpService,
+    private router: Router,
+    private modalService: ModalService
+
   ) { }
+
   ngOnInit(): void {
     this.getData();
-    this.translateService.onDefaultLangChange.subscribe((event) => {
-      this.changeLabelLanguage();
-    });
   }
 
   getData() {
+    this.http.getData(ENDPOINTS.getAllProducts).subscribe((products) => {
+      products.body
+        .filter((product: Product) => product.category === "electronics")
+        .forEach((product: Product) => this.products.push(product));
+    });
 
   }
 
-  //TODO:  Revisar con Mario la traducción de las categoría si se limpia o no
-  changeLabelLanguage() {
-    this.getData();
+  navigateToProductDetail(product: Product) {
+    console.log('product', product);
+    this.router.navigate([ `/product/detail/${product._id}` ]);
   }
+  openModalSize(product: Product) {
+    this.visible = true;
+    this.modalService.openModal(product);
+  }
+
 }

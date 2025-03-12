@@ -1,1 +1,22 @@
-<p>cart works!</p>
+<div class="font-sans">
+  <div class="grid lg:grid-cols-3 gap-10 p-4">
+    <div class="lg:col-span-2 bg-white divide-y">
+      <app-cart-list
+        [shoppingCart]="shoppingCart"
+        (removeProduct)="removeProduct($event)"
+        (incrementQuantity)="incrementQuantity($event)"
+        (decrementQuantity)="decrementQuantity($event)"
+        (idProductDetail)="navigateToProductDetail($event)"
+      ></app-cart-list>
+    </div>
+    <app-order-summary
+      [subTotal]="subTotal"
+      [shipping]="shipping"
+      [tax]="tax"
+      [total]="total"
+      [shoppingCart]="shoppingCart"
+      (payShoppingCart)="makePayment(shoppingCart)"
+    >
+    </app-order-summary>
+  </div>
+</div>

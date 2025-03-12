@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ENDPOINTS } from '../core/const/constants';
+import { Users } from '../core/models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,23 +12,23 @@ export class AuthService {
   private _authenticated = false;
 
   isAuthenticated$ = new BehaviorSubject<boolean>(false);
-  // user$: BehaviorSubject<Users> = new BehaviorSubject<Users>({} as Users);
+  user$: BehaviorSubject<Users> = new BehaviorSubject<Users>({} as Users);
 
 
 
   constructor(private _httpClient: HttpClient, private router: Router) { }
 
-  login(username: string, password: string): Observable<string> {
+  login(email: string, password: string): Observable<string> {
 
     const url = ENDPOINTS.login; //
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': 'Basic ' + btoa(`${username}:${password}`)
+      'Authorization': 'Basic ' + btoa(`${email}:${password}`)
     });
 
     const payload = {
-      username: username,
-      password: password
+      email,
+      password
     };
 
     return this._httpClient.post<string>(url, payload, { headers });
@@ -47,18 +48,38 @@ export class AuthService {
   getSessionStorage(key: string) {
     return JSON.parse(sessionStorage.getItem(key) || '{}');
   }
+  getLocalStorage(key: string) {
+    return JSON.parse(localStorage.getItem(key) || '{}');
+  }
+  removeLocalStorage(key: string) {
+    return localStorage.removeItem(key);
+  }
 
   logout(): void {
     sessionStorage.clear();
     this.isAuthenticated$.next(false);
+    this._authenticated = false;
   }
 
   isAuthenticated() {
     const token = sessionStorage.getItem('token');
     if (token) {
-      this.isAuthenticated$.next(true);
       this._authenticated = true;
+    } else {
+      this._authenticated = false;
     }
+    return this._authenticated;
+  }
+
+  isAdministrator() {
+    const user = this.getSessionStorage('user');
+    if (user.role === 'admin') {
+      return true;
+    }
+    return false;
+  }
+
+  get authenticated(): boolean {
     return this._authenticated;
   }
 

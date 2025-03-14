@@ -70,38 +70,26 @@ export class LoginComponent implements OnInit {
     const email = this.loginForm.get('email')?.value;
     const password = this.loginForm.get('password')?.value;
 
-    // Ejecutamos el login a través del servicio de autenticación.
     this.authService
       .login(email, password)
       .pipe(
-        // Al recibir la respuesta, guardamos el token en sessionStorage.
         tap((response: any) => {
           this.authService.setSessionStorage('token', response.token);
-        }),
-        // Con switchMap, encadenamos la obtención del carrito una vez que el login es exitoso.
-        switchMap((data) => {
-          // Guardamos la información del usuario en sessionStorage.
-          this.authService.setSessionStorage('user', JSON.stringify(data.user));
-          // Indicamos que el usuario está autenticado actualizando el BehaviorSubject.
+          this.authService.setSessionStorage('user', JSON.stringify(response.user));
           this.authService.isAuthenticated$.next(true);
-
-          // Retornamos el observable que obtiene el carrito del usuario.
+        }),
+        switchMap((data) => {
           return this.usersService.getShoppingCartByUserId(data.user.userId);
         }),
-        // Una vez obtenido el carrito, actualizamos el BehaviorSubject correspondiente.
         tap((cart: any) => {
           this.usersService.shoppingCart$.next(cart);
         }),
-        // Si ocurre algún error en cualquiera de los pasos, lo capturamos, mostramos un toast de error,
-        // reseteamos el formulario y retornamos EMPTY para detener la cadena.
         catchError((error) => {
           this.toastService.showError('Error', error);
           this.loginForm.reset();
           return EMPTY;
         })
-      )
-      .subscribe({
-        // En caso de éxito, navegamos a la página principal.
+      ).subscribe({
         next: () => this.router.navigate([ '/' ]),
         complete: () => console.log('.subscribe / complete'),
       });

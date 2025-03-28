@@ -1,5 +1,12 @@
 import { CommonModule, NgClass, NgIf } from '@angular/common';
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  signal,
+  computed
+} from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -38,31 +45,32 @@ import { Users } from '../../models/user.model';
     ConfirmPopupModule,
   ],
   templateUrl: './header.component.html',
-  styleUrls: [ './header.component.scss' ], // se corrige 'styleUrl' a 'styleUrls'
+  styleUrls: [ './header.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.OnPush  // Estrategia de optimización del rendimiento
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-
-  // ==========================
-  // Signals y propiedades
-  // ==========================
+  // =====================================
+  // Sección de Señales y Propiedades
+  // =====================================
   categories = signal<string[]>([]);
-  isAuthenticated = false;
+  isAuthenticated = signal(false);
   items: MenuItem[] = [];
   formGroup!: FormGroup;
-  user?: Users;
-  initialsName = '';
-  title = 'HEADER.LOGIN';
-  isVisible = false;
+  user = signal<Users | undefined>(undefined);
+  productsShoppingCart = signal(0);
+  favoriteProducts = signal(0);
+  cart = signal<ShoppingCart | undefined>(undefined);
 
-  productsShoppingCart = 0;
-  favoriteProducts = 0;
-  cart?: ShoppingCart;
+  // Propiedades computadas para derivar datos del estado
+  initialsName = computed(() => this.obtenerInicialesUsuario());
+  title = computed(() => this.isAuthenticated() ? 'HEADER.LOGOUT' : 'HEADER.LOGIN');
+  isVisible = computed(() => this.user()?.role === 'admin');
 
   private subscriptions = new Subscription();
 
-  // ==========================
-  // Constructor
-  // ==========================
+  // =====================================
+  // Constructor e Inyección de Dependencias
+  // =====================================
   constructor(
     private translateService: TranslateService,
     private router: Router,
@@ -71,307 +79,175 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private userService: UsersService
   ) { }
 
-  // ==========================
-  // Ciclo de vida
-  // ==========================
+  // =====================================
+  // Hooks del Ciclo de Vida
+  // =====================================
   ngOnInit(): void {
-    this.initializeComponent();
-    this.initSubscriptions();
+    this.inicializarComponente();
+    this.inicializarSubscripciones();
   }
 
   ngOnDestroy(): void {
-    // Anula todas las suscripciones almacenadas
     this.subscriptions.unsubscribe();
-    // Opcional, si no se están usando suscripciones directas a shoppingCart$ o favoriteProducts$
-    // entonces no hace falta llamar a .unsubscribe() sobre estos Subjects
-    // this.userService.shoppingCart$.unsubscribe();
-    // this.userService.favoriteProducts$.unsubscribe();
-
-    // Limpia otros estados si es necesario
     this.userService.selectedProduct.set({} as Product);
   }
 
-  // ==========================
+  // =====================================
   // Métodos de Inicialización
-  // ==========================
-  private initializeComponent(): void {
-    // Recupera carrito del LocalStorage (si existe) y notifica a shoppingCart$
-    this.initializeLocalCart();
-    // Verifica si existe sesión de usuario
-    this.checkUserAuthentication();
-    // Construye ítems de menú con el estado inicial
-    this.buildMenuItems();
+  // =====================================
+  private inicializarComponente(): void {
+    // Se inicializan el carrito local, la autenticación y el menú
+    this.inicializarCarritoLocal();
+    this.verificarAutenticacionUsuario();
+    this.construirMenu();
   }
 
-  private initSubscriptions(): void {
-    // Suscripción a cambios en la autenticación
-    const authSub = this.authService.isAuthenticated$.subscribe(() => {
-      this.checkUserAuthentication();
-    });
-    this.subscriptions.add(authSub);
+  private inicializarSubscripciones(): void {
+    // Se suscribe a los cambios en la autenticación
+    this.subscriptions.add(
+      this.authService.isAuthenticated$.subscribe((isAuth) => {
+        this.isAuthenticated.set(isAuth);
+        this.verificarAutenticacionUsuario();
+      })
+    );
 
-    // Suscripción a cambios en el carrito
-    const cartSub = this.userService.shoppingCart$.subscribe((cart) => {
-      if (cart) {
-        this.productsShoppingCart = cart.products?.length || 0;
-        this.cart = cart;
-      }
-    });
-    this.subscriptions.add(cartSub);
+    // Se suscribe a los cambios en el carrito de compras
+    this.subscriptions.add(
+      this.userService.shoppingCart$.subscribe((cart) => {
+        if (cart) {
+          this.productsShoppingCart.set(cart.products?.length ?? 0);
+          this.cart.set(cart);
+        }
+      })
+    );
   }
 
-  // ==========================
-  // Métodos de Autenticación
-  // ==========================
-  /**
-   * Verifica si el usuario está autenticado y obtiene datos asociados
-   */
-  private checkUserAuthentication(): void {
+  // =====================================
+  // Métodos de Autenticación y Gestión de Usuario
+  // =====================================
+  private verificarAutenticacionUsuario(): void {
     if (!this.authService.isAuthenticated()) {
-      this.resetUserState();
+      this.restablecerEstadoUsuario();
       return;
     }
 
-    // El usuario está autenticado, recupera datos
-    this.user = this.authService.getSessionStorage('user');
-    //Recuperar carrito del usuario
-    if (this.user?.userId) {
-      this.userService.getShoppingCartByUserId(this.user.userId).subscribe((cart) => {
-        this.userService.shoppingCart$.next(cart);
+    // Se obtiene el usuario desde el almacenamiento de sesión
+    const usuarioSesion = this.authService.getSessionStorage<Users>('user');
+    this.user.set(usuarioSesion);
+
+    // Si el usuario tiene un identificador, se obtiene su carrito de compras
+    if (usuarioSesion?.userId) {
+      this.userService.getShoppingCartByUserId(usuarioSesion.userId).subscribe((cart) => {
+        if (cart) {
+          this.userService.shoppingCart$.next(cart);
+        }
       });
     }
-    this.isAuthenticated = true;
 
-    this.setUserInitials();
-    this.setUserRoleVisibility();
-    this.title = 'HEADER.LOGOUT';
-
-    // Carga información extra (carrito, favoritos, etc.)
-    this.loadUserRelatedData();
+    // Se cargan otros datos relacionados (carrito, productos favoritos, etc.)
+    this.cargarDatosRelacionadosUsuario();
   }
 
-  /**
-   * Establece las iniciales del usuario (firstname y lastname)
-   */
-  private setUserInitials(): void {
-    if (!this.user?.name) return;
-    const { firstname = '', lastname = '' } = this.user.name;
-    this.initialsName =
-      (firstname[ 0 ]?.toUpperCase() || '') + (lastname[ 0 ]?.toUpperCase() || '');
+  private restablecerEstadoUsuario(): void {
+    // Se reinician las señales y se reconstruye el menú con el estado de usuario no autenticado
+    this.user.set(undefined);
+    this.isAuthenticated.set(false);
+    this.productsShoppingCart.set(0);
+    this.favoriteProducts.set(0);
+    this.cart.set(undefined);
+    this.construirMenu();
   }
 
-  /**
-   * Define si se muestra cierta parte del menú u opciones de admin
-   */
-  private setUserRoleVisibility(): void {
-    this.isVisible = this.user?.role === 'admin';
-  }
-
-  /**
-   * Reinicia el estado del usuario cuando no está autenticado
-   */
-  private resetUserState(): void {
-    this.user = undefined;
-    this.isAuthenticated = false;
-    this.isVisible = false;
-    this.initialsName = '';
-    this.title = 'HEADER.LOGIN';
-    this.productsShoppingCart = 0;
-    this.favoriteProducts = 0;
-    this.cart = undefined;
-    // Reconstruye menú con estado no autenticado
-    this.buildMenuItems();
-  }
-
-  /**
-   * Lógica que maneja el click en el botón de Login/Logout
-   */
   toggleAuthentication(event: Event): void {
-    if (!this.authService.isAuthenticated()) {
+    if (!this.isAuthenticated()) {
       this.router.navigate([ '/auth/login' ]);
       return;
     }
 
-    // Si está autenticado, mostrar confirmación de logout
+    // Se muestra una confirmación para cerrar sesión en caso de estar autenticado
     this.confirmationService.confirm({
       target: event.target as EventTarget,
-      message: this.translateService.instant(
-        'LOGIN.ARE_YOU_SURE_YOU_WANT_TO_LOG_OUT'
-      ),
+      message: this.translateService.instant('LOGIN.ARE_YOU_SURE_YOU_WANT_TO_LOG_OUT'),
       icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        // Al aceptar
-        this.handleLogout();
-      },
-      reject: () => {
-        // Al cancelar, no se hace nada
-      },
+      accept: () => this.procesarLogout(),
     });
   }
 
-  /**
-   * Procesa el cierre de sesión
-   */
-  private handleLogout(): void {
-    this.resetUserState();
-    // Redirecciones deseadas
-    this.redirectAfterLogout();
-    // Lógica final de logout
+  private procesarLogout(): void {
+    this.restablecerEstadoUsuario();
     this.authService.logout();
+    this.redirigirDespuesDeLogout();
   }
 
-  /**
-   * Reubica al usuario si estaba en ciertas rutas cuando hace logout
-   */
-  private redirectAfterLogout(): void {
-    if (
-      this.router.url === '/dashboard' ||
-      this.router.url.includes('/carts/') ||
-      this.router.url.includes('/checkout/')
-    ) {
+  private redirigirDespuesDeLogout(): void {
+    const rutasRestringidas = [ '/dashboard', '/carts/', '/checkout/' ];
+    if (rutasRestringidas.some((ruta) => this.router.url.includes(ruta))) {
       this.router.navigate([ '/' ]);
     }
   }
 
-  // ==========================
-  // Métodos de Carga de Datos
-  // ==========================
-  /**
-   * Verifica si existe un carrito en localStorage y lo inicializa en shoppingCart$
-   */
-  private initializeLocalCart(): void {
-    const cartLocalStorage = this.authService.getLocalStorage('shoppingCart') || [];
-    if (cartLocalStorage) {
-      this.userService.shoppingCart$.next(cartLocalStorage);
+  // =====================================
+  // Métodos de Carga y Sincronización de Datos
+  // =====================================
+  private inicializarCarritoLocal(): void {
+    const carritoLocal = this.authService.getLocalStorage<ShoppingCart>('shoppingCart');
+    if (carritoLocal) {
+      this.userService.shoppingCart$.next(carritoLocal);
     }
   }
 
-  /**
-   * Carga datos asociados al usuario autenticado
-   */
-  private loadUserRelatedData(): void {
-    const userId = this.user?.userId;
+  private cargarDatosRelacionadosUsuario(): void {
+    const userId = this.user()?.userId;
     if (!userId) return;
 
-    // Obtener carrito
-    const localCart = this.authService.getLocalStorage('shoppingCart');
-    if (localCart) {
-      this.userService.shoppingCart$.next(localCart);
-      this.subscriptions.add(localCart);
-    } else {
-      const cartSub = this.userService
-        .getShoppingCartByUserId(userId)
-        .subscribe((cart) => {
-          if (cart) {
-            this.productsShoppingCart = cart.products?.length || 0;
-            this.cart = cart;
-          }
-        });
-      this.subscriptions.add(cartSub);
-    }
+    // Actualización del carrito de compras
+    this.subscriptions.add(
+      this.userService.getShoppingCartByUserId(userId).subscribe((cart) => {
+        if (cart) {
+          this.productsShoppingCart.set(cart.products?.length ?? 0);
+          this.cart.set(cart);
+        }
+      })
+    );
 
-    // Obtener favoritos
-    const favSub = this.userService
-      .getFavoriteProductById(userId)
-      .subscribe((favorites) => {
-        this.favoriteProducts = favorites?.products?.length || 0;
-      });
-    this.subscriptions.add(favSub);
+    // Actualización de productos favoritos
+    this.subscriptions.add(
+      this.userService.getFavoriteProductById(userId).subscribe((favorites) => {
+        this.favoriteProducts.set(favorites?.products?.length ?? 0);
+      })
+    );
   }
 
-  // ==========================
-  // Métodos de Navegación
-  // ==========================
-  navigateToShoppingCart(): void {
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate([ '/carts/id/0' ]);
-      return;
-    }
-    // Si hay un carrito, ir a él
-    const shoppingCart = this.userService.shoppingCart$.value;
-    if (shoppingCart._id) {
-      this.router.navigate([ `/carts/id/${shoppingCart._id}` ]);
-      return;
-    } else {
-      this.router.navigate([ '/carts/id/0' ]);
-      return;
-    }
-
-  }
-
-  // ==========================
-  // Construcción de Menú
-  // ==========================
-  private buildMenuItems(): void {
+  // =====================================
+  // Métodos de Navegación y Construcción del Menú
+  // =====================================
+  private construirMenu(): void {
+    // Se construye el menú de navegación con base en la autenticación y roles del usuario
     this.items = [
-      {
-        label: 'HEADER.HOME',
-        icon: 'pi pi-home',
-        visible: true,
-        route: '/',
-      },
-      {
-        label: 'HEADER.NEW_ARRIVALS',
-        icon: 'pi pi-shop',
-        visible: true,
-        route: '/categories/feature',
-      },
-      {
-        label: 'HEADER.FEATURED',
-        icon: 'pi pi-shop',
-        visible: true,
-        route: '/category/featured',
-      },
-      {
-        label: 'HEADER.OUTLET',
-        icon: 'pi pi-shop',
-        visible: true,
-        route: '/categories/outlet',
-      },
+      { label: 'HEADER.HOME', icon: 'pi pi-home', route: '/' },
+      { label: 'HEADER.NEW_ARRIVALS', icon: 'pi pi-shop', route: '/categories/feature' },
+      { label: 'HEADER.FEATURED', icon: 'pi pi-shop', route: '/category/featured' },
+      { label: 'HEADER.OUTLET', icon: 'pi pi-shop', route: '/categories/outlet' },
       {
         label: 'HEADER.CATEGORY',
         icon: 'pi pi-shopping-bag',
-        visible: true,
-        route: '/categories',
         items: [
-          {
-            label: 'HEADER.MEN_CLOTHING',
-            icon: 'pi pi-pencil',
-            visible: true,
-            route: '/categories/men',
-          },
-          {
-            label: 'HEADER.WOMEN_CLOTHING',
-            icon: 'pi pi-palette',
-            visible: true,
-            route: '/categories/women',
-          },
-          {
-            label: 'HEADER.ELECTRONICS',
-            icon: 'pi pi-bolt',
-            visible: true,
-            route: '/categories/electronics',
-          },
-          {
-            label: 'HEADER.JEWELRY',
-            icon: 'pi pi-server',
-            visible: true,
-            route: '/categories/jewelry',
-          },
+          { label: 'HEADER.MEN_CLOTHING', icon: 'pi pi-pencil', route: '/categories/men' },
+          { label: 'HEADER.WOMEN_CLOTHING', icon: 'pi pi-palette', route: '/categories/women' },
+          { label: 'HEADER.ELECTRONICS', icon: 'pi pi-bolt', route: '/categories/electronics' },
+          { label: 'HEADER.JEWELRY', icon: 'pi pi-server', route: '/categories/jewelry' },
         ],
       },
-      {
-        label: 'HEADER.FAVORITES',
-        icon: 'pi pi-shop',
-        visible: true,
-        // Podríamos agregarle route si se desea
-      },
-      {
-        label: 'HEADER.DASHBOARD',
-        icon: 'pi pi-shop',
-        visible: this.isVisible,
-        route: '/dashboard',
-      },
+      { label: 'HEADER.FAVORITES', icon: 'pi pi-shop' },
+      { label: 'HEADER.DASHBOARD', icon: 'pi pi-shop', visible: this.isVisible(), route: '/dashboard' },
     ];
+  }
+
+  // =====================================
+  // Métodos de Utilidad
+  // =====================================
+  private obtenerInicialesUsuario(): string {
+    const { firstname = '', lastname = '' } = this.user()?.name || {};
+    return `${firstname[ 0 ]?.toUpperCase() ?? ''}${lastname[ 0 ]?.toUpperCase() ?? ''}`;
   }
 }

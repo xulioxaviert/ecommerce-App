@@ -10,12 +10,6 @@ import { Users } from '../models/user.model';
   providedIn: 'root',
 })
 export class ShoppingCartService {
-  private cart: ShoppingCart = {
-    userId: null,
-    date: new Date(),
-    products: [],
-    cartId: 0,
-  };
 
   constructor(
     @Inject(AuthService) private authService: AuthService,

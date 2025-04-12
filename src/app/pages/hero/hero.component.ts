@@ -30,7 +30,6 @@ export class HeroComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getData();
-    this.getSubscriptions();
   }
 
   getData(): void {
@@ -41,15 +40,7 @@ export class HeroComponent implements OnInit, OnDestroy {
 
     });
   }
-  getSubscriptions() {
-    this.subscription.add(
-      this.translateService.onLangChange.subscribe(() => {
-        console.log('change language');
-        this.getAndFillCategories()
 
-      })
-    );
-  }
 
   getAndFillCategories() {
     this.categories = [];
@@ -68,7 +59,7 @@ export class HeroComponent implements OnInit, OnDestroy {
             img: 'assets/images/electronics.jpg',
           });
           break;
-        case 'jewelery':
+        case 'jewelry':
           this.categories.push({
             category: this.translateService.instant('CATEGORY.JEWELRY'),
             name: this.translateService.instant('CATEGORY.JEWELRY'),

@@ -30,6 +30,6 @@ export class CartListComponent {
   removeProductFromCart(id: string): void {
     this.removeProduct.emit(id);
   }
-
+//TODO: Nunca un (click) fuera de botones
 
 }

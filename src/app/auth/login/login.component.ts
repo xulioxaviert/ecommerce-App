@@ -31,15 +31,11 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) { }
 
-  // Método del ciclo de vida que se ejecuta al inicializar el componente.
   ngOnInit(): void {
     this.createLoginForm();
   }
 
-  /**
-   * Crea el formulario de login con los campos 'email' y 'password'
-   * y establece las validaciones necesarias.
-   */
+
   createLoginForm(): void {
     this.loginForm = this.fb.group({
       email: [ '', [ Validators.required, Validators.minLength(3), Validators.email ] ],
@@ -54,13 +50,7 @@ export class LoginComponent implements OnInit {
     return this.loginForm.get('password');
   }
 
-  /**
-   * Método que se ejecuta al hacer "sign in".
-   * - Valida el formulario.
-   * - Realiza la autenticación y, si es exitosa, actualiza la sesión.
-   * - Recupera el carrito de compras del usuario.
-   * - Navega a la página principal.
-   */
+
   signIn(): void {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -79,10 +69,17 @@ export class LoginComponent implements OnInit {
           this.authService.isAuthenticated$.next(true);
         }),
         switchMap((data) => {
-          return this.usersService.getShoppingCartByUserId(data.user.userId);
+          return this.usersService.getShoppingCartByUserId(data.user.userId).pipe(
+            catchError((cartError) => {
+              console.log('No shopping cart found, creating a new one');
+              return EMPTY;
+            })
+          );
         }),
         tap((cart: any) => {
-          this.usersService.shoppingCart$.next(cart);
+          if (cart) {
+            this.usersService.shoppingCart$.next(cart);
+          }
         }),
         catchError((error) => {
           this.toastService.showError('Error', error);
@@ -90,8 +87,7 @@ export class LoginComponent implements OnInit {
           return EMPTY;
         })
       ).subscribe({
-        next: () => this.router.navigate([ '/' ]),
-        complete: () => console.log('.subscribe / complete'),
+        next: () => this.router.navigate([ '/' ])
       });
   }
 }

@@ -30,7 +30,7 @@ export const appConfig: ApplicationConfig = {
       useClass: HttpInterceptorService,
       multi: true,
     },
-    provideHttpClient(),
+    provideHttpClient(withFetch()),
     provideAnimations(),
     MessageService,
     CarouselModule,

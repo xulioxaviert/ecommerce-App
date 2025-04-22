@@ -1,5 +1,5 @@
 <div class="container__header p-fluid card sticky top-0">
-  <p-menubar [model]="items" class="card">
+  <p-menubar [model]="items()" class="card">
     <ng-template pTemplate="start">
       <div class="container__header-img">
         <img src="assets/images/logo5.png" alt="logo" />
@@ -16,18 +16,18 @@
     <ng-template pTemplate="end">
       <div class="flex items-center justify-end gap-2 mx-4">
         <app-translation-dropdown></app-translation-dropdown>
-        
+
         <i
           class="pi pi-shopping-cart text-2xl mx-2 iconShoppingCart"
           (click)="navigateToShoppingCart()"
           pBadge
-          value="{{ productsShoppingCart }}"
+          value="{{ productsShoppingCart() }}"
         ></i>
         <i
           class="pi pi-heart text-2xl mx-2 iconShoppingCart"
 
           pBadge
-          value="{{ favoriteProducts }}"
+          value="{{ favoriteProducts() }}"
         ></i>
         <div
           class="col-12 md:col-4 flex flex-col justify-center text-center container__avatar"
@@ -41,9 +41,9 @@
                 cursor: 'pointer'
               }"
               size="large"
-              [label]="initialsName"
+              [label]="initialsName()"
               (click)="toggleAuthentication($event)"
-              [title]="title | translate"
+              [title]="title() | translate"
               shape="circle"
             />
             <p-confirmPopup></p-confirmPopup>

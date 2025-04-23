@@ -34,9 +34,9 @@
         >
           <div class="card flex justify-content-center">
             <p-avatar
-              [icon]="!isAuthenticated ? 'pi pi-user' : ''"
+              [icon]="!isAuthenticated() ? 'pi pi-user' : ''"
               [style]="{
-                'background-color': !isAuthenticated ? 'red' : 'green',
+                'background-color': !isAuthenticated() ? 'red' : 'green',
                 color: 'white',
                 cursor: 'pointer'
               }"

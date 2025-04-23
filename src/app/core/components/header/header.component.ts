@@ -2,12 +2,12 @@ import { CommonModule, NgClass, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   OnDestroy,
   OnInit,
-  signal,
-  computed
+  signal
 } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmationService, MenuItem } from 'primeng/api';
@@ -57,14 +57,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   // =====================================
   // Señales y Propiedades Reactivas
   // =====================================
-  readonly categories = signal<string[]>([]);
   readonly isAuthenticated = signal(false);
   readonly user = signal<Users | undefined>(undefined);
   readonly productsShoppingCart = signal(0);
   readonly favoriteProducts = signal(0);
   readonly cart = signal<ShoppingCart | undefined>(undefined);
   readonly items = signal<MenuItem[]>([]);
-  formGroup!: FormGroup;
 
   // Propiedades computadas para derivar datos del estado
   readonly initialsName = computed(() => this.getUserInitials());
